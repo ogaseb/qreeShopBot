@@ -24,6 +24,7 @@
   "homepage": "https://github.com/ProPanek/qreeShopBot#readme",
   "dependencies": {
     "discord.js": "^11.5.1",
-    "dotenv": "^8.0.0"
+    "dotenv": "^8.0.0",
+    "qrcode-generator": "^1.4.3"
   }
 }
