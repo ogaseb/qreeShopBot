@@ -83,8 +83,12 @@ function handleGameUpload(messageArguments, receivedMessage){
 
   if (messageArguments[1].match(dropboxExpression)){
       messageArguments[1].slice(-1) === "0" ? link = parseDropboxLink(messageArguments[1]) : link = messageArguments[1]
+  } else {
+    link = messageArguments[1]
   }
 
+
+  console.log(link)
   //(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?\w+|"(?:\\"|[^"])+"|'(?:\\'|[^"])+'|\w+
 
 
