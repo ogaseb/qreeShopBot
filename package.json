@@ -2,9 +2,12 @@
   "name": "qreeshopbot",
   "version": "0.0.0",
   "description": "qreeShopBot for discord",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "cd server && nodemon --exec babel-node server.js",
+    "webpack": "webpack --config webpack.server.config.js",
+    "start": "webpack --config webpack.server.config.js && pm2-runtime server.min.js -i 1"
   },
   "repository": {
     "type": "git",
@@ -23,8 +26,15 @@
   },
   "homepage": "https://github.com/ProPanek/qreeShopBot#readme",
   "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-2": "^6.24.1",
     "discord.js": "^11.5.1",
     "dotenv": "^8.0.0",
-    "qrcode-generator": "^1.4.3"
+    "pg": "^7.11.0",
+    "qrcode-generator": "^1.4.3",
+    "webpack": "^4.37.0",
+    "webpack-cli": "^3.3.6",
+    "webpack-node-externals": "^1.7.2"
   }
 }
