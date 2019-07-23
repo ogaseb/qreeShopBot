@@ -1,0 +1,28 @@
+{
+  "name": "qreeshopbot",
+  "version": "0.0.0",
+  "description": "qreeShopBot for discord",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProPanek/qreeShopBot.git"
+  },
+  "keywords": [
+    "qr",
+    "bot",
+    "discord",
+    "3ds"
+  ],
+  "author": "ProPanek",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ProPanek/qreeShopBot/issues"
+  },
+  "homepage": "https://github.com/ProPanek/qreeShopBot#readme",
+  "dependencies": {
+    "discord.js": "^11.5.1"
+  }
+}
