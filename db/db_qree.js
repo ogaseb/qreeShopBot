@@ -1,13 +1,17 @@
 require('dotenv').config()
 import { Client } from 'pg'
 
-export async function createQree(qrData, qrLink, name,console, region, size, uploader_discord_id) {
-  const client = new Client({
+function createDBclient() {
+  return  new Client({
     connectionString: process.env.DATABASE_URL
   })
+}
+
+export async function createQree(qrData, qrLink, name, platform, region, size, uploader_discord_id) {
+  const client = createDBclient()
   try {
     await client.connect();
-    await client.query(`INSERT INTO qre_items(qr_data, qr_link, name, console, region, size, uploader_discord_id) VALUES('${qrData}', '${qrLink}', '${name}' , '${console}', '${region}', '${size}', '${uploader_discord_id}')`);
+    await client.query(`INSERT INTO qre_items(qr_data, qr_link, name, platform, region, size, uploader_discord_id) VALUES('${qrData}', '${qrLink}', '${name}' , '${platform}', '${region}', '${size}', '${uploader_discord_id}')`);
     await client.end();
     console.log('DB -> save qr in DB')
   } catch (e) {
@@ -21,9 +25,7 @@ export async function editUserJira (
   jiraSubdomain,
   userId
 ) {
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL
-  })
+  const client = createDBclient()
   await client.connect()
   try {
     await client.query(
@@ -39,15 +41,28 @@ export async function editUserJira (
 }
 
 export async function findGame(name) {
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL
-  })
+  const client = createDBclient()
   try {
     await client.connect()
     const res = await client.query(
-      `SELECT * FROM qre_items WHERE name LIKE '%${name}%';`
+      `SELECT * FROM qre_items WHERE name ILIKE '%${name}%';`
     )
     console.log('DB -> game found in DB')
+    await client.end()
+    return res
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+export async function approxQrCount(name) {
+  const client = createDBclient()
+  try {
+    await client.connect()
+    const res = await client.query(
+        `SELECT COUNT(*) FROM qre_items`
+    )
+    console.log('DB -> counting qr codes')
     await client.end()
     return res
   } catch (e) {

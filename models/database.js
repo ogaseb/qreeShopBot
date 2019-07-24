@@ -14,7 +14,7 @@ export async function initializeDb() {
 			"qr_data text not null, " +
 			"qr_link varchar not null, " +
 			"name varchar not null, " +
-			"console varchar not null, " +
+			"platform varchar not null, " +
 			"region varchar not null," +
 			"size varchar not null," +
 			"uploader_discord_id varchar not null" +
