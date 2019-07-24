@@ -1,5 +1,6 @@
 require("dotenv").config()
-const {Client} = require("pg")
+import {Client} from "pg"
+
 
 
 export async function initializeDb() {
@@ -13,7 +14,11 @@ export async function initializeDb() {
 			"qr_data text not null, " +
 			"qr_link varchar not null, " +
 			"name varchar not null, " +
-			"region varchar not null)"
+			"console varchar not null, " +
+			"region varchar not null," +
+			"size varchar not null," +
+			"uploader_discord_id varchar not null" +
+			")"
 		)
 
 		client.end()
