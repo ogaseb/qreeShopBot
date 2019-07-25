@@ -47,7 +47,7 @@ export function createEmbeddedHelper(
           "Description",
           "```upload - upload is available only in certain servers on " +
             "Discord and only available to users containing special role(s). " +
-            "Remember about quotation marks in title of the game!``"
+            "Remember about quotation marks in title of the game!```"
         )
         .addField(
           "Command: ",
