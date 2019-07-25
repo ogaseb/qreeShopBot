@@ -106,19 +106,29 @@ function processCommand(receivedMessage) {
         "example: !qre search \"Super Mario 3\"```"
       ) :
       receivedMessage.channel.send(
-        "```qreeShopBot Help page\n\n" +
-        "NOTE: \n" +
-        "links - you can provide direct link or normal sharing links from google and dropbox it will be automatically converted into direct ones\n\n" +
-        "COMMANDS: \n\n" +
-        "upload - "+ serverInvokers.get(receivedMessage.guild.id) +" upload <url> \"<name>\" <platform> <region> <size> \n" +
-        "example: !qre upload https://files.catbox.moe/au9pkx.cia \"Super Castlevania IV\" USA GBA 5MB \n\n" +
-        "search - \n" +
-        "invoke - \n```"
+        "**qreeShopBot Help page**\n\n" +
+        "**NOTE:** \n" +
+        "```links - you can provide direct link or normal sharing links from google and dropbox it will be automatically converted into direct ones```\n" +
+        "**COMMANDS**: \n\n" +
+        "**UPLOAD**\n" +
+        "```upload - upload is available only in certain servers on Discord and only available to users containing special role(s). Remember about quotation marks in title of the game!```\n" +
+        "command: ```"+ serverInvokers.get(receivedMessage.guild.id) +" upload <url> \"<name>\" <platform> <region> <size> ```\n" +
+        "example: ```"+ serverInvokers.get(receivedMessage.guild.id) +" upload https://files.catbox.moe/au9pkx.cia \"Super Castlevania IV\" GBA USA 5MB ```\n\n" +
+        "**SEARCH**\n" +
+        "```search -  It's available on channels and DM's, it will search for all games containing typed phrase. (emoji navigation in dm's is a little buggy but it works)```" +
+        "command: ```"+ serverInvokers.get(receivedMessage.guild.id) +" search \"<name>\" ```\n" +
+        "example: ```"+ serverInvokers.get(receivedMessage.guild.id) +" search \"Super Mario 3\"```\n" +
+        "**INVOKE** - \n" +
+        "```invoke - server only command which lets you change the command for invoking bot the default is always !qre```" +
+        "command: ```"+ serverInvokers.get(receivedMessage.guild.id) +" invoke <new_command> ```\n" +
+        "example: ```"+ serverInvokers.get(receivedMessage.guild.id) +" invoke %qre```\n" +
+        ""
       );
+    return
   }
 
-  if (checkIfDM(receivedMessage)) {
-    if(receivedMessage.member.roles.some(r=>["Ultra Mod", "Mod", "Dev", "Uploader"].includes(r.name)) ) {
+  if (!checkIfDM(receivedMessage)) {
+    if(process.env.BOT_PERMISSIONS_GUILD.includes(receivedMessage.guild.id) && receivedMessage.member.roles.some(r=>process.env.BOT_PERMISSIONS_ROLES.includes(r.name)) ) {
       if(primaryCommand === "upload"){
         return handleGameUpload(messageArguments, receivedMessage)
       }
@@ -166,10 +176,9 @@ function changeInvokeCommand(messageArguments, receivedMessage) {
 
 async function handleGameUpload(messageArguments, receivedMessage){
   let link
-
-  if (messageArguments.length < 6){
+  if (messageArguments.length !== 6){
     return  receivedMessage.channel.send(
-        `invalid arguments for upload command`
+        `invalid arguments count for upload command`
     )
   }
 
@@ -183,7 +192,7 @@ async function handleGameUpload(messageArguments, receivedMessage){
 
   if (!messageArguments[4].match(regexes.REGIONS)){
     return  receivedMessage.channel.send(
-        `invalid arguments for upload command`
+        `invalid region argument for upload command`
     )
   }
 
@@ -194,7 +203,7 @@ async function handleGameUpload(messageArguments, receivedMessage){
     const {rows} = await findGame(name)
     const text = rows.length === 0 ?
       "```diff\n" +
-      "+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)" +
+      "+ This is how it will look, save in database? Type 'yes'/'no'" +
       "\n```" :
       "```diff\n" +
       "+ There are games with similar name, check by searching them first before uploading" +
@@ -203,7 +212,7 @@ async function handleGameUpload(messageArguments, receivedMessage){
       "+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)" +
       "\n```"
 
-      await receivedMessage.channel.send(
+    await receivedMessage.channel.send(
         "```" + qr +
         "\nLink: " + link +
         "\n\nName: " + name +
@@ -212,7 +221,7 @@ async function handleGameUpload(messageArguments, receivedMessage){
         "\nSize: " + messageArguments[5] +
         "```" +
         text
-    );
+    )
 
     const collector = new MessageCollector(receivedMessage.channel, m => m.author.id === receivedMessage.author.id, { time: 60000 });
     collector.on('collect', async message => {
@@ -251,7 +260,7 @@ async function handleGameUpload(messageArguments, receivedMessage){
       } else if (message.content === "search") {
 
         try {
-          await receivedMessage.channel.send("```Ok displaying games that I have found, check your DM's, you can go back here and type 'yes'/'no' still```");
+          await receivedMessage.channel.send("```Ok, displaying games that I have found you can type 'yes'/'no' still```");
 
           const QrCodesSearchResults = createEmbeddedAnswer(rows, receivedMessage)
           await QrCodesSearchResults.build()
@@ -289,12 +298,9 @@ async function searchGame(messageArguments, receivedMessage){
 
     const name = messageArguments[1].replace(/^"(.*)"$/, '$1')
     const {rows} = await findGame(name)
-    console.log(rows)
     if (rows.length === 0){
-      await receivedMessage.channel.send(`I didn't find anything called ${messageArguments[1]}`);
+      await receivedMessage.author.send(`I didn't find anything called ${messageArguments[1]}`);
     } else {
-      await receivedMessage.channel.send(`I found some games, sending to you via PM to not spam here ;)`);
-
       const QrCodesSearchResults = createEmbeddedAnswer(rows, receivedMessage)
       await QrCodesSearchResults.build()
     }
