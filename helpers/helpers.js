@@ -1,4 +1,6 @@
 import qrCode from 'qrcode-generator'
+import {MessageEmbed} from "discord.js";
+import {Embeds} from "discord-paginationembed";
 
 export function parseDropboxLink(link){
   let string = link;
@@ -17,6 +19,38 @@ export function createASCIIQrCode(link){
   qr.addData(`${link}`);
   qr.make();
   return qr.createASCII()
+}
+
+export function createEmbeddedAnswer(args, receivedMessage){
+  const embeds = [];
+  args.map(({qr_data, qr_link, name, platform, region , size}, index) => {
+    embeds.push(new MessageEmbed()
+      .addField('Page', index + 1, true)
+      .addField('Name: ', name, true)
+      .addField('QR: ', "```"+ qr_data +"```")
+      .addField('QR link: ', qr_link, true)
+      .addField('Platform: ', platform, true)
+      .addField('Region: ', region, true)
+      .addField('Size: ', size, true)
+    );
+  })
+
+  return  new Embeds()
+    .setArray(embeds)
+    .setAuthorizedUsers([receivedMessage.author.id])
+    .setChannel(receivedMessage.author)
+    .setPageIndicator(true)
+    .setPage(1)
+    // Methods below are for customising all embeds
+    .setTitle('Qr Code 3DS games search collection')
+    .setDescription('==========================================================')
+    .setFooter('==========================================================')
+    .setColor(0xFFFFFF)
+
+}
+
+export function checkIfDM(receivedMessage){
+  return receivedMessage.channel.type === 'dm'
 }
 
 export const regexes = {
