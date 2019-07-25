@@ -5,9 +5,11 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon --exec babel-node server.min.js",
+    "server": "webpack --watch --config webpack.server.config.js",
     "webpack": "webpack --config webpack.server.config.js",
-    "start": "webpack --config webpack.server.config.js && pm2-runtime server.min.js -i 1"
+    "start": "webpack --config webpack.server.config.js && pm2-runtime server.min.js -i 1",
+    "heroku-postbuild": "npm install && npm install --only=dev --no-shrinkwrap",
+    "preinstall": "npm i -g pm2 && pm2 install pm2-logrotate"
   },
   "repository": {
     "type": "git",
@@ -26,16 +28,20 @@
   },
   "homepage": "https://github.com/ProPanek/qreeShopBot#readme",
   "dependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-stage-2": "^6.24.1",
     "discord-paginationembed": "^1.0.0-beta.4",
     "discord.js": "discordjs/discord.js",
     "dotenv": "^8.0.0",
     "pg": "^7.11.0",
     "qrcode-generator": "^1.4.3",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "nodemon-webpack-plugin": "^4.0.8",
     "webpack": "^4.37.0",
     "webpack-cli": "^3.3.6",
-    "webpack-node-externals": "^1.7.2"
+    "prettier": "^1.18.2"
   }
 }
