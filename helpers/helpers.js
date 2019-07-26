@@ -50,11 +50,20 @@ export function createEmbeddedHelper(
             "Remember about quotation marks in title of the game!```"
         )
         .addField(
+          "Arguments: ",
+          "```" +
+            "<platform> - GBA, NES, SNES, 3DS, NEW3DS, DSI, ESHOP, NEW 3DS, NEO GEO \n\n" +
+            "<regions> - USA, JPN, EUR, GLOBAL, HACK \n\n" +
+            "<size> - *KB, *MB, *GB \n" +
+            "```"
+        )
+        .addField(
           "Command: ",
           "```" +
             serverInvokers.get(receivedMessage.guild.id) +
             ' upload <url> "<name>" <platform> <region> <size> ```'
         )
+
         .addField(
           "Example: ",
           "```" +
@@ -169,19 +178,26 @@ export async function limitlessFetchMessages(channel, limit = 9000) {
 
 export function createEmbeddedAnswer(args, receivedMessage, destination) {
   const embeds = [];
-  args.map(({ qr_data, qr_link, name, platform, region, size }, index) => {
-    embeds.push(
-      new MessageEmbed()
-        .addField("Name: ", name, true)
-        .addField("Page", index + 1, true)
-        .addField("QR: ", "```" + qr_data + "```")
-        .addField("QR link: ", qr_link, true)
-        .addBlankField()
-        .addField("Platform: ", platform, true)
-        .addField("Region: ", region, true)
-        .addField("Size: ", size, true)
-    );
-  });
+  args.map(
+    (
+      { id, qr_data, qr_link, name, platform, region, size, uploader_name },
+      index
+    ) => {
+      embeds.push(
+        new MessageEmbed()
+          .addField("Name: ", name, true)
+          .addField("Page", index + 1, true)
+          .addField("QR: ", "```" + qr_data + "```")
+          .addField("QR link: ", qr_link, true)
+          .addField("DB ID: ", id, true)
+          .addBlankField()
+          .addField("Platform: ", platform, true)
+          .addField("Region: ", region, true)
+          .addField("Size: ", size, true)
+          .addField("Author: ", uploader_name, true)
+      );
+    }
+  );
 
   return (
     new Embeds()
@@ -226,9 +242,10 @@ export const regexes = {
   DROPBOX: /\b(\w*dropbox\w*)\b/g,
   GDRIVE: /\b(\w*drive.google.com\w*)\b/g,
   URL: /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g,
-  ARGUMENTS: /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\S+/g,
+  ARGUMENTS: /\b(\w*GBA|NES|SNES|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO\w*)\b|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\S+/g,
+  TITLE: /"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'/g,
   REGIONS: /\b(\w*USA|JPN|EUR|GLOBAL|HACK\w*)\b/gi,
-  PLATFORMS: /\b(\w*GBA|NES|SNES|3DS|NEW3DS|DSI|ESHOP|NEW 3DS\w*)\b/gi,
+  PLATFORMS: /\b(\w*GBA|NES|SNES|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO\w*)\b/gi,
   SIZE: /\b(\w*MB|GB|KB\w*)\b/gi,
   SCRAPER_TITLE: /([^\(]+)|\((.*?)\)|/g
 };

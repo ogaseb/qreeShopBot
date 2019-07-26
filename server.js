@@ -136,7 +136,11 @@ function processCommand(receivedMessage) {
       }
 
       if (primaryCommand === "scrap") {
-        return scrapChannelforQrCodes(messageArguments, receivedMessage);
+        return scrapChannelForQrCodes(messageArguments, receivedMessage);
+      }
+
+      if (primaryCommand === "edit") {
+        return handleGameEdit(messageArguments, receivedMessage);
       }
     } else {
       return receivedMessage.channel.send(
@@ -152,14 +156,7 @@ function processCommand(receivedMessage) {
   return receivedMessage.channel.send(`Command not found`);
 }
 
-function isEmpty(obj) {
-  for (let key in obj) {
-    if (obj.hasOwnProperty(key)) return false;
-  }
-  return true;
-}
-
-async function scrapChannelforQrCodes(messageArguments, receivedMessage) {
+async function scrapChannelForQrCodes(messageArguments, receivedMessage) {
   if (receivedMessage.channel.type === "dm") {
     return receivedMessage.channel.send(
       `This command is available only in servers`
@@ -167,13 +164,9 @@ async function scrapChannelforQrCodes(messageArguments, receivedMessage) {
   }
 
   limitlessFetchMessages(receivedMessage.channel).then(async messages => {
-    // console.log(data)
-    // const messages = Array.from(data)
-
-    messages.forEach(async item => {
+    for (const item of messages) {
+      console.log(messages.author.name);
       if (!!item.attachments.size) {
-        console.log(item.author.id);
-
         const metaInformation = item.content
           .match(regexes.SCRAPER_TITLE)
           .map(Function.prototype.call, String.prototype.trim)
@@ -204,10 +197,6 @@ async function scrapChannelforQrCodes(messageArguments, receivedMessage) {
           qr.callback = (err, v) => (err != null ? reject(err) : resolve(v));
           qr.decode(img.bitmap);
         });
-        console.log(value.result);
-        // await receivedMessage.author.send(
-        //   `scrapped links from images link: ${value.result}`
-        // );
 
         const obj = {
           name: name.replace(/^"(.*)"$/, "$1").replace(/'/g, "''"),
@@ -216,7 +205,8 @@ async function scrapChannelforQrCodes(messageArguments, receivedMessage) {
           platform: metaInformation[platformIndex] || "N/A",
           region: metaInformation[regionIndex] || "N/A",
           size: metaInformation[sizeIndex] || "N/A",
-          uploader_discord_id: item.author.id
+          uploader_discord_id: item.author.id,
+          uploader_name: messages.author.username
         };
 
         const { rows } = await findGame(obj.name);
@@ -230,9 +220,12 @@ async function scrapChannelforQrCodes(messageArguments, receivedMessage) {
               obj.platform,
               obj.region,
               obj.size,
-              obj.uploader_discord_id
+              obj.uploader_discord_id,
+              obj.uploader_name
             );
-            await receivedMessage.author.send("Saving in database! " + obj.name);
+            await receivedMessage.author.send(
+              "Saving in database! " + obj.name
+            );
           } catch (e) {
             console.log(e);
             await receivedMessage.author.send(
@@ -243,10 +236,10 @@ async function scrapChannelforQrCodes(messageArguments, receivedMessage) {
             );
           }
         } else {
-        await receivedMessage.author.send("Game is already in DB" + obj.name);
+          await receivedMessage.author.send("Game is already in DB" + obj.name);
         }
       }
-    });
+    }
 
     return receivedMessage.channel.send(`fetching messages`);
   });
@@ -287,134 +280,175 @@ function changeInvokeCommand(messageArguments, receivedMessage) {
 }
 
 async function handleGameUpload(messageArguments, receivedMessage) {
-  let link;
   if (messageArguments.length !== 6) {
     return receivedMessage.channel.send(
       `invalid arguments count for upload command`
     );
   }
+  const urlIndex = messageArguments.findIndex(value => regexes.URL.test(value));
 
-  if (messageArguments[1].match(regexes.GDRIVE)) {
-    link = parseGDriveLink(messageArguments[1]);
-  } else if (messageArguments[1].match(regexes.DROPBOX)) {
-    messageArguments[1].slice(-1) === "0"
-      ? (link = parseDropboxLink(messageArguments[1]))
-      : (link = messageArguments[1]);
-  } else {
-    link = messageArguments[1];
-  }
-
-  if (!messageArguments[4].match(regexes.REGIONS)) {
+  if (!urlIndex) {
     return receivedMessage.channel.send(
-      `invalid region argument for upload command`
+      `invalid arguments \`URL\` for upload command`
+    );
+  }
+  const titleIndex = messageArguments.findIndex(value =>
+    regexes.TITLE.test(value)
+  );
+  if (!titleIndex) {
+    return receivedMessage.channel.send(
+      `invalid arguments \`TITLE\` for upload command`
+    );
+  }
+  const regionIndex = messageArguments.findIndex(value =>
+    regexes.REGIONS.test(value)
+  );
+  if (!titleIndex) {
+    return receivedMessage.channel.send(
+      `invalid arguments \`REGION\` for upload command`
+    );
+  }
+  const platformIndex = messageArguments.findIndex(value =>
+    regexes.PLATFORMS.test(value)
+  );
+  if (!platformIndex) {
+    return receivedMessage.channel.send(
+      `invalid arguments \`PLATFORM\` for upload command`
+    );
+  }
+  const sizeIndex = messageArguments.findIndex(value =>
+    regexes.SIZE.test(value)
+  );
+  if (!sizeIndex) {
+    return receivedMessage.channel.send(
+      `invalid arguments \`SIZE\` for upload command`
     );
   }
 
-  if (link.match(regexes.URL)) {
-    const qr = createASCIIQrCode(link);
-    const name = messageArguments[2].replace(/^"(.*)"$/, "$1");
+  if (messageArguments[urlIndex].match(regexes.GDRIVE)) {
+    messageArguments[urlIndex] = parseGDriveLink(messageArguments[urlIndex]);
+  } else if (messageArguments[urlIndex].match(regexes.DROPBOX)) {
+    messageArguments[urlIndex].slice(-1) === "0"
+      ? (messageArguments[urlIndex] = parseDropboxLink(
+          messageArguments[urlIndex]
+        ))
+      : null;
+  }
 
-    const { rows } = await findGame(name);
-    const text =
-      rows.length === 0
-        ? "```diff\n" +
-          "+ This is how it will look, save in database? Type 'yes'/'no'" +
-          "\n```"
-        : "```diff\n" +
-          "+ There are games with similar name, check by searching them first before uploading" +
-          "\n```" +
-          "```diff\n" +
-          "+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)" +
-          "\n```";
+  const obj = {
+    name: messageArguments[titleIndex]
+      .replace(/^"(.*)"$/, "$1")
+      .replace(/'/g, "''"),
+    qr_link: messageArguments[urlIndex],
+    qr_data: await createASCIIQrCode(messageArguments[urlIndex]),
+    platform: messageArguments[platformIndex],
+    region: messageArguments[regionIndex],
+    size: messageArguments[sizeIndex],
+    uploader_discord_id: receivedMessage.author.id,
+    uploader_name: receivedMessage.author.username
+  };
 
-    await receivedMessage.channel.send(
+  const { rows } = await findGame(obj.name);
+  const text =
+    rows.length === 0
+      ? "```diff\n" +
+        "+ This is how it will look, save in database? Type 'yes'/'no'" +
+        "\n```"
+      : "```diff\n" +
+        "+ There are games with similar name, check by searching them first before uploading" +
+        "\n```" +
+        "```diff\n" +
+        "+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)" +
+        "\n```";
+
+  await receivedMessage.channel.send(
+    "```" +
+      obj.qr_data +
+      "\nLink: " +
+      obj.qr_link +
+      "\n\nName: " +
+      obj.name +
+      "\nPlatform: " +
+      obj.platform +
+      "\nRegion: " +
+      obj.region +
+      "\nSize: " +
+      obj.size +
+      "\nUploader: " +
+      obj.uploader_name +
       "```" +
-        qr +
-        "\nLink: " +
-        link +
-        "\n\nName: " +
-        name +
-        "\nPlatform: " +
-        messageArguments[3] +
-        "\nRegion: " +
-        messageArguments[4] +
-        "\nSize: " +
-        messageArguments[5] +
-        "```" +
-        text
-    );
+      text
+  );
 
-    const collector = new MessageCollector(
-      receivedMessage.channel,
-      m => m.author.id === receivedMessage.author.id,
-      { time: 60000 }
-    );
-    collector.on("collect", async message => {
-      if (message.content === "yes") {
-        try {
-          await receivedMessage.channel.send("Saving in database!");
-          await createQree(
-            qr,
-            link,
-            name,
-            messageArguments[3],
-            messageArguments[4],
-            messageArguments[5],
-            receivedMessage.author.id
-          );
-        } catch (e) {
-          console.log(e);
-          await receivedMessage.channel.send(
-            "something went wrong, send it to developer: \n" +
-              "```diff\n- " +
-              e +
-              "```"
-          );
-        }
-
-        collector.stop();
-      } else if (message.content === "no") {
-        try {
-          await receivedMessage.channel.send("Ok try again later :P");
-        } catch (e) {
-          console.log(e);
-          await receivedMessage.channel.send(
-            "something went wrong, send it to developer: \n" +
-              "```diff\n- " +
-              e +
-              "```"
-          );
-        }
-        collector.stop();
-      } else if (message.content === "search") {
-        try {
-          await receivedMessage.channel.send(
-            "```Ok, displaying games that I have found you can type 'yes'/'no' still```"
-          );
-
-          const QrCodesSearchResults = createEmbeddedAnswer(
-            rows,
-            receivedMessage
-          );
-          await QrCodesSearchResults.build();
-        } catch (e) {
-          console.log(e);
-          receivedMessage.channel.send(
-            "something went wrong, send it to developer: \n" +
-              "```diff\n- " +
-              e +
-              "```"
-          );
-        }
+  const collector = new MessageCollector(
+    receivedMessage.channel,
+    m => m.author.id === receivedMessage.author.id,
+    { time: 60000 }
+  );
+  collector.on("collect", async message => {
+    if (message.content === "yes") {
+      try {
+        await receivedMessage.channel.send("Saving in database!");
+        await createQree(
+          obj.qr_data,
+          obj.qr_link,
+          obj.name,
+          obj.platform,
+          obj.region,
+          obj.size,
+          obj.uploader_discord_id,
+          obj.uploader_name
+        );
+      } catch (e) {
+        console.log(e);
+        await receivedMessage.channel.send(
+          "something went wrong, send it to developer: \n" +
+            "```diff\n- " +
+            e +
+            "```"
+        );
       }
-    });
 
-    collector.on("end", async () => {
-      await receivedMessage.channel.send("upload session ended");
-    });
-  } else {
-    return receivedMessage.channel.send(`specify a valid url`);
-  }
+      collector.stop();
+    } else if (message.content === "no") {
+      try {
+        await receivedMessage.channel.send("Ok try again later :P");
+      } catch (e) {
+        console.log(e);
+        await receivedMessage.channel.send(
+          "something went wrong, send it to developer: \n" +
+            "```diff\n- " +
+            e +
+            "```"
+        );
+      }
+      collector.stop();
+    } else if (message.content === "search") {
+      try {
+        await receivedMessage.channel.send(
+          "```Ok, displaying games that I have found you can type 'yes'/'no' still```"
+        );
+
+        const QrCodesSearchResults = createEmbeddedAnswer(
+          rows,
+          receivedMessage
+        );
+        await QrCodesSearchResults.build();
+      } catch (e) {
+        console.log(e);
+        await receivedMessage.channel.send(
+          "something went wrong, send it to developer: \n" +
+            "```diff\n- " +
+            e +
+            "```"
+        );
+      }
+    }
+  });
+
+  collector.on("end", async () => {
+    await receivedMessage.channel.send("upload session ended");
+  });
 }
 
 async function searchGame(messageArguments, receivedMessage) {
@@ -437,6 +471,38 @@ async function searchGame(messageArguments, receivedMessage) {
       const QrCodesSearchResults = createEmbeddedAnswer(rows, receivedMessage);
       await QrCodesSearchResults.build();
     }
+  } catch (e) {
+    console.log(e);
+    await receivedMessage.channel.send(
+      "something went wrong, send it to developer: \n" +
+        "```diff\n- " +
+        e +
+        "```"
+    );
+  }
+}
+
+async function handleGameEdit(messageArguments, receivedMessage) {
+  try {
+    // const games = await findGame(messageArguments[1])
+    console.log(messageArguments);
+    const id = parseInt(messageArguments[1]);
+    // if (messageArguments.length !== 2) {
+    //   return await receivedMessage.channel.send(
+    //     `invalid arguments for search command`
+    //   );
+    // }
+    //
+    // const name = messageArguments[1].replace(/^"(.*)"$/, "$1");
+    // const { rows } = await findGame(name);
+    // if (rows.length === 0) {
+    //   await receivedMessage.author.send(
+    //     `I didn't find anything called \`${messageArguments[1]}\``
+    //   );
+    // } else {
+    //   const QrCodesSearchResults = createEmbeddedAnswer(rows, receivedMessage);
+    //   await QrCodesSearchResults.build();
+    // }
   } catch (e) {
     console.log(e);
     await receivedMessage.channel.send(

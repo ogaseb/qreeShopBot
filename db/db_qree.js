@@ -15,14 +15,16 @@ export async function createQree(
   platform,
   region,
   size,
-  uploader_discord_id
+  uploader_discord_id,
+  uploader_name
 ) {
   const client = createDBclient();
   try {
     await client.connect();
 
     await client.query(
-      `INSERT INTO qre_items(qr_data, qr_link, name, platform, region, size, uploader_discord_id) VALUES('${qrData}', '${qrLink}', '${name}' , '${platform}', '${region}', '${size}', '${uploader_discord_id}')`
+      `INSERT INTO qre_items(qr_data, qr_link, name, platform, region, size, uploader_discord_id, uploader_name) 
+      VALUES('${qrData}', '${qrLink}', '${name}' , '${platform}', '${region}', '${size}', '${uploader_discord_id}' , '${uploader_name}')`
     );
     await client.end();
     console.log("DB -> save qr in DB");
@@ -31,19 +33,14 @@ export async function createQree(
   }
 }
 
-export async function editUserJira(
-  jiraLogin,
-  jiraPassword,
-  jiraSubdomain,
-  userId
-) {
+export async function editQree(id, jiraLogin, jiraPassword, jiraSubdomain) {
   const client = createDBclient();
   await client.connect();
   try {
     await client.query(
-      `UPDATE users SET jira_email = '${jiraLogin}', jira_api_key = '${jiraPassword}', jira_subdomain = '${[
+      `UPDATE qre_items SET jira_email = '${jiraLogin}', jira_api_key = '${jiraPassword}', jira_subdomain = '${[
         jiraSubdomain
-      ]}'  WHERE user_id = '${userId}'`
+      ]}'  WHERE id = '${id}'`
     );
     console.log("DB -> save jira credentials in DB");
     await client.end();
