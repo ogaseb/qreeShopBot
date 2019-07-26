@@ -7,8 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "webpack --watch --config webpack.server.config.js",
     "webpack": "webpack --config webpack.server.config.js",
-    "start": "webpack --config webpack.server.config.js && pm2-runtime server.min.js -i 1",
-    "preinstall": "npm i -g pm2"
+    "start": "webpack --config webpack.server.config.js && pm2-runtime server.min.js -i 1"
   },
   "repository": {
     "type": "git",
@@ -30,8 +29,12 @@
     "discord-paginationembed": "^1.0.0-beta.4",
     "discord.js": "discordjs/discord.js",
     "dotenv": "^8.0.0",
+    "fs": "^0.0.1-security",
+    "jimp": "^0.6.4",
+    "node-fetch": "^2.6.0",
     "pg": "^7.11.0",
     "qrcode-generator": "^1.4.3",
+    "qrcode-reader": "^1.0.4",
     "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {
@@ -39,8 +42,8 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
     "nodemon-webpack-plugin": "^4.0.8",
+    "prettier": "^1.18.2",
     "webpack": "^4.37.0",
-    "webpack-cli": "^3.3.6",
-    "prettier": "^1.18.2"
+    "webpack-cli": "^3.3.6"
   }
 }

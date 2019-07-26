@@ -1,5 +1,8 @@
 require("dotenv").config();
 import { Client, MessageCollector } from "discord.js";
+import jimp from 'jimp'
+import fetch from 'node-fetch'
+import QRReader from 'qrcode-reader'
 import {
   parseGDriveLink,
   parseDropboxLink,
@@ -7,7 +10,8 @@ import {
   regexes,
   createEmbeddedAnswer,
   checkIfDM,
-  createEmbeddedHelper
+  createEmbeddedHelper,
+  limitlessFetchMessages
 } from "./helpers/helpers";
 import { initializeDb } from "./models/database";
 import { createQree, findGame, approxQrCount } from "./db/db_qree";
@@ -41,6 +45,7 @@ client.on("ready", async () => {
     guild.channels.forEach(channel => {
       console.log(` -- ${channel.name} (${channel.type}) - ${channel.id}`);
     });
+
 
     console.log(serverInvokers);
   });
@@ -130,6 +135,10 @@ function processCommand(receivedMessage) {
       if (primaryCommand === "invoke") {
         return changeInvokeCommand(messageArguments, receivedMessage);
       }
+
+      if (primaryCommand === "scrap") {
+        return scrapChannelforQrCodes(messageArguments, receivedMessage);
+      }
     } else {
       return receivedMessage.channel.send(
         "You have no permissions to use this commands"
@@ -142,6 +151,90 @@ function processCommand(receivedMessage) {
   }
 
   return receivedMessage.channel.send(`Command not found`);
+}
+
+function isEmpty(obj) {
+  for(let key in obj) {
+    if(obj.hasOwnProperty(key))
+      return false;
+  }
+  return true;
+}
+
+
+
+async function scrapChannelforQrCodes(messageArguments, receivedMessage) {
+  if (receivedMessage.channel.type === "dm") {
+    return receivedMessage.channel.send(
+      `This command is available only in servers`
+    );
+  }
+
+  limitlessFetchMessages(receivedMessage.channel)
+   .then(async messages => {
+     // console.log(data)
+     // const messages = Array.from(data)
+
+     messages.forEach(async item =>{
+       if (!!item.attachments.size) {
+         console.log(item.author.id)
+
+         const metaInformation = item.content.match(regexes.SCRAPER_TITLE)
+           .map(Function.prototype.call, String.prototype.trim)
+           .filter(function (el) {
+             if (el !== null && el !== ' ')
+               return el
+           });
+
+         //TODO finish the indexing of info from title
+
+         // const trimmed = title
+         // const filtered = trimmed
+         console.log(metaInformation)
+         // const regionIndex = metaInformation.findIndex(value => //.test(value));
+
+
+         const obj = {
+           title: metaInformation[0],
+
+         }
+
+
+
+         const res = await fetch(`${item.attachments.values().next().value.proxyURL}`)
+         const buffer = await res.buffer()
+         const img = await jimp.read(buffer);
+         const qr = new QRReader();
+
+         const value = await new Promise((resolve, reject) => {
+            qr.callback = (err, v) => err != null ? reject(err) : resolve(v);
+            qr.decode(img.bitmap);
+         });
+         console.log(value.result);
+         await receivedMessage.channel.send(
+           `scrapped links from images link: ${value.result}`
+         );
+
+       }
+     })
+
+     return receivedMessage.channel.send(
+       `fetching messages`
+     );
+   })
+
+  if (messageArguments.length > 3) {
+    return receivedMessage.channel.send(
+      `Too much arguments for invoke command`
+    );
+  }
+
+  if (messageArguments[1]) {
+    serverInvokers.set(receivedMessage.guild.id, messageArguments[1]);
+    return receivedMessage.channel.send(
+      `Successfully changed your invoke command`
+    );
+  }
 }
 
 function changeInvokeCommand(messageArguments, receivedMessage) {

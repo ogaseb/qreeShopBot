@@ -145,6 +145,28 @@ export function createEmbeddedHelper(
   // .on('error', console.error)
 }
 
+export async function limitlessFetchMessages(channel, limit = 9000) {
+  const sum_messages = [];
+  let last_id;
+
+  while (true) {
+    const options = { limit: 100 };
+    if (last_id) {
+      options.before = last_id;
+    }
+
+    const messages = await channel.messages.fetch(options);
+    sum_messages.push(...messages.array());
+    last_id = messages.last().id;
+
+    if (messages.size !== 100 || sum_messages >= limit) {
+      break;
+    }
+  }
+
+  return sum_messages;
+}
+
 export function createEmbeddedAnswer(args, receivedMessage, destination) {
   const embeds = [];
   args.map(({ qr_data, qr_link, name, platform, region, size }, index) => {
@@ -205,6 +227,9 @@ export const regexes = {
   GDRIVE: /\b(\w*drive.google.com\w*)\b/g,
   URL: /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g,
   ARGUMENTS: /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\S+/g,
-  REGIONS: /\b(\w*USA|JPN|EUR|GLOBAL|HACK\w*)\b/g
+  REGIONS: /\b(\w*USA|JPN|EUR|GLOBAL|HACK\w*)\b/gi,
+  PLATFORMS: /\b(\w*GBA|NES|SNES|3DS|NEW3DS|DSI\w*)\b/gi,
+  SIZE: /\b(\w*MB|GB|KB\w*)\b/gi,
+  SCRAPER_TITLE: /([^\(]+)|\((.*?)\)|/g
 };
 //(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?\w+|"(?:\\"|[^"])+"|'(?:\\'|[^"])+'|\w+
