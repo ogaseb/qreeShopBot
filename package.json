@@ -33,6 +33,7 @@
     "jimp": "^0.6.4",
     "node-fetch": "^2.6.0",
     "pg": "^7.11.0",
+    "pg-escape": "^0.2.0",
     "qrcode-generator": "^1.4.3",
     "qrcode-reader": "^1.0.4",
     "webpack-node-externals": "^1.7.2"

@@ -1,8 +1,8 @@
 require("dotenv").config();
 import { Client, MessageCollector } from "discord.js";
-import jimp from 'jimp'
-import fetch from 'node-fetch'
-import QRReader from 'qrcode-reader'
+import jimp from "jimp";
+import fetch from "node-fetch";
+import QRReader from "qrcode-reader";
 import {
   parseGDriveLink,
   parseDropboxLink,
@@ -45,7 +45,6 @@ client.on("ready", async () => {
     guild.channels.forEach(channel => {
       console.log(` -- ${channel.name} (${channel.type}) - ${channel.id}`);
     });
-
 
     console.log(serverInvokers);
   });
@@ -154,14 +153,11 @@ function processCommand(receivedMessage) {
 }
 
 function isEmpty(obj) {
-  for(let key in obj) {
-    if(obj.hasOwnProperty(key))
-      return false;
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) return false;
   }
   return true;
 }
-
-
 
 async function scrapChannelforQrCodes(messageArguments, receivedMessage) {
   if (receivedMessage.channel.type === "dm") {
@@ -170,58 +166,90 @@ async function scrapChannelforQrCodes(messageArguments, receivedMessage) {
     );
   }
 
-  limitlessFetchMessages(receivedMessage.channel)
-   .then(async messages => {
-     // console.log(data)
-     // const messages = Array.from(data)
+  limitlessFetchMessages(receivedMessage.channel).then(async messages => {
+    // console.log(data)
+    // const messages = Array.from(data)
 
-     messages.forEach(async item =>{
-       if (!!item.attachments.size) {
-         console.log(item.author.id)
+    messages.forEach(async item => {
+      if (!!item.attachments.size) {
+        console.log(item.author.id);
 
-         const metaInformation = item.content.match(regexes.SCRAPER_TITLE)
-           .map(Function.prototype.call, String.prototype.trim)
-           .filter(function (el) {
-             if (el !== null && el !== ' ')
-               return el
-           });
+        const metaInformation = item.content
+          .match(regexes.SCRAPER_TITLE)
+          .map(Function.prototype.call, String.prototype.trim)
+          .filter(function(el) {
+            if (el !== null && el !== " ") return el;
+          });
+        const name = metaInformation[0];
+        metaInformation.shift();
 
-         //TODO finish the indexing of info from title
+        const regionIndex = metaInformation.findIndex(value =>
+          regexes.REGIONS.test(value)
+        );
+        const platformIndex = metaInformation.findIndex(value =>
+          regexes.PLATFORMS.test(value)
+        );
+        const sizeIndex = metaInformation.findIndex(value =>
+          regexes.SIZE.test(value)
+        );
 
-         // const trimmed = title
-         // const filtered = trimmed
-         console.log(metaInformation)
-         // const regionIndex = metaInformation.findIndex(value => //.test(value));
+        const res = await fetch(
+          `${item.attachments.values().next().value.proxyURL}`
+        );
+        const buffer = await res.buffer();
+        const img = await jimp.read(buffer);
+        const qr = new QRReader();
 
+        const value = await new Promise((resolve, reject) => {
+          qr.callback = (err, v) => (err != null ? reject(err) : resolve(v));
+          qr.decode(img.bitmap);
+        });
+        console.log(value.result);
+        // await receivedMessage.author.send(
+        //   `scrapped links from images link: ${value.result}`
+        // );
 
-         const obj = {
-           title: metaInformation[0],
+        const obj = {
+          name: name.replace(/^"(.*)"$/, "$1").replace(/'/g, "''"),
+          qr_link: value.result,
+          qr_data: await createASCIIQrCode(value.result),
+          platform: metaInformation[platformIndex] || "N/A",
+          region: metaInformation[regionIndex] || "N/A",
+          size: metaInformation[sizeIndex] || "N/A",
+          uploader_discord_id: item.author.id
+        };
 
-         }
+        const { rows } = await findGame(obj.name);
+        console.log(!rows.length);
+        if (!rows.length) {
+          try {
+            await createQree(
+              obj.qr_data,
+              obj.qr_link,
+              obj.name,
+              obj.platform,
+              obj.region,
+              obj.size,
+              obj.uploader_discord_id
+            );
+            await receivedMessage.author.send("Saving in database! " + obj.name);
+          } catch (e) {
+            console.log(e);
+            await receivedMessage.author.send(
+              "something went wrong, send it to developer: \n" +
+                "```diff\n- " +
+                e +
+                "```"
+            );
+          }
+        } else {
+        await receivedMessage.author.send("Game is already in DB" + obj.name);
+        }
+      }
+    });
 
-
-
-         const res = await fetch(`${item.attachments.values().next().value.proxyURL}`)
-         const buffer = await res.buffer()
-         const img = await jimp.read(buffer);
-         const qr = new QRReader();
-
-         const value = await new Promise((resolve, reject) => {
-            qr.callback = (err, v) => err != null ? reject(err) : resolve(v);
-            qr.decode(img.bitmap);
-         });
-         console.log(value.result);
-         await receivedMessage.channel.send(
-           `scrapped links from images link: ${value.result}`
-         );
-
-       }
-     })
-
-     return receivedMessage.channel.send(
-       `fetching messages`
-     );
-   })
+    return receivedMessage.channel.send(`fetching messages`);
+  });
 
   if (messageArguments.length > 3) {
     return receivedMessage.channel.send(

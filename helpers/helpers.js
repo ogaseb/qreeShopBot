@@ -228,7 +228,7 @@ export const regexes = {
   URL: /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g,
   ARGUMENTS: /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\S+/g,
   REGIONS: /\b(\w*USA|JPN|EUR|GLOBAL|HACK\w*)\b/gi,
-  PLATFORMS: /\b(\w*GBA|NES|SNES|3DS|NEW3DS|DSI\w*)\b/gi,
+  PLATFORMS: /\b(\w*GBA|NES|SNES|3DS|NEW3DS|DSI|ESHOP|NEW 3DS\w*)\b/gi,
   SIZE: /\b(\w*MB|GB|KB\w*)\b/gi,
   SCRAPER_TITLE: /([^\(]+)|\((.*?)\)|/g
 };
