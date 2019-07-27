@@ -137,7 +137,6 @@ export async function handleGameUpload(messageArguments, receivedMessage) {
             "```"
         );
       }
-
       collector.stop();
     } else if (message.content === "no") {
       try {

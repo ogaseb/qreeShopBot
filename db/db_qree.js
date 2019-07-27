@@ -71,7 +71,7 @@ export async function findGame(name) {
     const res = await client.query(
       `SELECT * FROM qre_items WHERE name ILIKE '%${name}%';`
     );
-    console.log("DB -> game found in DB");
+    // console.log("DB -> game found in DB");
     await client.end();
     return res;
   } catch (e) {

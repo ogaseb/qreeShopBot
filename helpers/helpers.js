@@ -107,13 +107,14 @@ export function checkIfDM(receivedMessage) {
 
 export const regexes = {
   DROPBOX: /\b(\w*dropbox\w*)\b/g,
+  CIA: /\b(\w*cia\w*)\b/g,
   GDRIVE: /\b(\w*drive.google.com\w*)\b/g,
   URL: /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g,
   ARGUMENTS: /\b(\w*GBA|NES|SNES|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO\w*)\b|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\S+/g,
   TITLE: /"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'/g,
-  REGIONS: /\b(\w*USA|JPN|EUR|GLOBAL|HACK\w*)\b/gi,
-  PLATFORMS: /\b(\w*GBA|NES|SNES|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO\w*)\b/gi,
-  SIZE: /\b(\w*MB|GB|KB\w*)\b/gi,
+  REGIONS: /\b\w*USA|JPN|EUR|GLOBAL|HACK\w*\b/gi,
+  PLATFORMS: /\b\w*GBA|NES|SNES|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO\w*\b/gi,
+  SIZE: /\b\w* ?MB|\w* ?GB|\w* ?KB\w*\b/gi,
   SCRAPER_TITLE: /([^\(]+)|\((.*?)\)|/g
 };
 //(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?\w+|"(?:\\"|[^"])+"|'(?:\\'|[^"])+'|\w+

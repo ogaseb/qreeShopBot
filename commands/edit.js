@@ -41,6 +41,11 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
               "```type `end` if you want to finish```"
           );
         }
+        if (message.content === "no") {
+          await receivedMessage.channel.send(
+            "``` Ok, will not do anything with it ```"
+          );
+        }
 
         if (message.content === "end") {
           collector.stop();

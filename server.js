@@ -12,6 +12,12 @@ import { regexes, checkIfDM } from "./helpers/helpers";
 import { initializeDb } from "./models/database";
 import { approxQrCount } from "./db/db_qree";
 
+process.on("unhandledRejection", (err, p) => {
+  console.log("An unhandledRejection occurred");
+  console.log(`Rejected Promise: ${p}`);
+  console.log(`Rejection: ${err}`);
+});
+
 void (async function() {
   try {
     await initializeDb();
