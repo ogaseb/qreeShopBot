@@ -91,7 +91,7 @@ export async function scrapChannelForQrCodes(
             name: name.replace(/^"(.*)"$/, "$1").replace(/'/g, "''"),
             qr_link: value.result,
             qr_data: await createASCIIQrCode(value.result),
-            platform: metaInformation[platformIndex] || "N/A",
+            platform: metaInformation[platformIndex] || "3DS",
             region: metaInformation[regionIndex] || "N/A",
             size: metaInformation[sizeIndex] || "N/A",
             uploader_discord_id: item.author.id,
