@@ -3,12 +3,17 @@ import {
   createEmbeddedAnswer,
   parseDropboxLink,
   parseGDriveLink,
-  regexes
+  regexes,
+  sendToQrGames
 } from "../helpers/helpers";
 import { createQree, findGame } from "../db/db_qree";
 import { MessageCollector } from "discord.js";
 
-export async function handleGameUpload(messageArguments, receivedMessage) {
+export async function handleGameUpload(
+  messageArguments,
+  receivedMessage,
+  client
+) {
   if (messageArguments.length !== 6) {
     return receivedMessage.channel.send(
       `invalid arguments count for upload command`
@@ -128,6 +133,9 @@ export async function handleGameUpload(messageArguments, receivedMessage) {
           obj.uploader_discord_id,
           obj.uploader_name
         );
+
+        const QrCodesSubscription = sendToQrGames(obj, receivedMessage, client);
+        await QrCodesSubscription.build();
       } catch (e) {
         console.log(e);
         await receivedMessage.channel.send(

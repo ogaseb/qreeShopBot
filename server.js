@@ -130,7 +130,7 @@ function processCommand(receivedMessage) {
       )
     ) {
       if (primaryCommand === "upload") {
-        return handleGameUpload(messageArguments, receivedMessage);
+        return handleGameUpload(messageArguments, receivedMessage, client);
       }
 
       if (primaryCommand === "invoke") {

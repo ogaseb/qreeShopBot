@@ -101,6 +101,49 @@ export function createEmbeddedAnswer(args, receivedMessage, destination) {
   // .on('error', console.error)
 }
 
+export function sendToQrGames(args, receivedMessage, client) {
+  const embeds = [];
+
+  console.log(client.channels.get("582266411166990346"));
+  embeds.push(
+    new MessageEmbed()
+      .addField("Name: ", args.name, true)
+      .addField("QR: ", "```" + args.qr_data + "```")
+      .addField("QR link: ", args.qr_link, true)
+      .addBlankField()
+      .addField("Platform: ", args.platform, true)
+      .addField("Region: ", args.region, true)
+      .addField("Size: ", args.size, true)
+      .addField("Author: ", args.uploader_name, true)
+  );
+
+  return (
+    new Embeds()
+      .setArray(embeds)
+      .setAuthorizedUsers([receivedMessage.author.id])
+      .setChannel(client.channels.get("582266411166990346"))
+      .setPage(1)
+      // Methods below are for customising all embeds
+      .setTitle("Qr Code 3DS games search collection")
+      .setDescription(
+        "=========================================================="
+      )
+      .setFooter("")
+      .setColor(0xffffff)
+      .setDisabledNavigationEmojis(["ALL"])
+      .setTimeout(600000)
+  );
+  // .on('start', () => console.log('Started!'))
+  // // Upon a user deleting the embed
+  // .on('finish', (user) => console.log(`Finished! User: ${user.username}`))
+  // // Upon a user reacting to the embed
+  // .on('react', (user, emoji) => console.log(`Reacted! User: ${user.username} | Emoji: ${emoji.name} (${emoji.id})`))
+  // // Upon the awaiting time expired
+  // .on('expire', () => console.warn('Expired!'))
+  // // Upon non-PaginationEmbed error (e.g: Discord API Error)
+  // .on('error', console.error)
+}
+
 export function checkIfDM(receivedMessage) {
   return receivedMessage.channel.type === "dm";
 }
