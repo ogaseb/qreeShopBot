@@ -33,14 +33,29 @@ export async function createQree(
   }
 }
 
-export async function editQree(id, jiraLogin, jiraPassword, jiraSubdomain) {
+export async function editQree(
+  id,
+  qrData,
+  qrLink,
+  name,
+  platform,
+  region,
+  size,
+  uploader_discord_id,
+  uploader_name
+) {
   const client = createDBclient();
   await client.connect();
   try {
     await client.query(
-      `UPDATE qre_items SET jira_email = '${jiraLogin}', jira_api_key = '${jiraPassword}', jira_subdomain = '${[
-        jiraSubdomain
-      ]}'  WHERE id = '${id}'`
+      `UPDATE qre_items SET qr_data = '${qrData}', 
+      qr_link = '${qrLink}', 
+      name = '${name}', 
+      platform = '${platform}', 
+      region = '${region}' ,   
+      size = '${size}' ,  
+      uploader_discord_id = '${uploader_discord_id}' ,   
+      uploader_name = '${uploader_name}' WHERE id = ${id}`
     );
     console.log("DB -> save jira credentials in DB");
     await client.end();
@@ -55,6 +70,21 @@ export async function findGame(name) {
     await client.connect();
     const res = await client.query(
       `SELECT * FROM qre_items WHERE name ILIKE '%${name}%';`
+    );
+    console.log("DB -> game found in DB");
+    await client.end();
+    return res;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export async function findGameToEdit(id) {
+  const client = createDBclient();
+  try {
+    await client.connect();
+    const res = await client.query(
+      `SELECT * FROM qre_items WHERE id='${id}' LIMIT 1;`
     );
     console.log("DB -> game found in DB");
     await client.end();
