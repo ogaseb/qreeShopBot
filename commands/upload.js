@@ -97,7 +97,7 @@ export async function handleGameUpload(
         "+ This is how it will look, save in database? Type 'yes'/'no'" +
         "\n```"
       : "```diff\n" +
-        "+ There are games with similar name, check by searching them first before uploading" +
+        "- I FOUND THE GAMES WITH SIMILAR NAME, CHECK THEM BEFORE SAYING 'yes' GAMES BY TYPING 'search'" +
         "\n```" +
         "```diff\n" +
         "+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)" +
