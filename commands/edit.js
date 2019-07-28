@@ -35,19 +35,19 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           "```"
       );
       await collector.on("collect", async message => {
-        if (message.content === "yes") {
+        if (message.content.toLowerCase() === "yes") {
           await receivedMessage.channel.send(
             "```please type all the information you want to edit, remember that title NEEDS to be in quotation marks. You can type all info you want to edit in one or more messages.```" +
               "```type `end` if you want to finish```"
           );
         }
-        if (message.content === "no") {
+        if (message.content.toLowerCase() === "no") {
           await receivedMessage.channel.send(
             "``` Ok, will not do anything with it ```"
           );
         }
 
-        if (message.content === "end") {
+        if (message.content.toLowerCase() === "end") {
           collector.stop();
         }
       });
