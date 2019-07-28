@@ -34,7 +34,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           "Is this the game you wish to edit? type 'yes'/'no'" +
           "```"
       );
-      await collector.on("collect", async message => {
+      collector.on("collect", async message => {
         if (message.content.toLowerCase() === "yes") {
           await receivedMessage.channel.send(
             "```please type all the information you want to edit, remember that title NEEDS to be in quotation marks. You can type all info you want to edit in one or more messages.```" +
@@ -142,28 +142,18 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           uploader_name: rows[0].uploader_name
         };
 
-        try {
-          await editQree(
-            id,
-            obj.qr_data,
-            obj.qr_link,
-            obj.name,
-            obj.platform,
-            obj.region,
-            obj.size,
-            obj.uploader_discord_id,
-            obj.uploader_name
-          );
-          await receivedMessage.channel.send("Edited!");
-        } catch (e) {
-          console.log(e);
-          await receivedMessage.channel.send(
-            "something went wrong, send it to developer: \n" +
-              "```diff\n- " +
-              e +
-              "```"
-          );
-        }
+        await editQree(
+          id,
+          obj.qr_data,
+          obj.qr_link,
+          obj.name,
+          obj.platform,
+          obj.region,
+          obj.size,
+          obj.uploader_discord_id,
+          obj.uploader_name
+        );
+        await receivedMessage.channel.send("Edited!");
       });
     } else {
       await receivedMessage.channel.send("cant find it in database");
