@@ -63,7 +63,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
         const args = collectedArguments.join(" ").match(regexes.ARGUMENTS);
         console.log(args);
 
-        const urlIndex = args.findIndex(value => regexes.URL.test(value));
+        const urlIndex = await args.findIndex(value => regexes.URL.test(value));
         if (urlIndex === -1) {
           await receivedMessage.channel.send(
             `argument \`URL\` is missing continue...`
@@ -72,7 +72,9 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           await receivedMessage.channel.send(`argument \`URL\` is present!`);
         }
 
-        const titleIndex = args.findIndex(value => regexes.TITLE.test(value));
+        const titleIndex = await args.findIndex(value =>
+          regexes.TITLE.test(value)
+        );
         if (titleIndex === -1) {
           await receivedMessage.channel.send(
             `argument \`TITLE\` is missing continue...`
@@ -81,7 +83,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           await receivedMessage.channel.send(`argument \`TITLE\` is present!`);
         }
 
-        const regionIndex = args.findIndex(value =>
+        const regionIndex = await args.findIndex(value =>
           regexes.REGIONS.test(value)
         );
         if (regionIndex === -1) {
@@ -92,7 +94,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           await receivedMessage.channel.send(`argument \`REGION\` is present!`);
         }
 
-        const platformIndex = args.findIndex(value =>
+        const platformIndex = await args.findIndex(value =>
           regexes.PLATFORMS.test(value)
         );
         if (platformIndex === -1) {
@@ -105,7 +107,9 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           );
         }
 
-        const sizeIndex = args.findIndex(value => regexes.SIZE.test(value));
+        const sizeIndex = await args.findIndex(value =>
+          regexes.SIZE.test(value)
+        );
         if (sizeIndex === -1) {
           await receivedMessage.channel.send(
             `argument \`SIZE\` is missing continue...`
@@ -119,7 +123,8 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           titleIndex,
           regionIndex,
           sizeIndex,
-          platformIndex
+          platformIndex,
+          args[platformIndex]
         );
 
         const obj = {
