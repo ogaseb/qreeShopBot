@@ -81,7 +81,7 @@ export async function createEmbeddedAnswer(args, receivedMessage, destination) {
         "=========================================================="
       )
       .setFooter("")
-      .setColor(0xffffff)
+      .setColor(0x000000)
       .setNavigationEmojis({
         back: "◀",
         jump: "↗",
@@ -120,7 +120,7 @@ export function sendToQrGames(args, receivedMessage, client) {
         "=========================================================="
       )
       .setFooter("Bot created by: `ProPanek | Ji-chan~ ;3#0188`")
-      .setColor(0xffffff)
+      .setColor(0x000000)
       .setDisabledNavigationEmojis(["ALL"])
       .setTimeout(600000)
   );
