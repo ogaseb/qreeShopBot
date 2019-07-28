@@ -95,7 +95,7 @@ export async function createEmbeddedAnswer(args, receivedMessage, destination) {
 export function sendToQrGames(args, receivedMessage, client) {
   const embeds = [];
 
-  console.log(client.channels.get("582266411166990346"));
+  console.log(client.channels.get("604692669146333184"));
   embeds.push(
     new MessageEmbed()
       .addField("Name: ", args.name, true)

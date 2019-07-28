@@ -113,6 +113,14 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           await receivedMessage.channel.send(`argument \`SIZE\` is present!`);
         }
 
+        console.log(
+          urlIndex,
+          titleIndex,
+          regionIndex,
+          sizeIndex,
+          platformIndex
+        );
+
         const obj = {
           name: args[titleIndex]
             ? args[titleIndex].replace(/^"(.*)"$/, "$1").replace(/'/g, "''")
