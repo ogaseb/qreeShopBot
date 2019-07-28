@@ -68,13 +68,18 @@ export async function handleGameUpload(
   if (messageArguments[urlIndex].match(regexes.GDRIVE)) {
     messageArguments[urlIndex] = parseGDriveLink(messageArguments[urlIndex]);
   } else if (messageArguments[urlIndex].match(regexes.DROPBOX)) {
-    if (messageArguments[urlIndex].slice(-1) === "0") {
+    if (
+      messageArguments[urlIndex].slice(-1) === "0" ||
+      messageArguments[urlIndex].slice(-1) === "1"
+    ) {
       messageArguments[urlIndex] = parseDropboxLink(messageArguments[urlIndex]);
       messageArguments[urlIndex] = messageArguments[urlIndex].match(
         /^(.*?)\.?dl=1/gi
       );
     }
   }
+
+  console.log(messageArguments[urlIndex]);
 
   const obj = {
     name: messageArguments[titleIndex]

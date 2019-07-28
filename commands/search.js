@@ -14,7 +14,7 @@ export async function searchGame(messageArguments, receivedMessage) {
     const name = messageArguments[1].replace(/^"(.*)"$/, "$1");
     const { rows } = await findGame(name);
     if (rows.length === 0) {
-      await receivedMessage.channel.send(
+      return await receivedMessage.channel.send(
         `I didn't find anything called \`${messageArguments[1]}\``
       );
     } else {
