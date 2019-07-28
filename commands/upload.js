@@ -14,6 +14,7 @@ export async function handleGameUpload(
   receivedMessage,
   client
 ) {
+  console.log(messageArguments);
   if (messageArguments.length !== 6) {
     return receivedMessage.channel.send(
       `invalid arguments count for upload command`

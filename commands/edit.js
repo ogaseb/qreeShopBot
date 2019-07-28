@@ -42,6 +42,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           );
         }
         if (message.content.toLowerCase() === "no") {
+          collector.stop();
           await receivedMessage.channel.send(
             "``` Ok, will not do anything with it ```"
           );
