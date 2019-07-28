@@ -128,6 +128,7 @@ export async function handleGameUpload(
   );
   collector.on("collect", async message => {
     if (message.content.toLowerCase() === "yes") {
+      collector.stop();
       try {
         await receivedMessage.channel.send("Saving in database!");
         await createQree(
@@ -143,7 +144,6 @@ export async function handleGameUpload(
 
         const QrCodesSubscription = sendToQrGames(obj, receivedMessage, client);
         await QrCodesSubscription.build();
-        collector.stop();
       } catch (e) {
         console.log(e);
         await receivedMessage.channel.send(
@@ -154,9 +154,10 @@ export async function handleGameUpload(
         );
       }
     } else if (message.content.toLowerCase() === "no") {
+      collector.stop();
+
       try {
         await receivedMessage.channel.send("Ok try again later :P");
-        collector.stop();
       } catch (e) {
         console.log(e);
         await receivedMessage.channel.send(
@@ -172,7 +173,7 @@ export async function handleGameUpload(
           "```Ok, displaying games that I have found you can type 'yes'/'no' still```"
         );
 
-        const QrCodesSearchResults = createEmbeddedAnswer(
+        const QrCodesSearchResults = await createEmbeddedAnswer(
           rows,
           receivedMessage
         );
