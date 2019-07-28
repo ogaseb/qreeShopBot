@@ -84,7 +84,7 @@ export async function findGameToEdit(id) {
   try {
     await client.connect();
     const res = await client.query(
-      `SELECT * FROM qre_items WHERE id='${id}' LIMIT 1;`
+      "SELECT * FROM qre_items WHERE id= " + id + " LIMIT 1;"
     );
     console.log("DB -> game found in DB");
     await client.end();

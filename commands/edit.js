@@ -1,6 +1,7 @@
 import { editQree, findGameToEdit } from "../db/db_qree";
 import { MessageCollector } from "discord.js";
 import { createASCIIQrCode, regexes } from "../helpers/helpers";
+import pgEscape from "pg-escape";
 
 export async function handleGameEdit(messageArguments, receivedMessage) {
   try {
@@ -127,10 +128,11 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           args[platformIndex]
         );
 
+        const name = pgEscape
+          .string(args[titleIndex].replace(/^"(.*)"$/, "$1"))
+          .replace(/'/g, "''");
         const obj = {
-          name: args[titleIndex]
-            ? args[titleIndex].replace(/^"(.*)"$/, "$1").replace(/'/g, "''")
-            : rows[0].name,
+          name: args[titleIndex] ? name : rows[0].name,
           qr_link: args[urlIndex] || rows[0].qr_link,
           qr_data: args[urlIndex]
             ? await createASCIIQrCode(args[urlIndex])

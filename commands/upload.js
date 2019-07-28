@@ -79,12 +79,8 @@ export async function handleGameUpload(
     }
   }
 
-  console.log(messageArguments[urlIndex]);
-
   const obj = {
-    name: messageArguments[titleIndex]
-      .replace(/^"(.*)"$/, "$1")
-      .replace(/'/g, "''"),
+    name: messageArguments[titleIndex].replace(/^"(.*)"$/, "$1"),
     qr_link: messageArguments[urlIndex],
     qr_data: await createASCIIQrCode(messageArguments[urlIndex]),
     platform: messageArguments[platformIndex],
@@ -94,7 +90,7 @@ export async function handleGameUpload(
     uploader_name: receivedMessage.author.username
   };
 
-  const { rows } = await findGame(obj.name);
+  const { rows } = await findGame(obj.name.replace(/'/g, "''"));
   const text =
     rows.length === 0
       ? "```diff\n" +

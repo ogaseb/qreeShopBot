@@ -1,21 +1,26 @@
 import { findGame } from "../db/db_qree";
 import { createEmbeddedAnswer } from "../helpers/helpers";
+import pgEscape from "pg-escape";
 
 export async function searchGame(messageArguments, receivedMessage) {
   try {
     // const games = await findGame(messageArguments[1])
-    console.log(messageArguments);
     if (messageArguments.length !== 2) {
       return await receivedMessage.channel.send(
         `invalid arguments for search command`
       );
     }
 
-    const name = messageArguments[1].replace(/^"(.*)"$/, "$1");
+    const name = pgEscape
+      .string(messageArguments[1].replace(/^"(.*)"$/, "$1"))
+      .replace(/'/g, "''");
     const { rows } = await findGame(name);
     if (rows.length === 0) {
       return await receivedMessage.channel.send(
-        `I didn't find anything called \`${messageArguments[1]}\``
+        `I didn't find anything called \`${messageArguments[1].replace(
+          /^"(.*)"$/,
+          "$1"
+        )}\``
       );
     } else {
       const QrCodesSearchResults = await createEmbeddedAnswer(
