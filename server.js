@@ -122,6 +122,10 @@ function processCommand(receivedMessage) {
     return createEmbeddedHelper(serverInvokers, receivedMessage).build();
   }
 
+  if (primaryCommand === "search") {
+    return searchGame(messageArguments, receivedMessage);
+  }
+
   if (!checkIfDM(receivedMessage)) {
     if (
       process.env.BOT_PERMISSIONS_GUILD.includes(receivedMessage.guild.id) &&
@@ -149,10 +153,6 @@ function processCommand(receivedMessage) {
         "You have no permissions to use this commands"
       );
     }
-  }
-
-  if (primaryCommand === "search") {
-    return searchGame(messageArguments, receivedMessage);
   }
 
   return receivedMessage.channel.send(`Command not found`);

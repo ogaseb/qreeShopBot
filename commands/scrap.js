@@ -21,19 +21,23 @@ export async function scrapChannelForQrCodes(
   try {
     await receivedMessage.author.send(`Starting scrapping`);
     // await receivedMessage.channel.send(`scrapping...`);
-
     limitlessFetchMessages(receivedMessage.channel).then(async messages => {
       for (const item of messages) {
         if (!!item.attachments.size) {
-          const metaInformation = item.content
-            .match(regexes.SCRAPER_TITLE)
-            .map(Function.prototype.call, String.prototype.trim)
-            .filter(function(el) {
-              if (el !== null && el !== " ") return el;
-            });
-          let name = metaInformation[0];
-          if (!name) {
+          let metaInformation = item.content.match(regexes.SCRAPER);
+          if (metaInformation) {
+            metaInformation = metaInformation
+              .map(Function.prototype.call, String.prototype.trim)
+              .filter(function(el) {
+                if (el !== null && el !== " ") return el;
+              });
+          } else {
             continue;
+          }
+
+          let name = metaInformation[0];
+
+          if (!name) {
           } else {
             name = name.replace(/^"(.*)"$/, "$1").replace(/'/g, "''");
           }

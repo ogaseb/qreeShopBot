@@ -15,10 +15,10 @@ export function parseGDriveLink(link) {
 }
 
 export function createASCIIQrCode(link) {
-  let qr = qrCode(0, "M");
+  let qr = qrCode(0, "L");
   qr.addData(`${link}`);
   qr.make();
-  return qr.createASCII();
+  return qr.createASCII(1, 1);
 }
 
 export async function limitlessFetchMessages(channel, limit = 9000) {
@@ -43,10 +43,10 @@ export async function limitlessFetchMessages(channel, limit = 9000) {
   return sum_messages;
 }
 
-export function createEmbeddedAnswer(args, receivedMessage, destination) {
+export async function createEmbeddedAnswer(args, receivedMessage, destination) {
   const embeds = [];
   args.map(
-    (
+    async (
       { id, qr_data, qr_link, name, platform, region, size, uploader_name },
       index
     ) => {
@@ -90,15 +90,6 @@ export function createEmbeddedAnswer(args, receivedMessage, destination) {
       })
       .setTimeout(600000)
   );
-  // .on('start', () => console.log('Started!'))
-  // // Upon a user deleting the embed
-  // .on('finish', (user) => console.log(`Finished! User: ${user.username}`))
-  // // Upon a user reacting to the embed
-  // .on('react', (user, emoji) => console.log(`Reacted! User: ${user.username} | Emoji: ${emoji.name} (${emoji.id})`))
-  // // Upon the awaiting time expired
-  // .on('expire', () => console.warn('Expired!'))
-  // // Upon non-PaginationEmbed error (e.g: Discord API Error)
-  // .on('error', console.error)
 }
 
 export function sendToQrGames(args, receivedMessage, client) {
@@ -124,24 +115,15 @@ export function sendToQrGames(args, receivedMessage, client) {
       .setChannel(client.channels.get("582266411166990346"))
       .setPage(1)
       // Methods below are for customising all embeds
-      .setTitle("Qr Code 3DS games search collection")
+      .setTitle("QR Code 3DS games subscription module")
       .setDescription(
         "=========================================================="
       )
-      .setFooter("")
+      .setFooter("Bot created by: `ProPanek | Ji-chan~ ;3#0188`")
       .setColor(0xffffff)
       .setDisabledNavigationEmojis(["ALL"])
       .setTimeout(600000)
   );
-  // .on('start', () => console.log('Started!'))
-  // // Upon a user deleting the embed
-  // .on('finish', (user) => console.log(`Finished! User: ${user.username}`))
-  // // Upon a user reacting to the embed
-  // .on('react', (user, emoji) => console.log(`Reacted! User: ${user.username} | Emoji: ${emoji.name} (${emoji.id})`))
-  // // Upon the awaiting time expired
-  // .on('expire', () => console.warn('Expired!'))
-  // // Upon non-PaginationEmbed error (e.g: Discord API Error)
-  // .on('error', console.error)
 }
 
 export function checkIfDM(receivedMessage) {
@@ -153,11 +135,11 @@ export const regexes = {
   CIA: /\b(\w*cia\w*)\b/g,
   GDRIVE: /\b(\w*drive.google.com\w*)\b/g,
   URL: /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g,
-  ARGUMENTS: /\b(\w*GBA|NES|SNES|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO\w*)\b|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\S+/g,
+  ARGUMENTS: /\b(\w*GBA|NES|SNES|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO\w*)\b|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\S+/gi,
   TITLE: /"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'/g,
   REGIONS: /\b\w*USA|JPN|EUR|GLOBAL|HACK\w*\b/gi,
   PLATFORMS: /\b\w*GBA|NES|SNES|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO\w*\b/gi,
-  SIZE: /\b\w* ?MB|\w* ?GB|\w* ?KB\w*\b/gi,
-  SCRAPER_TITLE: /([^\(]+)|\((.*?)\)|/g
+  SIZE: /\b\w*[0-9]MB|\w*[0-9]GB|\w*[0-9]KB\w*\b/gi,
+  SCRAPER: /\b([^\(]+)|\((.*?)\)|(\w*GBA|NES|SNES|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO\w*)\b|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\S+/gi
 };
 //(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?\w+|"(?:\\"|[^"])+"|'(?:\\'|[^"])+'|\w+

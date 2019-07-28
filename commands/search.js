@@ -18,7 +18,10 @@ export async function searchGame(messageArguments, receivedMessage) {
         `I didn't find anything called \`${messageArguments[1]}\``
       );
     } else {
-      const QrCodesSearchResults = createEmbeddedAnswer(rows, receivedMessage);
+      const QrCodesSearchResults = await createEmbeddedAnswer(
+        rows,
+        receivedMessage
+      );
       await QrCodesSearchResults.build();
     }
   } catch (e) {
