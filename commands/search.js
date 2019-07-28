@@ -20,7 +20,7 @@ export async function searchGame(messageArguments, receivedMessage) {
         `I didn't find anything called \`${messageArguments[1].replace(
           /^"(.*)"$/,
           "$1"
-        )}\``
+        )}\` in my database. Please check #qr-games for it, if it's there please inform Uploaders/Mods/Bot Dev about adding it to the bot. If it's not there either request game on #qr-game-requests`
       );
     } else {
       const QrCodesSearchResults = await createEmbeddedAnswer(
