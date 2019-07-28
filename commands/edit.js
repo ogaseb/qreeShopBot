@@ -61,6 +61,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
         collectedArguments.shift();
         collectedArguments.pop();
         const args = collectedArguments.join(" ").match(regexes.ARGUMENTS);
+        console.log(args);
 
         const urlIndex = args.findIndex(value => regexes.URL.test(value));
         if (urlIndex === -1) {
