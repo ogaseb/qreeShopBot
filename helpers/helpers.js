@@ -138,7 +138,7 @@ export const regexes = {
   ARGUMENTS: /\b(\w*GBA|NES|SNES|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO\w*)\b|(\d+\.?\d+)\s*(KB|MB|GB|Bytes|Kilobytes|Megabytes)|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+|\S+/gi,
   TITLE: /"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“/g,
   REGIONS: /\b\w*USA|JPN|EUR|GLOBAL|HACK\w*\b/gi,
-  PLATFORMS: /\b\w*GBA|NES|SNES|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO\w*\b/gi,
+  PLATFORMS: /\b\w*GBA|NES|SNES|3DS|NEW3DS|DSiWare|DSI|ESHOP|NEW 3DS|NEO GEO\w*\b/gi,
   SIZE: /(\d*\.?\d+)\s*(KB|MB|GB|Bytes|Kilobytes|Megabytes)/gi,
   SCRAPER: /\b([^\(]+)|\((.*?)\)|(\w*GBA|NES|SNES|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO\w*)\b|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\S+/gi
 };
