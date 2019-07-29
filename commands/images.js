@@ -13,20 +13,20 @@ export async function makeQrImagesfromDB(
     const { rows } = await getWholeDB();
     for (const {
       id,
+      qr_image_url,
       qr_data,
       qr_link,
       name,
       platform,
       region,
       size,
-      uploader_discord_id,
-      qr_image_url
+      uploader_discord_id
     } of rows) {
       const obj = {
         name: name,
         qr_link: qr_link,
         qr_data: qr_data,
-        qr_image_url: await createDataURLQrCode(qr_link),
+        qr_image: await createDataURLQrCode(qr_link),
         platform: platform,
         region: region,
         size: size,
@@ -34,14 +34,13 @@ export async function makeQrImagesfromDB(
         id
       };
 
-      if (!qr_image_url) {
+      console.log(qr_image_url);
+
+      if (qr_image_url === null) {
         let string = obj.name + obj.platform + obj.region + uploader_discord_id;
         string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
         // console.log(string);
-        await imageDataURI.outputFile(
-          obj.qr_image_url,
-          "./img/" + string + ".png"
-        );
+        await imageDataURI.outputFile(obj.qr_image, "./img/" + string + ".png");
 
         fs.access("./img/" + string + ".png", fs.F_OK, async err => {
           if (err) {
@@ -53,8 +52,8 @@ export async function makeQrImagesfromDB(
           });
           //file exists
           console.log(msg.attachments.values().next().value.proxyURL);
-          obj.qr_image_url = msg.attachments.values().next().value.proxyURL;
-          await updateQrImageUrl(obj.id, obj.qr_image_url);
+          obj.qr_image = msg.attachments.values().next().value.proxyURL;
+          await updateQrImageUrl(obj.id, obj.qr_image);
         });
       }
     }
