@@ -6,7 +6,8 @@ import {
   handleGameUpload,
   searchGame,
   handleGameEdit,
-  createEmbeddedHelper
+  createEmbeddedHelper,
+  makeQrImagesfromDB
 } from "./commands/index";
 import { regexes, checkIfDM } from "./helpers/helpers";
 import { initializeDb } from "./models/database";
@@ -143,6 +144,10 @@ function processCommand(receivedMessage) {
 
       if (primaryCommand === "scrap") {
         return scrapChannelForQrCodes(messageArguments, receivedMessage);
+      }
+
+      if (primaryCommand === "images") {
+        return makeQrImagesfromDB(messageArguments, receivedMessage);
       }
 
       if (primaryCommand === "edit") {

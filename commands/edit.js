@@ -7,7 +7,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
   try {
     const id = parseInt(messageArguments[1]);
     const { rows } = await findGameToEdit(id);
-
+    //TODO UPDATE IT LATER
     if (rows.length) {
       const collector = new MessageCollector(
         receivedMessage.channel,

@@ -18,7 +18,14 @@ export function createASCIIQrCode(link) {
   let qr = qrCode(0, "L");
   qr.addData(`${link}`);
   qr.make();
-  return qr.createASCII(1, 1);
+  return qr.createASCII(2, 1);
+}
+
+export function createDataURLQrCode(link) {
+  let qr = qrCode(0, "M");
+  qr.addData(`${link}`);
+  qr.make();
+  return qr.createDataURL(5, 5);
 }
 
 export async function limitlessFetchMessages(channel, limit = 9000) {
@@ -47,21 +54,32 @@ export async function createEmbeddedAnswer(args, receivedMessage, destination) {
   const embeds = [];
   args.map(
     async (
-      { id, qr_data, qr_link, name, platform, region, size, uploader_name },
+      {
+        id,
+        qr_link,
+        name,
+        platform,
+        region,
+        size,
+        uploader_name,
+        qr_image_url
+      },
       index
     ) => {
+      console.log(qr_image_url);
       embeds.push(
         new MessageEmbed()
+          .setImage(qr_image_url)
           .addField("Name: ", name, true)
           .addField("Page", index + 1, true)
-          .addField("QR: ", "```" + qr_data + "```")
-          .addField("QR link: ", qr_link, true)
-          .addField("DB ID: ", id, true)
+          .addField("QR link: ", qr_link)
           .addBlankField()
+          .addField("DB ID: ", id, true)
           .addField("Platform: ", platform, true)
           .addField("Region: ", region, true)
           .addField("Size: ", size, true)
           .addField("Author: ", uploader_name, true)
+          .addField("QR:", "===================")
       );
     }
   );
@@ -80,7 +98,7 @@ export async function createEmbeddedAnswer(args, receivedMessage, destination) {
       .setDescription(
         "=========================================================="
       )
-      .setFooter("Bot created by: `ProPanek | Ji-chan~ ;3#0188`")
+      .setFooter("Bot created by: <@141621426397511680>")
       .setColor(0x000000)
       .setNavigationEmojis({
         back: "◀",
@@ -99,13 +117,14 @@ export function sendToQrGames(args, receivedMessage, client) {
   embeds.push(
     new MessageEmbed()
       .addField("Name: ", args.name, true)
-      .addField("QR: ", "```" + args.qr_data + "```")
-      .addField("QR link: ", args.qr_link, true)
+      .addField("QR link: ", args.qr_link)
       .addBlankField()
       .addField("Platform: ", args.platform, true)
       .addField("Region: ", args.region, true)
       .addField("Size: ", args.size, true)
       .addField("Author: ", args.uploader_name, true)
+      .addField("QR: ", "===================")
+      .setImage(args.qr_image_url)
   );
 
   return (
@@ -119,7 +138,7 @@ export function sendToQrGames(args, receivedMessage, client) {
       .setDescription(
         "=========================================================="
       )
-      .setFooter("Bot created by: `ProPanek | Ji-chan~ ;3#0188`")
+      .setFooter("Bot created by: <@141621426397511680>")
       .setColor(0x000000)
       .setDisabledNavigationEmojis(["ALL"])
       .setTimeout(600000)

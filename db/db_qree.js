@@ -10,6 +10,7 @@ function createDBclient() {
 
 export async function createQree(
   qrData,
+  qrImageUrl,
   qrLink,
   name,
   platform,
@@ -23,8 +24,8 @@ export async function createQree(
     await client.connect();
 
     await client.query(
-      `INSERT INTO qre_items(qr_data, qr_link, name, platform, region, size, uploader_discord_id, uploader_name) 
-      VALUES('${qrData}', '${qrLink}', '${name}' , '${platform}', '${region}', '${size}', '${uploader_discord_id}' , '${uploader_name}')`
+      `INSERT INTO qre_items(qr_data, qr_link, qr_image_url, name, platform, region, size, uploader_discord_id, uploader_name) 
+      VALUES('${qrData}', '${qrLink}', '${qrImageUrl}' , '${name}' , '${platform}', '${region}', '${size}', '${uploader_discord_id}' , '${uploader_name}')`
     );
     await client.end();
     console.log("DB -> save qr in DB");
@@ -36,6 +37,7 @@ export async function createQree(
 export async function editQree(
   id,
   qrData,
+  qrImageUrl,
   qrLink,
   name,
   platform,
@@ -48,7 +50,8 @@ export async function editQree(
   await client.connect();
   try {
     await client.query(
-      `UPDATE qre_items SET qr_data = '${qrData}', 
+      `UPDATE qre_items SET qr_data = '${qrData}',
+      qr_image_url = '${qrImageUrl}' 
       qr_link = '${qrLink}', 
       name = '${name}', 
       platform = '${platform}', 
@@ -100,6 +103,34 @@ export async function approxQrCount() {
     await client.connect();
     const res = await client.query(`SELECT COUNT(*) FROM qre_items`);
     console.log("DB -> counting qr codes");
+    await client.end();
+    return res;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export async function getWholeDB() {
+  const client = createDBclient();
+  try {
+    await client.connect();
+    const res = await client.query(`SELECT * FROM qre_items`);
+    console.log("DB -> getting whole DB");
+    await client.end();
+    return res;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export async function updateQrImageUrl(id, qrImageUrl) {
+  const client = createDBclient();
+  try {
+    await client.connect();
+    const res = await client.query(
+      `UPDATE qre_items SET qr_image_url = '${qrImageUrl}' WHERE id = ${id}`
+    );
+    console.log("DB -> updating qr url image");
     await client.end();
     return res;
   } catch (e) {
