@@ -41,7 +41,9 @@ export async function scrapChannelForQrCodes(
 
           if (!name) {
           } else {
-            name = name.replace(/^"(.*)"$/, "$1").replace(/'/g, "''");
+            name = pgEscape
+              .string(messageArguments[1].replace(/^"(.*)"$/, "$1"))
+              .replace(/'/g, "''");
           }
           metaInformation.shift();
           const { rows } = await findGame(name);
@@ -92,9 +94,7 @@ export async function scrapChannelForQrCodes(
           } else {
             continue;
           }
-          name = pgEscape
-            .string(messageArguments[1].replace(/^"(.*)"$/, "$1"))
-            .replace(/'/g, "''");
+
           const obj = {
             name: name,
             qr_link: value.result,
