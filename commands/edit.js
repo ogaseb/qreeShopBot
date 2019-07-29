@@ -172,7 +172,9 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
               obj.qr_image_url = msg.attachments.values().next().value.proxyURL;
             });
         }
-
+        obj.name = pgEscape
+          .string(obj.name.replace(/^"(.*)"$/, "$1"))
+          .replace(/'/g, "''");
         await editQree(
           id,
           obj.qr_data,
