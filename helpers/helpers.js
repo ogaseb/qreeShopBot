@@ -2,7 +2,8 @@ import qrCode from "qrcode-generator";
 import { MessageEmbed } from "discord.js";
 import { Embeds } from "discord-paginationembed";
 import { getWholeDB } from "../db/db_qree";
-import urlStatusCode from "url-status-code";
+import request from "request";
+import rp from "request-promise";
 
 export function parseDropboxLink(link) {
   let string = link;
@@ -155,20 +156,25 @@ export async function urlStatus(client) {
     size,
     uploader_discord_id
   } of rows) {
-    urlStatusCode(qr_link, (error, statusCode) => {
-      if (error) {
-        console.error(error);
-      } else {
-        console.log(statusCode);
-        if (statusCode === 404) {
-          client.channels
-            .get("605181514321494036")
-            .send(
-              `${qr_link} this link gives 404 error (not found) Game name ${name}, DB ID to update link: ${id} . Mark it with some reaction if its fixed! `
-            );
-        }
-      }
-    });
+    const req = await request(qr_link);
+    if (req) {
+      if (req) console.log(req.response);
+    }
+    // await client.channels
+    //     .get("604692669146333184")
+    //     .send(
+    //         `${qr_link} this link gives 404 error (not found) Game name ${name}, DB ID to update link: ${id} . Mark it with some reaction if its fixed! `
+    //     );
+    // urlStatusCode(qr_link, (error, statusCode) => {
+    //   if (error) {
+    //     console.error(error);
+    //   } else {
+    //     console.log(statusCode);
+    //     if (statusCode === 404) {
+    //
+    //     }
+    //   }
+    // });
   }
 }
 

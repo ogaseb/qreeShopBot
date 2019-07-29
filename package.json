@@ -37,6 +37,8 @@
     "pg-escape": "^0.2.0",
     "qrcode-generator": "^1.4.3",
     "qrcode-reader": "^1.0.4",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
     "url-status-code": "^1.1.1",
     "webpack-node-externals": "^1.7.2"
   },

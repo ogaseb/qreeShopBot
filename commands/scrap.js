@@ -80,13 +80,13 @@ export async function scrapChannelForQrCodes(
             console.log(e);
           });
           if (value) {
-            if (
-              value.result.match(regexes.DROPBOX) &&
-              value.result.match(regexes.CIA)
-            ) {
-              value.result = parseDropboxLink(value.result);
-              value.result = value.result.match(/^(.*?)\.?dl=1/gi);
-            }
+            // if (
+            //   value.result.match(regexes.DROPBOX) &&
+            //   value.result.match(regexes.CIA)
+            // ) {
+            //   value.result = parseDropboxLink(value.result);
+            //   value.result = value.result.match(/^(.*?)\.?dl=1/gi);
+            // }
           } else {
             continue;
           }
