@@ -2,7 +2,7 @@ import qrCode from "qrcode-generator";
 import { MessageEmbed } from "discord.js";
 import { Embeds } from "discord-paginationembed";
 import { getWholeDB } from "../db/db_qree";
-import request from "request";
+import urlStatusCode from "url-status-code";
 
 export function parseDropboxLink(link) {
   let string = link;
