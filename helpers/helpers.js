@@ -155,27 +155,21 @@ export async function urlStatus(client) {
     size,
     uploader_discord_id
   } of rows) {
-    await request(qr_link, async function(error, response) {
-      if (response && response.statusCode === 404) {
-        console.log(qr_link);
-        await client.channels
-          .get("604692669146333184")
-          .send(
-            `This Game ${name} is giving 404 error (not found), DB ID to update link: ${id} . Mark it with some reaction if its fixed! `
-          );
+    urlStatusCode(qr_link, async (error, statusCode) => {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log(statusCode);
+        if (statusCode === 404) {
+           await client.channels
+              .get("604692669146333184")
+              .send(
+                  `This Game ${name} is giving 404 error (not found), DB ID to update link: ${id} . Mark it with some reaction if its fixed! `
+              );
+        }
+        }
       }
     });
-
-    // urlStatusCode(qr_link, (error, statusCode) => {
-    //   if (error) {
-    //     console.error(error);
-    //   } else {
-    //     console.log(statusCode);
-    //     if (statusCode === 404) {
-    //
-    //     }
-    //   }
-    // });
   }
 }
 
