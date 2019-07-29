@@ -36,7 +36,7 @@ export async function makeQrImagesfromDB(
 
       console.log(qr_image_url);
 
-      if (qr_image_url === null) {
+      if (qr_image_url === "null") {
         let string = obj.name + obj.platform + obj.region + uploader_discord_id;
         string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
         // console.log(string);
