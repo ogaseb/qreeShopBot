@@ -73,12 +73,12 @@ export async function createEmbeddedAnswer(args, receivedMessage, destination) {
           .addField("Name: ", name, true)
           .addField("Page", index + 1, true)
           .addField("QR link: ", qr_link)
-          .addBlankField()
           .addField("DB ID: ", id, true)
           .addField("Platform: ", platform, true)
           .addField("Region: ", region, true)
           .addField("Size: ", size, true)
           .addField("Author: ", uploader_name, true)
+          .addBlankField()
           .addField("QR:", "===================")
       );
     }
@@ -98,7 +98,7 @@ export async function createEmbeddedAnswer(args, receivedMessage, destination) {
       .setDescription(
         "=========================================================="
       )
-      .setFooter("Bot created by: <@141621426397511680>")
+      .setFooter("Bot created by: ProPanek#0188")
       .setColor(0x000000)
       .setNavigationEmojis({
         back: "◀",
@@ -116,6 +116,7 @@ export function sendToQrGames(args, receivedMessage, client) {
   console.log(client.channels.get("604692669146333184"));
   embeds.push(
     new MessageEmbed()
+      .setImage(args.qr_image_url)
       .addField("Name: ", args.name, true)
       .addField("QR link: ", args.qr_link)
       .addBlankField()
@@ -123,8 +124,8 @@ export function sendToQrGames(args, receivedMessage, client) {
       .addField("Region: ", args.region, true)
       .addField("Size: ", args.size, true)
       .addField("Author: ", args.uploader_name, true)
+      .addBlankField()
       .addField("QR: ", "===================")
-      .setImage(args.qr_image_url)
   );
 
   return (
@@ -138,7 +139,7 @@ export function sendToQrGames(args, receivedMessage, client) {
       .setDescription(
         "=========================================================="
       )
-      .setFooter("Bot created by: <@141621426397511680>")
+      .setFooter("Bot created by: ProPanek#0188")
       .setColor(0x000000)
       .setDisabledNavigationEmojis(["ALL"])
       .setTimeout(600000)
