@@ -147,9 +147,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           qr_data: args[urlIndex]
             ? await createASCIIQrCode(args[urlIndex])
             : rows[0].qr_data,
-          qr_image_url: args[urlIndex]
-            ? await createDataURLQrCode(args[urlIndex])
-            : rows[0].qr_image_url,
+          qr_image_url: rows[0].qr_image_url,
           platform: args[platformIndex] || rows[0].platform,
           region: args[regionIndex] || rows[0].region,
           size: args[sizeIndex] || rows[0].size,
@@ -157,21 +155,23 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           uploader_name: rows[0].uploader_name
         };
 
-        let string =
-          obj.name + obj.platform + obj.region + obj.uploader_discord_id;
-        string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
-        await imageDataURI.outputFile(
-          obj.qr_image_url,
-          "./img/" + string + ".png"
-        );
+        if (args[urlIndex]) {
+          let string =
+            obj.name + obj.platform + obj.region + obj.uploader_discord_id;
+          string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
+          await imageDataURI.outputFile(
+            obj.qr_image_url,
+            "./img/" + string + ".png"
+          );
 
-        await receivedMessage.channel
-          .send("", {
-            files: ["./img/" + string + ".png"]
-          })
-          .then(msg => {
-            obj.qr_image_url = msg.attachments.values().next().value.proxyURL;
-          });
+          await receivedMessage.channel
+            .send("", {
+              files: ["./img/" + string + ".png"]
+            })
+            .then(msg => {
+              obj.qr_image_url = msg.attachments.values().next().value.proxyURL;
+            });
+        }
 
         await editQree(
           id,
