@@ -5379,6 +5379,13 @@ url-parse-lax@^1.0.0:
   dependencies:
     prepend-http "^1.0.1"
 
+url-status-code@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/url-status-code/-/url-status-code-1.1.1.tgz#df314271110bb04178d6c39351d9920cbd518a85"
+  integrity sha512-Piwn2TqcsFPAjTjYaRTwTB3A4Fz0frgdhWNoPtvw10yTIle4Uc9Q7RriRPx8YHUGvpChN31r8mAbxi2e0CvvBw==
+  dependencies:
+    valid-url "1.0.9"
+
 url@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/url/-/url-0.11.0.tgz#3838e97cfc60521eb73c525a8e55bfdd9e2e28f1"
@@ -5439,6 +5446,11 @@ v8flags@^2.1.1:
   integrity sha1-qrGh+jDUX4jdMhFIh1rALAtV5bQ=
   dependencies:
     user-home "^1.1.1"
+
+valid-url@1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/valid-url/-/valid-url-1.0.9.tgz#1c14479b40f1397a75782f115e4086447433a200"
+  integrity sha1-HBRHm0DxOXp1eC8RXkCGRHQzogA=
 
 verror@1.10.0:
   version "1.10.0"

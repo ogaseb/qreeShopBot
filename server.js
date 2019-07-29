@@ -9,7 +9,7 @@ import {
   createEmbeddedHelper,
   makeQrImagesfromDB
 } from "./commands/index";
-import { regexes, checkIfDM } from "./helpers/helpers";
+import { regexes, checkIfDM, urlStatus } from "./helpers/helpers";
 import { initializeDb } from "./models/database";
 import { approxQrCount } from "./db/db_qree";
 
@@ -60,6 +60,10 @@ client.on("ready", async () => {
       });
     });
   }, 60000);
+
+  // setInterval(async () => {
+  //   await urlStatus(client);
+  // }, 1000);
 });
 
 client.on("message", receivedMessage => {
@@ -152,6 +156,10 @@ function processCommand(receivedMessage) {
 
       if (primaryCommand === "edit") {
         return handleGameEdit(messageArguments, receivedMessage);
+      }
+
+      if (primaryCommand === "checkurls") {
+        return urlStatus(client);
       }
     } else {
       return receivedMessage.channel.send(
