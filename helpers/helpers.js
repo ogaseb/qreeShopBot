@@ -161,12 +161,11 @@ export async function urlStatus(client) {
       } else {
         console.log(statusCode);
         if (statusCode === 404) {
-           await client.channels
-              .get("604692669146333184")
-              .send(
-                  `This Game ${name} is giving 404 error (not found), DB ID to update link: ${id} . Mark it with some reaction if its fixed! `
-              );
-        }
+          await client.channels
+            .get("604692669146333184")
+            .send(
+              `This Game ${name} is giving 404 error (not found), DB ID to update link: ${id} . Mark it with some reaction if its fixed! `
+            );
         }
       }
     });
