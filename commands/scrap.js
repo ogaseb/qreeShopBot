@@ -1,5 +1,6 @@
 import {
   createASCIIQrCode,
+  createDataURLQrCode,
   limitlessFetchMessages,
   parseDropboxLink,
   regexes
@@ -8,6 +9,7 @@ import fetch from "node-fetch";
 import jimp from "jimp";
 import QRReader from "qrcode-reader";
 import { createQree, findGame } from "../db/db_qree";
+import pgEscape from "pg-escape";
 
 export async function scrapChannelForQrCodes(
   messageArguments,
@@ -90,11 +92,14 @@ export async function scrapChannelForQrCodes(
           } else {
             continue;
           }
-
+          name = pgEscape
+            .string(messageArguments[1].replace(/^"(.*)"$/, "$1"))
+            .replace(/'/g, "''");
           const obj = {
-            name: name.replace(/^"(.*)"$/, "$1").replace(/'/g, "''"),
+            name: name,
             qr_link: value.result,
             qr_data: await createASCIIQrCode(value.result),
+            qr_image_url: null,
             platform: metaInformation[platformIndex] || "3DS",
             region: metaInformation[regionIndex] || "N/A",
             size: metaInformation[sizeIndex] || "N/A",
@@ -106,6 +111,7 @@ export async function scrapChannelForQrCodes(
             try {
               await createQree(
                 obj.qr_data,
+                obj.qr_image_url,
                 obj.qr_link,
                 obj.name,
                 obj.platform,
