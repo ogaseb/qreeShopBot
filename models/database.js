@@ -10,6 +10,7 @@ export async function initializeDb() {
     await client.query(
       "CREATE TABLE IF NOT EXISTS qre_items(id SERIAL PRIMARY KEY, " +
         "qr_data text not null, " +
+        "qr_image_url text not null, " +
         "qr_link varchar not null, " +
         "name varchar not null, " +
         "platform varchar not null, " +

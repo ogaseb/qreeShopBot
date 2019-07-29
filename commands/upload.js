@@ -105,7 +105,7 @@ export async function handleGameUpload(
         "+ This is how it will look, save in database? Type 'yes'/'no'" +
         "\n```"
       : "```diff\n" +
-        "- I FOUND THE GAMES WITH SIMILAR NAME, CHECK THEM BEFORE SAYING 'yes' GAMES BY TYPING 'search'" +
+        "- I FOUND THE GAMES WITH SIMILAR NAME, CHECK THEM BEFORE SAYING 'yes' BY TYPING 'search'" +
         "\n```" +
         "```diff\n" +
         "+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)" +
@@ -144,6 +144,7 @@ export async function handleGameUpload(
   );
   collector.on("collect", async message => {
     if (message.content.toLowerCase() === "yes") {
+      console.log(obj.qr_image_url);
       collector.stop();
       try {
         await receivedMessage.channel.send("Saving in database!");

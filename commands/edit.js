@@ -1,7 +1,12 @@
 import { editQree, findGameToEdit } from "../db/db_qree";
 import { MessageCollector } from "discord.js";
-import { createASCIIQrCode, regexes } from "../helpers/helpers";
+import {
+  createASCIIQrCode,
+  createDataURLQrCode,
+  regexes
+} from "../helpers/helpers";
 import pgEscape from "pg-escape";
+import imageDataURI from "image-data-uri";
 
 export async function handleGameEdit(messageArguments, receivedMessage) {
   try {
@@ -15,9 +20,12 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
         { time: 120000 }
       );
 
+      await receivedMessage.channel.send("", {
+        files: [rows[0].qr_image_url]
+      });
+
       await receivedMessage.channel.send(
         "```" +
-          rows[0].qr_data +
           "\nLink: " +
           rows[0].qr_link +
           "\n\nName: " +
@@ -62,7 +70,6 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
         collectedArguments.shift();
         collectedArguments.pop();
         const args = collectedArguments.join(" ").match(regexes.ARGUMENTS);
-        console.log(args);
 
         const urlIndex = await args.findIndex(value => regexes.URL.test(value));
         if (urlIndex === -1) {
@@ -127,16 +134,22 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           platformIndex,
           args[platformIndex]
         );
+        let name;
+        if (args[titleIndex]) {
+          name = pgEscape
+            .string(args[titleIndex].replace(/^"(.*)"$/, "$1"))
+            .replace(/'/g, "''");
+        }
 
-        const name = pgEscape
-          .string(args[titleIndex].replace(/^"(.*)"$/, "$1"))
-          .replace(/'/g, "''");
         const obj = {
           name: args[titleIndex] ? name : rows[0].name,
           qr_link: args[urlIndex] || rows[0].qr_link,
           qr_data: args[urlIndex]
             ? await createASCIIQrCode(args[urlIndex])
             : rows[0].qr_data,
+          qr_image_url: args[urlIndex]
+            ? await createDataURLQrCode(args[urlIndex])
+            : rows[0].qr_image_url,
           platform: args[platformIndex] || rows[0].platform,
           region: args[regionIndex] || rows[0].region,
           size: args[sizeIndex] || rows[0].size,
@@ -144,9 +157,26 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           uploader_name: rows[0].uploader_name
         };
 
+        let string =
+          obj.name + obj.platform + obj.region + obj.uploader_discord_id;
+        string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
+        await imageDataURI.outputFile(
+          obj.qr_image_url,
+          "./img/" + string + ".png"
+        );
+
+        await receivedMessage.channel
+          .send("", {
+            files: ["./img/" + string + ".png"]
+          })
+          .then(msg => {
+            obj.qr_image_url = msg.attachments.values().next().value.proxyURL;
+          });
+
         await editQree(
           id,
           obj.qr_data,
+          obj.qr_image_url,
           obj.qr_link,
           obj.name,
           obj.platform,

@@ -66,20 +66,17 @@ export async function createEmbeddedAnswer(args, receivedMessage, destination) {
       },
       index
     ) => {
-      console.log(qr_image_url);
       embeds.push(
         new MessageEmbed()
           .setImage(qr_image_url)
           .addField("Name: ", name, true)
-          .addField("Page", index + 1, true)
           .addField("QR link: ", qr_link)
           .addField("DB ID: ", id, true)
           .addField("Platform: ", platform, true)
           .addField("Region: ", region, true)
-          .addField("Size: ", size, true)
+          .addField("Size: ", size)
+          .addField("QR:", "===================", true)
           .addField("Author: ", uploader_name, true)
-          .addBlankField()
-          .addField("QR:", "===================")
       );
     }
   );
@@ -113,26 +110,24 @@ export async function createEmbeddedAnswer(args, receivedMessage, destination) {
 export function sendToQrGames(args, receivedMessage, client) {
   const embeds = [];
 
-  console.log(client.channels.get("604692669146333184"));
+  console.log(client.channels.get("604061407352324119"));
   embeds.push(
     new MessageEmbed()
       .setImage(args.qr_image_url)
       .addField("Name: ", args.name, true)
       .addField("QR link: ", args.qr_link)
-      .addBlankField()
       .addField("Platform: ", args.platform, true)
       .addField("Region: ", args.region, true)
-      .addField("Size: ", args.size, true)
+      .addField("Size: ", args.size)
+      .addField("QR: ", "===================", true)
       .addField("Author: ", args.uploader_name, true)
-      .addBlankField()
-      .addField("QR: ", "===================")
   );
 
   return (
     new Embeds()
       .setArray(embeds)
       .setAuthorizedUsers([receivedMessage.author.id])
-      .setChannel(client.channels.get("582266411166990346"))
+      .setChannel(client.channels.get("604061407352324119"))
       .setPage(1)
       // Methods below are for customising all embeds
       .setTitle("QR Code 3DS games subscription module")

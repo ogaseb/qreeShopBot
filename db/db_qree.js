@@ -51,7 +51,7 @@ export async function editQree(
   try {
     await client.query(
       `UPDATE qre_items SET qr_data = '${qrData}',
-      qr_image_url = '${qrImageUrl}' 
+      qr_image_url = '${qrImageUrl}' ,
       qr_link = '${qrLink}', 
       name = '${name}', 
       platform = '${platform}', 
@@ -60,7 +60,7 @@ export async function editQree(
       uploader_discord_id = '${uploader_discord_id}' ,   
       uploader_name = '${uploader_name}' WHERE id = ${id}`
     );
-    console.log("DB -> save jira credentials in DB");
+    console.log("DB -> edited in DB");
     await client.end();
   } catch (e) {
     console.log(e);
