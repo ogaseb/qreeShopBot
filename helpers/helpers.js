@@ -179,6 +179,9 @@ export async function urlStatus(client) {
       }
     }
   }
+  await client.channels
+    .get("604692367018033152")
+    .send(`All games have been scanned!`);
 }
 
 export async function updateSize() {
