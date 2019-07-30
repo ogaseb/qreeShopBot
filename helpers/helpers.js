@@ -195,7 +195,9 @@ export async function updateSize(client) {
           await updateRegionArgument(id, found_region[0]);
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
 
