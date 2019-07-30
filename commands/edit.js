@@ -77,8 +77,8 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
             `argument \`URL\` is missing continue...`
           );
         } else {
-          url = messageArguments[urlIndex];
-          messageArguments.splice(urlIndex, 1);
+          url = args[urlIndex];
+          args.splice(urlIndex, 1);
           await receivedMessage.channel.send(`argument \`URL\` is present!`);
         }
 
@@ -90,8 +90,8 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
             `argument \`TITLE\` is missing continue...`
           );
         } else {
-          title = messageArguments[titleIndex];
-          messageArguments.splice(titleIndex, 1);
+          title = args[titleIndex];
+          args.splice(titleIndex, 1);
           await receivedMessage.channel.send(`argument \`TITLE\` is present!`);
         }
 
@@ -103,8 +103,8 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
             `argument \`REGION\` is missing continue...`
           );
         } else {
-          region = messageArguments[regionIndex];
-          messageArguments.splice(regionIndex, 1);
+          region = args[regionIndex];
+          args.splice(regionIndex, 1);
           await receivedMessage.channel.send(`argument \`REGION\` is present!`);
         }
 
@@ -116,8 +116,8 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
             `argument \`PLATFORM\` is missing continue...`
           );
         } else {
-          platform = messageArguments[platformIndex];
-          messageArguments.splice(platformIndex, 1);
+          platform = args[platformIndex];
+          args.splice(platformIndex, 1);
           await receivedMessage.channel.send(
             `argument \`PLATFORM\` is present!`
           );
@@ -131,8 +131,8 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
             `argument \`SIZE\` is missing continue...`
           );
         } else {
-          size = messageArguments[sizeIndex];
-          messageArguments.splice(sizeIndex, 1);
+          size = args[sizeIndex];
+          args.splice(sizeIndex, 1);
           await receivedMessage.channel.send(`argument \`SIZE\` is present!`);
         }
 
