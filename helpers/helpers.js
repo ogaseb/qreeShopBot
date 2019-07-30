@@ -160,6 +160,7 @@ export async function urlStatus(client) {
   for (const { id, qr_link, name, uploader_discord_id } of rows) {
     try {
       console.log(`starting scanning ${name}`);
+      await axios.head(qr_link, { timeout: 15000 });
     } catch (e) {
       if (e.response) {
         if (e.response.status === 404) {
