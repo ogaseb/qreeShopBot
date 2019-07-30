@@ -188,17 +188,15 @@ export async function updateSize(client) {
           if (found_region && region === "N/A") {
             await updateRegionArgument(id, found_region[0]);
           }
-          if (pretty(response.headers["content-length"], true)) {
-            await updateSizeArgument(
-              id,
-              pretty(response.headers["content-length"], true)
-            );
-          }
           console.log(
             pretty(response.headers["content-length"], true),
             name,
             found_region[0],
             id
+          );
+          await updateSizeArgument(
+            id,
+            pretty(response.headers["content-length"], true)
           );
         }
       })
