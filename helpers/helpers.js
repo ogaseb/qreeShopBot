@@ -155,22 +155,29 @@ export function sendToQrGames(args, receivedMessage, client) {
 export async function urlStatus(client) {
   await client.channels
     .get("604692669146333184")
-    .send(`Checking urls started... I will do it every hour`);
+    .send(`Checking urls started... I will do it every 24 hours`);
   const { rows } = await getWholeDB();
   for (const { id, qr_link, name } of rows) {
-    urlStatusCode(qr_link, async (error, statusCode) => {
-      if (error) {
-      } else {
-        console.log(statusCode);
-        if (statusCode === 404) {
+    try {
+      console.log(`starting scanning ${name}`);
+      const response = await axios.head(qr_link, { timeout: 15000 });
+    } catch (e) {
+      if (e.response) {
+        if (e.response.status === 404) {
           await client.channels
             .get("604692669146333184")
             .send(
-              `This Game ${name} is giving 404 error (not found), DB ID to update link: ${id} . Mark it with some reaction if its fixed! `
+              `${qr_link} sends ${e.response.status} respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} .`
             );
         }
+      } else {
+        await client.channels
+          .get("604692669146333184")
+          .send(
+            `${qr_link} sends error respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} .`
+          );
       }
-    });
+    }
   }
 }
 

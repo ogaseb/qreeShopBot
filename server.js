@@ -65,7 +65,7 @@ client.on("ready", async () => {
 
   setInterval(async () => {
     await urlStatus(client);
-  }, 1000 * 60 * 60);
+  }, 1000 * 60 * 60 * 24);
 });
 
 client.on("message", receivedMessage => {
