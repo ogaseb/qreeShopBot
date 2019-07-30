@@ -101,15 +101,17 @@ export async function handleGameUpload(
 
     const obj = {
       name: title.replace(/^"(.*)"$/, "$1"),
-      qr_link: url,
-      qr_data: await createASCIIQrCode(messageArguments[urlIndex]),
-      qr_image_url: await createDataURLQrCode(messageArguments[urlIndex]),
-      platform,
-      region,
-      size,
+      qr_link: url[0],
+      qr_data: await createASCIIQrCode(url),
+      qr_image_url: await createDataURLQrCode(url),
+      platform: platform,
+      region: region,
+      size: size,
       uploader_discord_id: receivedMessage.author.id,
       uploader_name: receivedMessage.author.username
     };
+
+    console.log(obj)
 
     // imageDataURI.decode(obj.qr_data);
     let string = obj.name + obj.platform + obj.region + obj.uploader_discord_id;
@@ -154,6 +156,83 @@ export async function handleGameUpload(
       "```" +
       text
     );
+
+
+    const collector = new MessageCollector(
+      receivedMessage.channel,
+      m => m.author.id === receivedMessage.author.id,
+      { time: 60000 }
+    );
+
+    collector.on("collect", async message => {
+      if (message.content.toLowerCase() === "yes") {
+        collector.stop();
+        try {
+          await receivedMessage.channel.send("Saving in database!");
+          await createQree(
+            obj.qr_data,
+            obj.qr_image_url,
+            obj.qr_link,
+            obj.name,
+            obj.platform,
+            obj.region,
+            obj.size,
+            obj.uploader_discord_id,
+            obj.uploader_name
+          );
+
+          const QrCodesSubscription = sendToQrGames(obj, receivedMessage, client);
+          await QrCodesSubscription.build();
+        } catch (e) {
+          console.log(e);
+          await receivedMessage.channel.send(
+            "something went wrong, send it to developer: \n" +
+            "```diff\n- " +
+            e +
+            "```"
+          );
+        }
+      } else if (message.content.toLowerCase() === "no") {
+        collector.stop();
+
+        try {
+          await receivedMessage.channel.send("Ok try again later :P");
+        } catch (e) {
+          console.log(e);
+          await receivedMessage.channel.send(
+            "something went wrong, send it to developer: \n" +
+            "```diff\n- " +
+            e +
+            "```"
+          );
+        }
+      } else if (message.content.toLowerCase() === "search") {
+        try {
+          await receivedMessage.channel.send(
+            "```Ok, displaying games that I have found you can type 'yes'/'no' still```"
+          );
+
+          const QrCodesSearchResults = await createEmbeddedAnswer(
+            rows,
+            receivedMessage
+          );
+          await QrCodesSearchResults.build();
+        } catch (e) {
+          console.log(e);
+          await receivedMessage.channel.send(
+            "something went wrong, send it to developer: \n" +
+            "```diff\n- " +
+            e +
+            "```"
+          );
+        }
+      }
+    });
+
+    collector.on("end", async () => {
+      await receivedMessage.channel.send("upload session ended");
+    });
+
   } catch (e) {
     console.log(e);
     await receivedMessage.channel.send(
@@ -165,78 +244,5 @@ export async function handleGameUpload(
   }
 
 
-  const collector = new MessageCollector(
-    receivedMessage.channel,
-    m => m.author.id === receivedMessage.author.id,
-    { time: 60000 }
-  );
 
-  collector.on("collect", async message => {
-    if (message.content.toLowerCase() === "yes") {
-      collector.stop();
-      try {
-        await receivedMessage.channel.send("Saving in database!");
-        await createQree(
-          obj.qr_data,
-          obj.qr_image_url,
-          obj.qr_link,
-          obj.name,
-          obj.platform,
-          obj.region,
-          obj.size,
-          obj.uploader_discord_id,
-          obj.uploader_name
-        );
-
-        const QrCodesSubscription = sendToQrGames(obj, receivedMessage, client);
-        await QrCodesSubscription.build();
-      } catch (e) {
-        console.log(e);
-        await receivedMessage.channel.send(
-          "something went wrong, send it to developer: \n" +
-            "```diff\n- " +
-            e +
-            "```"
-        );
-      }
-    } else if (message.content.toLowerCase() === "no") {
-      collector.stop();
-
-      try {
-        await receivedMessage.channel.send("Ok try again later :P");
-      } catch (e) {
-        console.log(e);
-        await receivedMessage.channel.send(
-          "something went wrong, send it to developer: \n" +
-            "```diff\n- " +
-            e +
-            "```"
-        );
-      }
-    } else if (message.content.toLowerCase() === "search") {
-      try {
-        await receivedMessage.channel.send(
-          "```Ok, displaying games that I have found you can type 'yes'/'no' still```"
-        );
-
-        const QrCodesSearchResults = await createEmbeddedAnswer(
-          rows,
-          receivedMessage
-        );
-        await QrCodesSearchResults.build();
-      } catch (e) {
-        console.log(e);
-        await receivedMessage.channel.send(
-          "something went wrong, send it to developer: \n" +
-            "```diff\n- " +
-            e +
-            "```"
-        );
-      }
-    }
-  });
-
-  collector.on("end", async () => {
-    await receivedMessage.channel.send("upload session ended");
-  });
 }
