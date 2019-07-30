@@ -174,29 +174,38 @@ export async function urlStatus(client) {
   }
 }
 
-export async function updateSize(client) {
+export async function updateSize() {
   const { rows } = await getWholeDB();
   for (const { id, qr_link, name, region } of rows) {
     try {
       const response = await axios(qr_link);
       if (response && response.status !== 404) {
-        const found_region = response.headers["content-disposition"].match(
-          /\b\w*USA|JPN|EUR|GLOBAL|HACK|RF\w*\b/i
-        );
-        console.log(pretty(response.headers["content-length"], true), name, id);
-        if (pretty(response.headers["content-length"], true)) {
+        let found_region;
+        if (response.headers["content-disposition"]) {
+          found_region = response.headers["content-disposition"].match(
+            /\b\w*USA|JPN|EUR|GLOBAL|HACK|RF\w*\b/i
+          );
+        }
+
+        if (response.headers["content-length"]) {
           await updateSizeArgument(
             id,
             pretty(response.headers["content-length"], true)
           );
+          console.log(
+            pretty(response.headers["content-length"], true),
+            name,
+            id
+          );
         }
+
         if (found_region && region === "N/A") {
           console.log(found_region[0]);
           await updateRegionArgument(id, found_region[0]);
         }
       }
     } catch (e) {
-      console.log(e);
+      console.log(e.response.status);
     }
   }
 }
