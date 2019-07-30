@@ -154,7 +154,7 @@ export function sendToQrGames(args, receivedMessage, client) {
 
 export async function urlStatus(client) {
   await client.channels
-    .get("604692669146333184")
+    .get("604692367018033152")
     .send(`Checking urls started... I will do it every 24 hours`);
   const { rows } = await getWholeDB();
   for (const { id, qr_link, name } of rows) {
@@ -165,14 +165,14 @@ export async function urlStatus(client) {
       if (e.response) {
         if (e.response.status === 404) {
           await client.channels
-            .get("604692669146333184")
+            .get("604692367018033152")
             .send(
               `${qr_link} sends ${e.response.status} respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} .`
             );
         }
       } else {
         await client.channels
-          .get("604692669146333184")
+          .get("604692367018033152")
           .send(
             `${qr_link} sends error respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} .`
           );
