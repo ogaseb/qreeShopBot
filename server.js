@@ -9,12 +9,11 @@ import {
   createEmbeddedHelper,
   makeQrImagesfromDB
 } from "./commands/index";
-import {regexes, checkIfDM, urlStatus, updateSize} from "./helpers/helpers";
+import { regexes, checkIfDM, urlStatus, updateSize } from "./helpers/helpers";
 import { initializeDb } from "./models/database";
 import { approxQrCount } from "./db/db_qree";
-import request from "request"
-import pretty from 'prettysize';
-
+import request from "request";
+import pretty from "prettysize";
 
 process.on("unhandledRejection", (err, p) => {
   console.log("An unhandledRejection occurred");
@@ -67,9 +66,6 @@ client.on("ready", async () => {
   setInterval(async () => {
     await urlStatus(client);
   }, 1000 * 60 * 60);
-
-
-
 });
 
 client.on("message", receivedMessage => {
@@ -149,7 +145,11 @@ function processCommand(receivedMessage) {
       }
 
       if (primaryCommand === "invoke") {
-        return changeInvokeCommand(messageArguments, receivedMessage, serverInvokers);
+        return changeInvokeCommand(
+          messageArguments,
+          receivedMessage,
+          serverInvokers
+        );
       }
 
       if (primaryCommand === "scrap") {

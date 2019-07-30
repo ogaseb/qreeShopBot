@@ -23,16 +23,18 @@ export async function handleGameUpload(
       );
     }
 
-    const urlIndex = messageArguments.findIndex(value => regexes.URL.test(value));
+    const urlIndex = messageArguments.findIndex(value =>
+      regexes.URL.test(value)
+    );
 
-    let url, title, region,platform, size;
+    let url, title, region, platform, size;
     if (urlIndex === -1) {
       return receivedMessage.channel.send(
         `invalid arguments \`URL\` for upload command`
       );
     } else {
-      url = messageArguments[urlIndex]
-      messageArguments.splice(urlIndex,1)
+      url = messageArguments[urlIndex];
+      messageArguments.splice(urlIndex, 1);
     }
 
     const titleIndex = messageArguments.findIndex(value =>
@@ -43,8 +45,8 @@ export async function handleGameUpload(
         `invalid arguments \`TITLE\` for upload command`
       );
     } else {
-      title = messageArguments[titleIndex]
-      messageArguments.splice(titleIndex,1)
+      title = messageArguments[titleIndex];
+      messageArguments.splice(titleIndex, 1);
     }
 
     const regionIndex = messageArguments.findIndex(value =>
@@ -54,9 +56,9 @@ export async function handleGameUpload(
       return receivedMessage.channel.send(
         `invalid arguments \`REGION\` for upload command`
       );
-    }else {
-      region = messageArguments[regionIndex]
-      messageArguments.splice(regionIndex,1)
+    } else {
+      region = messageArguments[regionIndex];
+      messageArguments.splice(regionIndex, 1);
     }
 
     const platformIndex = messageArguments.findIndex(value =>
@@ -66,9 +68,9 @@ export async function handleGameUpload(
       return receivedMessage.channel.send(
         `invalid arguments \`PLATFORM\` for upload command`
       );
-    }else {
-      platform = messageArguments[platformIndex]
-      messageArguments.splice(platformIndex,1)
+    } else {
+      platform = messageArguments[platformIndex];
+      messageArguments.splice(platformIndex, 1);
     }
 
     const sizeIndex = messageArguments.findIndex(value =>
@@ -78,9 +80,9 @@ export async function handleGameUpload(
       return receivedMessage.channel.send(
         `invalid arguments \`SIZE\` for upload command`
       );
-    }else {
-      size = messageArguments[sizeIndex]
-      messageArguments.splice(sizeIndex,1)
+    } else {
+      size = messageArguments[sizeIndex];
+      messageArguments.splice(sizeIndex, 1);
     }
 
     console.log(url, title, region, platform, size);
@@ -88,14 +90,9 @@ export async function handleGameUpload(
     if (url.match(regexes.GDRIVE)) {
       url = parseGDriveLink(url);
     } else if (url.match(regexes.DROPBOX)) {
-      if (
-        url.slice(-1) === "0" ||
-        url.slice(-1) === "1"
-      ) {
+      if (url.slice(-1) === "0" || url.slice(-1) === "1") {
         url = parseDropboxLink(url);
-        url = url.match(
-          /^(.*?)\.?dl=1/gi
-        );
+        url = url.match(/^(.*?)\.?dl=1/gi);
       }
     }
 
@@ -111,7 +108,7 @@ export async function handleGameUpload(
       uploader_name: receivedMessage.author.username
     };
 
-    console.log(obj)
+    console.log(obj);
 
     // imageDataURI.decode(obj.qr_data);
     let string = obj.name + obj.platform + obj.region + obj.uploader_discord_id;
@@ -122,14 +119,14 @@ export async function handleGameUpload(
     const text =
       rows.length === 0
         ? "```diff\n" +
-        "+ This is how it will look, save in database? Type 'yes'/'no'" +
-        "\n```"
+          "+ This is how it will look, save in database? Type 'yes'/'no'" +
+          "\n```"
         : "```diff\n" +
-        "- I FOUND THE GAMES WITH SIMILAR NAME, CHECK THEM BEFORE SAYING 'yes' BY TYPING 'search'" +
-        "\n```" +
-        "```diff\n" +
-        "+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)" +
-        "\n```";
+          "- I FOUND THE GAMES WITH SIMILAR NAME, CHECK THEM BEFORE SAYING 'yes' BY TYPING 'search'" +
+          "\n```" +
+          "```diff\n" +
+          "+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)" +
+          "\n```";
 
     await receivedMessage.channel
       .send("", {
@@ -141,22 +138,21 @@ export async function handleGameUpload(
 
     await receivedMessage.channel.send(
       "```" +
-      "\nLink: " +
-      obj.qr_link +
-      "\n\nName: " +
-      obj.name +
-      "\nPlatform: " +
-      obj.platform +
-      "\nRegion: " +
-      obj.region +
-      "\nSize: " +
-      obj.size +
-      "\nUploader: " +
-      obj.uploader_name +
-      "```" +
-      text
+        "\nLink: " +
+        obj.qr_link +
+        "\n\nName: " +
+        obj.name +
+        "\nPlatform: " +
+        obj.platform +
+        "\nRegion: " +
+        obj.region +
+        "\nSize: " +
+        obj.size +
+        "\nUploader: " +
+        obj.uploader_name +
+        "```" +
+        text
     );
-
 
     const collector = new MessageCollector(
       receivedMessage.channel,
@@ -181,15 +177,19 @@ export async function handleGameUpload(
             obj.uploader_name
           );
 
-          const QrCodesSubscription = sendToQrGames(obj, receivedMessage, client);
+          const QrCodesSubscription = sendToQrGames(
+            obj,
+            receivedMessage,
+            client
+          );
           await QrCodesSubscription.build();
         } catch (e) {
           console.log(e);
           await receivedMessage.channel.send(
             "something went wrong, send it to developer: \n" +
-            "```diff\n- " +
-            e +
-            "```"
+              "```diff\n- " +
+              e +
+              "```"
           );
         }
       } else if (message.content.toLowerCase() === "no") {
@@ -201,9 +201,9 @@ export async function handleGameUpload(
           console.log(e);
           await receivedMessage.channel.send(
             "something went wrong, send it to developer: \n" +
-            "```diff\n- " +
-            e +
-            "```"
+              "```diff\n- " +
+              e +
+              "```"
           );
         }
       } else if (message.content.toLowerCase() === "search") {
@@ -221,9 +221,9 @@ export async function handleGameUpload(
           console.log(e);
           await receivedMessage.channel.send(
             "something went wrong, send it to developer: \n" +
-            "```diff\n- " +
-            e +
-            "```"
+              "```diff\n- " +
+              e +
+              "```"
           );
         }
       }
@@ -232,17 +232,13 @@ export async function handleGameUpload(
     collector.on("end", async () => {
       await receivedMessage.channel.send("upload session ended");
     });
-
   } catch (e) {
     console.log(e);
     await receivedMessage.channel.send(
       "something went wrong, send it to developer: \n" +
-      "```diff\n- " +
-      e +
-      "```"
+        "```diff\n- " +
+        e +
+        "```"
     );
   }
-
-
-
 }

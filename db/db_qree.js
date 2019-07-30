@@ -137,3 +137,33 @@ export async function updateQrImageUrl(id, qrImageUrl) {
     console.log(e);
   }
 }
+
+export async function updateSizeArgument(id, size) {
+  const client = createDBclient();
+  try {
+    await client.connect();
+    const res = await client.query(
+      `UPDATE qre_items SET size = '${size}' WHERE id = ${id}`
+    );
+    console.log("DB -> updating size for id: " + id);
+    await client.end();
+    return res;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export async function updateRegionArgument(id, region) {
+  const client = createDBclient();
+  try {
+    await client.connect();
+    const res = await client.query(
+      `UPDATE qre_items SET region = '${region}' WHERE id = ${id}`
+    );
+    console.log("DB -> updating region for id: " + id);
+    await client.end();
+    return res;
+  } catch (e) {
+    console.log(e);
+  }
+}

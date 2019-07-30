@@ -1,10 +1,20 @@
 import qrCode from "qrcode-generator";
 import { MessageEmbed } from "discord.js";
 import { Embeds } from "discord-paginationembed";
-import { getWholeDB } from "../db/db_qree";
+import {
+  getWholeDB,
+  updateRegionArgument,
+  updateSizeArgument
+} from "../db/db_qree";
 import urlStatusCode from "url-status-code";
-import request from "request";
+import rp from "request-promise";
+
+function dbInsert(obj) {
+  //insert into database
+  // return a promise that resolves when the database insertion is done
+}
 import pretty from "prettysize";
+import axios from "axios";
 
 export function parseDropboxLink(link) {
   let string = link;
@@ -57,18 +67,16 @@ export async function limitlessFetchMessages(channel, limit = 9000) {
 export async function createEmbeddedAnswer(args, receivedMessage, destination) {
   const embeds = [];
   args.map(
-    async (
-      {
-        id,
-        qr_link,
-        name,
-        platform,
-        region,
-        size,
-        uploader_name,
-        qr_image_url
-      }
-    ) => {
+    async ({
+      id,
+      qr_link,
+      name,
+      platform,
+      region,
+      size,
+      uploader_name,
+      qr_image_url
+    }) => {
       embeds.push(
         new MessageEmbed()
           .setImage(qr_image_url)
@@ -146,22 +154,17 @@ export function sendToQrGames(args, receivedMessage, client) {
 
 export async function urlStatus(client) {
   await client.channels
-    .get("605181514321494036")
-    .send(
-      `Checking urls started... I will do it every hour`
-    );
+    .get("604692669146333184")
+    .send(`Checking urls started... I will do it every hour`);
   const { rows } = await getWholeDB();
-  for (const {
-    id,
-    qr_link,
-    name,
-  } of rows) {
+  for (const { id, qr_link, name } of rows) {
     urlStatusCode(qr_link, async (error, statusCode) => {
       if (error) {
       } else {
+        console.log(statusCode);
         if (statusCode === 404) {
           await client.channels
-            .get("605181514321494036")
+            .get("604692669146333184")
             .send(
               `This Game ${name} is giving 404 error (not found), DB ID to update link: ${id} . Mark it with some reaction if its fixed! `
             );
@@ -173,25 +176,35 @@ export async function urlStatus(client) {
 
 export async function updateSize(client) {
   const { rows } = await getWholeDB();
-  for (const {
-    id,
-    qr_link,
-    name,
-    size
-  } of rows)
-  {
-    await request({
-      url: qr_link,
-      method: "HEAD"
-    }, function(err, response) {
-      if (response && size !== "N/A"){
-        console.log(pretty(response.headers["content-length"], true), name, id);
-      }
-    });
+  for (const { id, qr_link, name, region } of rows) {
+    axios
+      .get(qr_link)
+      .then(async function(response) {
+        console.log(response.status);
+        if (response && response.status !== 404) {
+          const found_region = response.headers["content-disposition"].match(
+            /\b\w*USA|JPN|EUR|GLOBAL|HACK|RF\w*\b/i
+          );
+          if (found_region && region === "N/A") {
+            await updateRegionArgument(id, found_region[0]);
+          }
+          if (pretty(response.headers["content-length"], true)) {
+            await updateSizeArgument(
+              id,
+              pretty(response.headers["content-length"], true)
+            );
+          }
+          console.log(
+            pretty(response.headers["content-length"], true),
+            name,
+            found_region[0],
+            id
+          );
+        }
+      })
+      .catch(e => {});
   }
 }
-
-
 
 export function checkIfDM(receivedMessage) {
   return receivedMessage.channel.type === "dm";
