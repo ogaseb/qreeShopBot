@@ -179,7 +179,7 @@ export async function updateSize() {
   for (const { id, qr_link, name, region } of rows) {
     try {
       console.log(`starting scanning ${name}`);
-      const response = await axios(qr_link, { timeout: 15000 });
+      const response = await axios.head(qr_link, { timeout: 15000 });
       if (response && response.status !== 404) {
         let found_region;
         if (response.headers["content-disposition"]) {
