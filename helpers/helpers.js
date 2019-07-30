@@ -3,6 +3,8 @@ import { MessageEmbed } from "discord.js";
 import { Embeds } from "discord-paginationembed";
 import { getWholeDB } from "../db/db_qree";
 import urlStatusCode from "url-status-code";
+import request from "request";
+import pretty from "prettysize";
 
 export function parseDropboxLink(link) {
   let string = link;
@@ -168,6 +170,28 @@ export async function urlStatus(client) {
     });
   }
 }
+
+export async function updateSize(client) {
+  const { rows } = await getWholeDB();
+  for (const {
+    id,
+    qr_link,
+    name,
+    size
+  } of rows)
+  {
+    await request({
+      url: qr_link,
+      method: "HEAD"
+    }, function(err, response) {
+      if (response && size !== "N/A"){
+        console.log(pretty(response.headers["content-length"], true), name, id);
+      }
+    });
+  }
+}
+
+
 
 export function checkIfDM(receivedMessage) {
   return receivedMessage.channel.type === "dm";

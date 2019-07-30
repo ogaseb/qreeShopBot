@@ -157,7 +157,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           qr_data: url
             ? await createASCIIQrCode(url)
             : rows[0].qr_data,
-          qr_image_url: rows[0].qr_image_url,
+          qr_image_url: url ? await createDataURLQrCode(url) :rows[0].qr_image_url,
           platform: platform || rows[0].platform,
           region: region || rows[0].region,
           size: size || rows[0].size,
