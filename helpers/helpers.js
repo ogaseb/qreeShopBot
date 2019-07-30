@@ -206,7 +206,11 @@ export async function updateSize() {
         }
       }
     } catch (e) {
-      console.log(e.response.status);
+      if (e.response) {
+        console.log(e.response.status);
+      } else {
+        console.log(e);
+      }
     }
   }
 }
