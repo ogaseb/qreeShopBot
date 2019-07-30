@@ -10,9 +10,9 @@ import imageDataURI from "image-data-uri";
 
 export async function handleGameEdit(messageArguments, receivedMessage) {
   try {
+
     const id = parseInt(messageArguments[1]);
     const { rows } = await findGameToEdit(id);
-    //TODO UPDATE IT LATER
     if (rows.length) {
       const collector = new MessageCollector(
         receivedMessage.channel,
@@ -71,12 +71,15 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
         collectedArguments.pop();
         const args = collectedArguments.join(" ").match(regexes.ARGUMENTS);
 
+        let url, title, region,platform, size;
         const urlIndex = await args.findIndex(value => regexes.URL.test(value));
         if (urlIndex === -1) {
           await receivedMessage.channel.send(
             `argument \`URL\` is missing continue...`
           );
         } else {
+          url = messageArguments[urlIndex]
+          messageArguments.splice(urlIndex,1)
           await receivedMessage.channel.send(`argument \`URL\` is present!`);
         }
 
@@ -88,6 +91,8 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
             `argument \`TITLE\` is missing continue...`
           );
         } else {
+          title = messageArguments[titleIndex]
+          messageArguments.splice(titleIndex,1)
           await receivedMessage.channel.send(`argument \`TITLE\` is present!`);
         }
 
@@ -99,6 +104,8 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
             `argument \`REGION\` is missing continue...`
           );
         } else {
+          region = messageArguments[regionIndex]
+          messageArguments.splice(regionIndex,1)
           await receivedMessage.channel.send(`argument \`REGION\` is present!`);
         }
 
@@ -110,6 +117,8 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
             `argument \`PLATFORM\` is missing continue...`
           );
         } else {
+          platform = messageArguments[platformIndex]
+          messageArguments.splice(platformIndex,1)
           await receivedMessage.channel.send(
             `argument \`PLATFORM\` is present!`
           );
@@ -123,39 +132,40 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
             `argument \`SIZE\` is missing continue...`
           );
         } else {
+          size = messageArguments[sizeIndex]
+          messageArguments.splice(sizeIndex,1)
           await receivedMessage.channel.send(`argument \`SIZE\` is present!`);
         }
 
         console.log(
-          urlIndex,
-          titleIndex,
-          regionIndex,
-          sizeIndex,
-          platformIndex,
-          args[platformIndex]
+          url,
+          title,
+          region,
+          size,
+          platform,
         );
-        let name;
-        if (args[titleIndex]) {
-          name = pgEscape
-            .string(args[titleIndex].replace(/^"(.*)"$/, "$1"))
+
+        if (title) {
+          title = pgEscape
+            .string(title.replace(/^"(.*)"$/, "$1"))
             .replace(/'/g, "''");
         }
 
         const obj = {
-          name: args[titleIndex] ? name : rows[0].name,
-          qr_link: args[urlIndex] || rows[0].qr_link,
-          qr_data: args[urlIndex]
-            ? await createASCIIQrCode(args[urlIndex])
+          name: title ? title : rows[0].name,
+          qr_link: url || rows[0].qr_link,
+          qr_data: url
+            ? await createASCIIQrCode(url)
             : rows[0].qr_data,
           qr_image_url: rows[0].qr_image_url,
-          platform: args[platformIndex] || rows[0].platform,
-          region: args[regionIndex] || rows[0].region,
-          size: args[sizeIndex] || rows[0].size,
+          platform: platform || rows[0].platform,
+          region: region || rows[0].region,
+          size: size || rows[0].size,
           uploader_discord_id: rows[0].uploader_discord_id,
           uploader_name: rows[0].uploader_name
         };
 
-        if (args[urlIndex]) {
+        if (url) {
           let string =
             obj.name + obj.platform + obj.region + obj.uploader_discord_id;
           string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");

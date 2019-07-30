@@ -61,9 +61,9 @@ client.on("ready", async () => {
     });
   }, 60000);
 
-  // setInterval(async () => {
-  //   await urlStatus(client);
-  // }, 1000);
+  setInterval(async () => {
+    await urlStatus(client);
+  }, 1000 * 60 * 60);
 });
 
 client.on("message", receivedMessage => {
@@ -143,7 +143,7 @@ function processCommand(receivedMessage) {
       }
 
       if (primaryCommand === "invoke") {
-        return changeInvokeCommand(messageArguments, receivedMessage);
+        return changeInvokeCommand(messageArguments, receivedMessage, serverInvokers);
       }
 
       if (primaryCommand === "scrap") {
@@ -163,7 +163,7 @@ function processCommand(receivedMessage) {
       }
     } else {
       return receivedMessage.channel.send(
-        "You have no permissions to use this commands"
+        "You have no permissions to use this commands or command is not found"
       );
     }
   }

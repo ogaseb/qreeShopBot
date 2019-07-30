@@ -65,8 +65,7 @@ export async function createEmbeddedAnswer(args, receivedMessage, destination) {
         size,
         uploader_name,
         qr_image_url
-      },
-      index
+      }
     ) => {
       embeds.push(
         new MessageEmbed()
@@ -144,25 +143,23 @@ export function sendToQrGames(args, receivedMessage, client) {
 }
 
 export async function urlStatus(client) {
+  await client.channels
+    .get("605181514321494036")
+    .send(
+      `Checking urls started... I will do it every hour`
+    );
   const { rows } = await getWholeDB();
   for (const {
     id,
-    qr_data,
     qr_link,
     name,
-    platform,
-    region,
-    size,
-    uploader_discord_id
   } of rows) {
     urlStatusCode(qr_link, async (error, statusCode) => {
       if (error) {
-        console.error(error);
       } else {
-        console.log(statusCode);
         if (statusCode === 404) {
           await client.channels
-            .get("604692669146333184")
+            .get("605181514321494036")
             .send(
               `This Game ${name} is giving 404 error (not found), DB ID to update link: ${id} . Mark it with some reaction if its fixed! `
             );

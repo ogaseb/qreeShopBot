@@ -1,4 +1,4 @@
-export function changeInvokeCommand(messageArguments, receivedMessage) {
+export function changeInvokeCommand(messageArguments, receivedMessage, serverInvokers) {
   if (receivedMessage.channel.type === "dm") {
     return receivedMessage.channel.send(
       `This command is available only in servers`
