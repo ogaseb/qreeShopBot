@@ -196,33 +196,6 @@ export async function updateSize(client) {
         }
       }
     } catch (e) {}
-
-    // axios
-    //   .get(qr_link)
-    //   .then(function(response) {
-    // if (response && response.status !== 404) {
-    //   const found_region = response.headers["content-disposition"].match(
-    //     /\b\w*USA|JPN|EUR|GLOBAL|HACK|RF\w*\b/i
-    //   );
-    //   console.log(
-    //     pretty(response.headers["content-length"], true),
-    //     name,
-    //     id
-    //   );
-    //   updateSizeArgument(
-    //     id,
-    //     pretty(response.headers["content-length"], true)
-    //   );
-    //   if (found_region && region === "N/A") {
-    //     console.log(found_region[0]);
-    //     updateRegionArgument(id, found_region[0]);
-    //   }
-    // }
-    // })
-    // .then(data => {
-    //   console.log(data);
-    // })
-    // .catch(e => {});
   }
 }
 
