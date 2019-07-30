@@ -177,30 +177,52 @@ export async function urlStatus(client) {
 export async function updateSize(client) {
   const { rows } = await getWholeDB();
   for (const { id, qr_link, name, region } of rows) {
-    axios
-      .get(qr_link)
-      .then(async function(response) {
-        console.log(response.status);
-        if (response && response.status !== 404) {
-          const found_region = response.headers["content-disposition"].match(
-            /\b\w*USA|JPN|EUR|GLOBAL|HACK|RF\w*\b/i
-          );
-          if (found_region && region === "N/A") {
-            await updateRegionArgument(id, found_region[0]);
-          }
-          console.log(
-            pretty(response.headers["content-length"], true),
-            name,
-            found_region[0],
-            id
-          );
+    try {
+      const response = await axios(qr_link);
+      if (response && response.status !== 404) {
+        const found_region = response.headers["content-disposition"].match(
+          /\b\w*USA|JPN|EUR|GLOBAL|HACK|RF\w*\b/i
+        );
+        console.log(pretty(response.headers["content-length"], true), name, id);
+        if (pretty(response.headers["content-length"], true)) {
           await updateSizeArgument(
             id,
             pretty(response.headers["content-length"], true)
           );
         }
-      })
-      .catch(e => {});
+        if (found_region && region === "N/A") {
+          console.log(found_region[0]);
+          await updateRegionArgument(id, found_region[0]);
+        }
+      }
+    } catch (e) {}
+
+    // axios
+    //   .get(qr_link)
+    //   .then(function(response) {
+    // if (response && response.status !== 404) {
+    //   const found_region = response.headers["content-disposition"].match(
+    //     /\b\w*USA|JPN|EUR|GLOBAL|HACK|RF\w*\b/i
+    //   );
+    //   console.log(
+    //     pretty(response.headers["content-length"], true),
+    //     name,
+    //     id
+    //   );
+    //   updateSizeArgument(
+    //     id,
+    //     pretty(response.headers["content-length"], true)
+    //   );
+    //   if (found_region && region === "N/A") {
+    //     console.log(found_region[0]);
+    //     updateRegionArgument(id, found_region[0]);
+    //   }
+    // }
+    // })
+    // .then(data => {
+    //   console.log(data);
+    // })
+    // .catch(e => {});
   }
 }
 
