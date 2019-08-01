@@ -93,12 +93,15 @@ export async function handleGameUpload(
       if (url.slice(-1) === "0" || url.slice(-1) === "1") {
         url = parseDropboxLink(url);
         url = url.match(/^(.*?)\.?dl=1/gi);
+        url = url[0];
       }
     }
 
+    console.log(url);
+
     const obj = {
       name: title.replace(/^"(.*)"$/, "$1"),
-      qr_link: url[0],
+      qr_link: url,
       qr_data: await createASCIIQrCode(url),
       qr_image_url: await createDataURLQrCode(url),
       platform: platform,

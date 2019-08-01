@@ -33,9 +33,10 @@ export async function getStatsFromDB() {
   try {
     await client.connect();
 
-    await client.query(`SELECT * FROM qre_search_stats`);
+    const response = await client.query("SELECT * FROM qre_search_stats;");
     await client.end();
     console.log("DB -> get all stats from DB");
+    return response;
   } catch (e) {
     console.log(e);
   }
