@@ -34,7 +34,7 @@ export async function getStats(receivedMessage) {
       successCounter +
       " \n" +
       "failure search count: " +
-      successCounter +
+      failureCounter +
       " \n" +
       "```"
   );
