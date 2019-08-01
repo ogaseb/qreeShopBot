@@ -1,6 +1,7 @@
 import { findGame } from "../../db/db_qree";
 import { checkIfDM, createEmbeddedAnswer } from "../../helpers/helpers";
 import pgEscape from "pg-escape";
+import { insertOnSearchCommand } from "../../db/db_search_stats";
 
 export async function searchGame(messageArguments, receivedMessage) {
   try {
@@ -24,6 +25,20 @@ export async function searchGame(messageArguments, receivedMessage) {
         );
       }
     } else {
+      if (checkIfDM(receivedMessage)) {
+        await insertOnSearchCommand(
+          receivedMessage.author.id,
+          nameEscaped,
+          "dm"
+        );
+      } else {
+        await insertOnSearchCommand(
+          receivedMessage.author.id,
+          nameEscaped,
+          "server"
+        );
+      }
+
       const QrCodesSearchResults = await createEmbeddedAnswer(
         rows,
         receivedMessage
