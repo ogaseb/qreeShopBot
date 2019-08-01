@@ -6,13 +6,8 @@ import {
   updateRegionArgument,
   updateSizeArgument
 } from "../db/db_qree";
-import urlStatusCode from "url-status-code";
-import rp from "request-promise";
 
-function dbInsert(obj) {
-  //insert into database
-  // return a promise that resolves when the database insertion is done
-}
+
 import pretty from "prettysize";
 import axios from "axios";
 

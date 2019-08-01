@@ -130,7 +130,7 @@ function processCommand(receivedMessage) {
   }
 
   if (primaryCommand === "search") {
-    return searchGame(messageArguments, receivedMessage);
+    return searchGame(fullCommand, receivedMessage);
   }
 
   if (!checkIfDM(receivedMessage)) {
