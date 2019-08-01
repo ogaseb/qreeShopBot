@@ -1,4 +1,8 @@
-import {getWholeDB, updateRegionArgument, updateSizeArgument} from "../../db/db_qree";
+import {
+  getWholeDB,
+  updateRegionArgument,
+  updateSizeArgument
+} from "../../db/db_qree";
 import axios from "axios";
 import pretty from "prettysize";
 

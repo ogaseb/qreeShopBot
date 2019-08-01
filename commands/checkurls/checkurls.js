@@ -1,4 +1,4 @@
-import {getWholeDB} from "../../db/db_qree";
+import { getWholeDB } from "../../db/db_qree";
 import axios from "axios";
 
 export async function urlStatus(client) {

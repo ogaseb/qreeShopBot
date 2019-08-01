@@ -7,16 +7,15 @@ import {
   updateSizeArgument
 } from "../db/db_qree";
 
-
 import pretty from "prettysize";
 import axios from "axios";
 
 export function parseDropboxLink(link) {
   let string = link;
   string = string.split("/");
-  if (string[3] === "sh" ) {
+  if (string[3] === "sh") {
     string = string.join("/");
-    return string
+    return string;
   } else {
     string[5] = "?dl=1";
     return string;

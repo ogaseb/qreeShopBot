@@ -11,7 +11,7 @@ import {
   urlStatus,
   updateSize
 } from "./commands/index";
-import { regexes, checkIfDM} from "./helpers/helpers";
+import { regexes, checkIfDM } from "./helpers/helpers";
 import { initializeDb } from "./models/database";
 import { approxQrCount } from "./db/db_qree";
 
@@ -175,7 +175,7 @@ function processCommand(receivedMessage) {
         "You have no permissions to use this command"
       );
     }
-  }else {
+  } else {
     return receivedMessage.channel.send(
       "this command is available only on qreeShop server"
     );

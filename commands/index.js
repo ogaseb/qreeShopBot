@@ -8,8 +8,6 @@ import { makeQrImagesfromDB } from "./images/images";
 import { urlStatus } from "./checkurls/checkurls";
 import { updateSize } from "./updatesize/updatesize";
 
-
-
 export {
   scrapChannelForQrCodes,
   changeInvokeCommand,
