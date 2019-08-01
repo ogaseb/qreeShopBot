@@ -6,8 +6,8 @@ import {
   regexes,
   sendToQrGames,
   createDataURLQrCode
-} from "../helpers/helpers";
-import { createQree, findGame } from "../db/db_qree";
+} from "../../helpers/helpers";
+import { createQree, findGame } from "../../db/db_qree";
 import { MessageCollector } from "discord.js";
 import imageDataURI from "image-data-uri";
 

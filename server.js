@@ -7,13 +7,13 @@ import {
   searchGame,
   handleGameEdit,
   createEmbeddedHelper,
-  makeQrImagesfromDB
+  makeQrImagesfromDB,
+  urlStatus,
+  updateSize
 } from "./commands/index";
-import { regexes, checkIfDM, urlStatus, updateSize } from "./helpers/helpers";
+import { regexes, checkIfDM} from "./helpers/helpers";
 import { initializeDb } from "./models/database";
 import { approxQrCount } from "./db/db_qree";
-import request from "request";
-import pretty from "prettysize";
 
 process.on("unhandledRejection", (err, p) => {
   console.log("An unhandledRejection occurred");
@@ -70,7 +70,6 @@ client.on("ready", async () => {
 
 client.on("message", receivedMessage => {
   if (receivedMessage.author === client.user) {
-    // Prevent bot from responding to its own messages
     return;
   }
 
@@ -173,9 +172,13 @@ function processCommand(receivedMessage) {
       }
     } else {
       return receivedMessage.channel.send(
-        "You have no permissions to use this commands or command is not found"
+        "You have no permissions to use this command"
       );
     }
+  }else {
+    return receivedMessage.channel.send(
+      "this command is available only on qreeShop server"
+    );
   }
 
   return receivedMessage.channel.send(`Command not found`);

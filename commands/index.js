@@ -1,10 +1,14 @@
-import { scrapChannelForQrCodes } from "./scrap.js";
-import { changeInvokeCommand } from "./invoke.js";
-import { handleGameUpload } from "./upload.js";
-import { searchGame } from "./search.js";
-import { handleGameEdit } from "./edit.js";
-import { createEmbeddedHelper } from "./help.js";
-import { makeQrImagesfromDB } from "./images";
+import { scrapChannelForQrCodes } from "./scrap/scrap.js";
+import { changeInvokeCommand } from "./invoke/invoke.js";
+import { handleGameUpload } from "./upload/upload.js";
+import { searchGame } from "./search/search.js";
+import { handleGameEdit } from "./edit/edit.js";
+import { createEmbeddedHelper } from "./help/help.js";
+import { makeQrImagesfromDB } from "./images/images";
+import { urlStatus } from "./checkurls/checkurls";
+import { updateSize } from "./updatesize/updatesize";
+
+
 
 export {
   scrapChannelForQrCodes,
@@ -13,5 +17,7 @@ export {
   searchGame,
   handleGameEdit,
   createEmbeddedHelper,
-  makeQrImagesfromDB
+  makeQrImagesfromDB,
+  urlStatus,
+  updateSize
 };

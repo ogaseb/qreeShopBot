@@ -1,6 +1,6 @@
 import { MessageEmbed } from "discord.js";
 import { Embeds } from "discord-paginationembed";
-import { checkIfDM } from "../helpers/helpers";
+import { checkIfDM } from "../../helpers/helpers";
 
 export function createEmbeddedHelper(
   serverInvokers,

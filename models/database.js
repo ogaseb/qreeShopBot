@@ -21,6 +21,20 @@ export async function initializeDb() {
         ")"
     );
 
+    // await client.query(
+    //   "CREATE TABLE IF NOT EXISTS qre_stats(id SERIAL PRIMARY KEY, " +
+    //   "search_from_channel_Count text not null, " +
+    //   "search_from_dm_Count text not null " +
+    //   ")"
+    // );
+
+    // await client.query(
+    //   "CREATE TABLE IF NOT EXISTS qre_stats(id SERIAL PRIMARY KEY, " +
+    //   "search_from_channel_Count text not null, " +
+    //   "search_from_dm_Count text not null " +
+    //   ")"
+    // );
+
     client.end();
   } catch (e) {
     console.log(e);

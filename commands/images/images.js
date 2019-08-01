@@ -1,5 +1,5 @@
-import { createDataURLQrCode } from "../helpers/helpers";
-import { getWholeDB, updateQrImageUrl } from "../db/db_qree";
+import { createDataURLQrCode } from "../../helpers/helpers";
+import { getWholeDB, updateQrImageUrl } from "../../db/db_qree";
 import { MessageCollector } from "discord.js";
 import imageDataURI from "image-data-uri";
 import fs from "fs";

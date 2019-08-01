@@ -1,10 +1,10 @@
-import { editQree, findGameToEdit } from "../db/db_qree";
+import { editQree, findGameToEdit } from "../../db/db_qree";
 import { MessageCollector } from "discord.js";
 import {
   createASCIIQrCode,
   createDataURLQrCode,
   regexes
-} from "../helpers/helpers";
+} from "../../helpers/helpers";
 import pgEscape from "pg-escape";
 import imageDataURI from "image-data-uri";
 

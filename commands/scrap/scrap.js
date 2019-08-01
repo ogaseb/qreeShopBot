@@ -4,11 +4,11 @@ import {
   limitlessFetchMessages,
   parseDropboxLink,
   regexes
-} from "../helpers/helpers";
+} from "../../helpers/helpers";
 import fetch from "node-fetch";
 import jimp from "jimp";
 import QRReader from "qrcode-reader";
-import { createQree, findGame } from "../db/db_qree";
+import { createQree, findGame } from "../../db/db_qree";
 import pgEscape from "pg-escape";
 
 export async function scrapChannelForQrCodes(
