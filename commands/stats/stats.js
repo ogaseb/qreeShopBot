@@ -1,8 +1,7 @@
 import { getStatsFromDB } from "../../db/db_search_stats";
 
 export async function getStats(receivedMessage) {
-  const response = await getStatsFromDB();
-  console.log(response);
+  const { rows } = await getStatsFromDB();
   let successCounter = 0,
     failureCounter = 0,
     searchCountFromDm = 0,
