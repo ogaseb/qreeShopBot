@@ -14,9 +14,13 @@ import axios from "axios";
 export function parseDropboxLink(link) {
   let string = link;
   string = string.split("/");
-  string[5] = "?dl=1";
-  string = string.join("/");
-  return string;
+  if (string[3] === "sh" ) {
+    string = string.join("/");
+    return string
+  } else {
+    string[5] = "?dl=1";
+    return string;
+  }
 }
 
 export function parseGDriveLink(link) {
