@@ -25,7 +25,8 @@ export async function initializeDb() {
       "CREATE TABLE IF NOT EXISTS qre_search_stats(id SERIAL PRIMARY KEY, " +
         "search_name text not null, " +
         "search_user_id text not null, " +
-        "search_from text not null " +
+        "search_from text not null," +
+        "search_success boolean not null" +
         ")"
     );
 

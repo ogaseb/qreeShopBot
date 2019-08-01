@@ -7,6 +7,7 @@ import { createEmbeddedHelper } from "./help/help.js";
 import { makeQrImagesfromDB } from "./images/images";
 import { urlStatus } from "./checkurls/checkurls";
 import { updateSize } from "./updatesize/updatesize";
+import { getStats } from "./stats/stats";
 
 export {
   scrapChannelForQrCodes,
@@ -17,5 +18,6 @@ export {
   createEmbeddedHelper,
   makeQrImagesfromDB,
   urlStatus,
-  updateSize
+  updateSize,
+  getStats
 };

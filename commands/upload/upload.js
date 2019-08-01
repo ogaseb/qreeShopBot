@@ -29,7 +29,7 @@ export async function handleGameUpload(
 
     let url, title, region, platform, size;
     if (urlIndex === -1) {
-      return receivedMessage.channel.send(
+      return await receivedMessage.channel.send(
         `invalid arguments \`URL\` for upload command`
       );
     } else {
@@ -41,7 +41,7 @@ export async function handleGameUpload(
       regexes.TITLE.test(value)
     );
     if (titleIndex === -1) {
-      return receivedMessage.channel.send(
+      return await receivedMessage.channel.send(
         `invalid arguments \`TITLE\` for upload command`
       );
     } else {
@@ -53,7 +53,7 @@ export async function handleGameUpload(
       regexes.REGIONS.test(value)
     );
     if (regionIndex === -1) {
-      return receivedMessage.channel.send(
+      return await receivedMessage.channel.send(
         `invalid arguments \`REGION\` for upload command`
       );
     } else {
@@ -65,7 +65,7 @@ export async function handleGameUpload(
       regexes.PLATFORMS.test(value)
     );
     if (platformIndex === -1) {
-      return receivedMessage.channel.send(
+      return await receivedMessage.channel.send(
         `invalid arguments \`PLATFORM\` for upload command`
       );
     } else {
@@ -77,7 +77,7 @@ export async function handleGameUpload(
       regexes.SIZE.test(value)
     );
     if (sizeIndex === -1) {
-      return receivedMessage.channel.send(
+      return await receivedMessage.channel.send(
         `invalid arguments \`SIZE\` for upload command`
       );
     } else {
@@ -85,7 +85,7 @@ export async function handleGameUpload(
       messageArguments.splice(sizeIndex, 1);
     }
 
-    console.log(url, title, region, platform, size);
+    console.log(url, title, region, platform, size, messageArguments);
 
     if (url.match(regexes.GDRIVE)) {
       url = parseGDriveLink(url);

@@ -9,7 +9,8 @@ import {
   createEmbeddedHelper,
   makeQrImagesfromDB,
   urlStatus,
-  updateSize
+  updateSize,
+  getStats
 } from "./commands/index";
 import { regexes, checkIfDM } from "./helpers/helpers";
 import { initializeDb } from "./models/database";
@@ -169,6 +170,10 @@ function processCommand(receivedMessage) {
 
       if (primaryCommand === "updatesize") {
         return updateSize(client);
+      }
+
+      if (primaryCommand === "stats") {
+        return getStats(receivedMessage);
       }
     } else {
       return receivedMessage.channel.send(

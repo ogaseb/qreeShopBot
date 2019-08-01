@@ -16,10 +16,22 @@ export async function searchGame(messageArguments, receivedMessage) {
     const { rows } = await findGame(nameEscaped);
     if (rows.length === 0) {
       if (checkIfDM(receivedMessage)) {
+        await insertOnSearchCommand(
+          receivedMessage.author.id,
+          nameEscaped,
+          "dm",
+          false
+        );
         return await receivedMessage.channel.send(
           `I didn't find anything called \`${finalArgs}\` in my database. If you want to request games join https://discord.gg/uJnP5q`
         );
       } else {
+        await insertOnSearchCommand(
+          receivedMessage.author.id,
+          nameEscaped,
+          "server",
+          false
+        );
         return await receivedMessage.channel.send(
           `I didn't find anything called \`${finalArgs}\` in my database. You can request game on <#582262747937505290> channel`
         );
@@ -29,13 +41,15 @@ export async function searchGame(messageArguments, receivedMessage) {
         await insertOnSearchCommand(
           receivedMessage.author.id,
           nameEscaped,
-          "dm"
+          "dm",
+          true
         );
       } else {
         await insertOnSearchCommand(
           receivedMessage.author.id,
           nameEscaped,
-          "server"
+          "server",
+          true
         );
       }
 
