@@ -27,7 +27,7 @@ export async function getStats(receivedMessage) {
 
   const resultSearchCount = _.countBy(rows, 'search_name')
   let sortableResultSearchCount = [];
-  for (let search in result) {
+  for (let search in resultSearchCount) {
     sortableResultSearchCount.push([resultSearchCount, resultSearchCount[search]]);
   }
   sortableResultSearchCount.sort(function(a, b) {
