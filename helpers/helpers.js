@@ -14,11 +14,12 @@ export function parseDropboxLink(link) {
   let string = link;
   string = string.split("/");
   if (string[3] === "sh") {
-    string = string.join("/");
-    return string;
+    let string_sh = string.join("/");
+    return string_sh;
   } else {
     string[5] = "?dl=1";
-    return string;
+    let string_db = string.join("/");
+    return string_db;
   }
 }
 

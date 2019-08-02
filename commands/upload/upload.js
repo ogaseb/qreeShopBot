@@ -87,9 +87,9 @@ export async function handleGameUpload(
 
     console.log(url, title, region, platform, size, messageArguments);
 
-    if (url.match(regexes.GDRIVE)) {
+    if (url && url.match(regexes.GDRIVE)) {
       url = parseGDriveLink(url);
-    } else if (url.match(regexes.DROPBOX)) {
+    } else if (url && url.match(regexes.DROPBOX)) {
       if (url.slice(-1) === "0" || url.slice(-1) === "1") {
         url = parseDropboxLink(url);
         url = url.match(/^(.*?)\.?dl=1/gi);
