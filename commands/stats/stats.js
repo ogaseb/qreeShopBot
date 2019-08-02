@@ -1,4 +1,5 @@
 import { getStatsFromDB } from "../../db/db_search_stats";
+import * as _ from "lodash"
 
 export async function getStats(receivedMessage) {
   const { rows } = await getStatsFromDB();
@@ -20,7 +21,30 @@ export async function getStats(receivedMessage) {
         searchCountFromServer++;
       }
     }
-  );
+
+);
+
+
+  const resultSearchCount = _.countBy(rows, 'search_name')
+  let sortableResultSearchCount = [];
+  for (let search in result) {
+    sortableResultSearchCount.push([resultSearchCount, resultSearchCount[search]]);
+  }
+  sortableResultSearchCount.sort(function(a, b) {
+    return a[1] - b[1];
+  });
+
+  console.log(sortableResultSearchCount)
+  // console.log(JSON.stringify(result, null, 2));
+  console.log(
+    sortableResultSearchCount[sortableResultSearchCount.length - 1],
+    sortableResultSearchCount[sortableResultSearchCount.length - 2],
+    sortableResultSearchCount[sortableResultSearchCount.length - 3],
+    sortableResultSearchCount[sortableResultSearchCount.length - 4],
+    sortableResultSearchCount[sortableResultSearchCount.length - 5]
+  )
+
+
   return await receivedMessage.channel.send(
     "```" +
       "STATS - searching: \n\n" +
@@ -35,7 +59,14 @@ export async function getStats(receivedMessage) {
       " \n" +
       "failure search count: " +
       failureCounter +
-      " \n" +
+      " \n\n" +
+    "top searching phrases: \n" +
+    "1. '" + sortableResultSearchCount[sortableResultSearchCount.length - 1][0] + "' times: " + sortableResultSearchCount[sortableResultSearchCount.length - 1][1] + "\n" +
+    "2. '" + sortableResultSearchCount[sortableResultSearchCount.length - 2][0] + "' times: " + sortableResultSearchCount[sortableResultSearchCount.length - 2][1] + "\n" +
+    "3. '" + sortableResultSearchCount[sortableResultSearchCount.length - 3][0] + "' times: " + sortableResultSearchCount[sortableResultSearchCount.length - 3][1] + "\n" +
+    "4. '" + sortableResultSearchCount[sortableResultSearchCount.length - 4][0] + "' times: " + sortableResultSearchCount[sortableResultSearchCount.length - 4][1] + "\n" +
+    "5. '" + sortableResultSearchCount[sortableResultSearchCount.length - 5][0] + "' times: " + sortableResultSearchCount[sortableResultSearchCount.length - 5][1] + "\n" +
+    ""+
       "```"
   );
 }

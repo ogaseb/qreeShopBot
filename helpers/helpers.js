@@ -1,14 +1,6 @@
 import qrCode from "qrcode-generator";
 import { MessageEmbed } from "discord.js";
 import { Embeds } from "discord-paginationembed";
-import {
-  getWholeDB,
-  updateRegionArgument,
-  updateSizeArgument
-} from "../db/db_qree";
-
-import pretty from "prettysize";
-import axios from "axios";
 
 export function parseDropboxLink(link) {
   let string = link;
@@ -160,7 +152,7 @@ export const regexes = {
   CIA: /\b(\w*cia\w*)\b/g,
   GDRIVE: /\b(\w*drive.google.com\w*)\b/g,
   URL: /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g,
-  ARGUMENTS: /\b(\w*GBA|GBC|NES|SNES|MD|PCE|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS\w*)\b|(\d+\.?\d+)\s*(KB|MB|GB|Bytes|Kilobytes|Megabytes)|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+|\S+/gi,
+  ARGUMENTS: /\b(\w*GBA|GBC|NES|SNES|MD|PCE|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS\w*)\b|(\d+\.?\d+)\s*(KB|MB|GB|Bytes|Kilobytes|Megabytes)|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+/gi,
   TITLE: /"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“/g,
   REGIONS: /\b\w*USA|JPN|EUR|GLOBAL|HACK\w*\b/gi,
   PLATFORMS: /\b\w*GBA|GBC|NES|SNES|PCE|3DS|NEW3DS|DSiWare|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS\w*\b/g,
