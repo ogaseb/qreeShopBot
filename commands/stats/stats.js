@@ -24,25 +24,21 @@ export async function getStats(receivedMessage) {
 
 );
 
-
-  const resultSearchCount = _.countBy(rows, 'search_name')
-  let sortableResultSearchCount = [];
-  for (let search in resultSearchCount) {
-    sortableResultSearchCount.push([resultSearchCount, resultSearchCount[search]]);
+ 
+  const result = _.countBy(rows, 'search_name')
+  let sortable = [];
+  for (let search in result) {
+    sortable.push([search, result[search]]);
   }
-  sortableResultSearchCount.sort(function(a, b) {
+  sortable.sort(function(a, b) {
     return a[1] - b[1];
   });
 
-  console.log(sortableResultSearchCount)
+  console.log(sortable)
   // console.log(JSON.stringify(result, null, 2));
-  console.log(
-    sortableResultSearchCount[sortableResultSearchCount.length - 1],
-    sortableResultSearchCount[sortableResultSearchCount.length - 2],
-    sortableResultSearchCount[sortableResultSearchCount.length - 3],
-    sortableResultSearchCount[sortableResultSearchCount.length - 4],
-    sortableResultSearchCount[sortableResultSearchCount.length - 5]
-  )
+  console.log(sortable[sortable.length - 1],sortable[sortable.length - 2],sortable[sortable.length - 3],sortable[sortable.length - 4], sortable[sortable.length - 5])
+
+  // console.log(countBy(rows.search_name));
 
 
   return await receivedMessage.channel.send(
@@ -61,11 +57,11 @@ export async function getStats(receivedMessage) {
       failureCounter +
       " \n\n" +
     "top searching phrases: \n" +
-    "1. '" + sortableResultSearchCount[sortableResultSearchCount.length - 1][0] + "' times: " + sortableResultSearchCount[sortableResultSearchCount.length - 1][1] + "\n" +
-    "2. '" + sortableResultSearchCount[sortableResultSearchCount.length - 2][0] + "' times: " + sortableResultSearchCount[sortableResultSearchCount.length - 2][1] + "\n" +
-    "3. '" + sortableResultSearchCount[sortableResultSearchCount.length - 3][0] + "' times: " + sortableResultSearchCount[sortableResultSearchCount.length - 3][1] + "\n" +
-    "4. '" + sortableResultSearchCount[sortableResultSearchCount.length - 4][0] + "' times: " + sortableResultSearchCount[sortableResultSearchCount.length - 4][1] + "\n" +
-    "5. '" + sortableResultSearchCount[sortableResultSearchCount.length - 5][0] + "' times: " + sortableResultSearchCount[sortableResultSearchCount.length - 5][1] + "\n" +
+    "1. '" + sortable[sortable.length - 1][0] + "' times: " + sortable[sortable.length - 1][1] + "\n" +
+    "2. '" + sortable[sortable.length - 2][0] + "' times: " + sortable[sortable.length - 2][1] + "\n" +
+    "3. '" + sortable[sortable.length - 3][0] + "' times: " + sortable[sortable.length - 3][1] + "\n" +
+    "4. '" + sortable[sortable.length - 4][0] + "' times: " + sortable[sortable.length - 4][1] + "\n" +
+    "5. '" + sortable[sortable.length - 5][0] + "' times: " + sortable[sortable.length - 5][1] + "\n" +
     ""+
       "```"
   );
