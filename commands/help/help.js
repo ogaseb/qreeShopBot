@@ -33,7 +33,7 @@ export function createEmbeddedHelper(
         .addField(
           "Arguments: ",
           "```" +
-            "<platform> -  GBA, GBC, NES, SNES, 3DS, DSI, ESHOP, NEW 3DS, NEO GEO, VIRTUAL CONSOLE, MEGA DRIVE, SEGA GENESIS \n\n" +
+            "<platform> -  GBA, GBC, NES, SNES, 3DS, DSI, ESHOP, NEW 3DS, NEO GEO, VIRTUAL CONSOLE, MEGA DRIVE, SEGA GENESIS, MAME \n\n" +
             "<regions> - USA, JPN, EUR, GLOBAL, HACK \n\n" +
             "<size> - *KB, *MB, *GB \n" +
             "```"
@@ -67,7 +67,7 @@ export function createEmbeddedHelper(
         .addField(
           "Arguments: ",
           "```" +
-            "<platform> - GBA, GBC, NES, SNES, 3DS, DSI, ESHOP, NEW 3DS, NEO GEO, VIRTUAL CONSOLE, MEGA DRIVE, SEGA GENESIS \n\n" +
+            "<platform> - GBA, GBC, NES, SNES, 3DS, DSI, ESHOP, NEW 3DS, NEO GEO, VIRTUAL CONSOLE, MEGA DRIVE, SEGA GENESIS, MAME \n\n" +
             "<regions> - USA, JPN, EUR, GLOBAL, HACK \n\n" +
             "<size> - *KB, *MB, *GB \n" +
             "```"
