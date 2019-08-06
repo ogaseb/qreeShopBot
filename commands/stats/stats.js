@@ -24,7 +24,7 @@ export async function getStats(receivedMessage) {
 
 );
 
- 
+
   const result = _.countBy(rows, 'search_name')
   let sortable = [];
   for (let search in result) {
