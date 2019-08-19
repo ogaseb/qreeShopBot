@@ -1,5 +1,5 @@
 import qrCode from "qrcode-generator";
-import { MessageEmbed } from "discord.js";
+import { RichEmbed } from "discord.js";
 import { Embeds } from "discord-paginationembed";
 
 export function parseDropboxLink(link) {
@@ -68,8 +68,9 @@ export async function createEmbeddedAnswer(args, receivedMessage, destination) {
       uploader_name,
       qr_image_url
     }) => {
+      console.log(qr_image_url);
       embeds.push(
-        new MessageEmbed()
+        new RichEmbed()
           .setImage(qr_image_url)
           .addField("Name: ", name, true)
           .addField("QR link: ", qr_link)
@@ -114,7 +115,7 @@ export function sendToQrGames(args, receivedMessage, client) {
 
   console.log(client.channels.get("582266411166990346"));
   embeds.push(
-    new MessageEmbed()
+    new RichEmbed()
       .setImage(args.qr_image_url)
       .addField("Name: ", args.name, true)
       .addField("QR link: ", args.qr_link)
