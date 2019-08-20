@@ -6,16 +6,6 @@ function createDBclient() {
     connectionString: process.env.DATABASE_URL
   });
 }
-//
-// obj.qr_data,
-//   obj.qr_image_url,
-//   obj.qr_link,
-//   obj.name,
-//   obj.platform,
-//   obj.region,
-//   obj.size,
-//   obj.uploader_discord_id,
-//   obj.uploader_name
 
 export async function createQree(
   qrData,
@@ -41,9 +31,9 @@ export async function createQree(
   } catch (e) {
     await receivedMessage.channel.send(
       "something went wrong, send it to developer: \n" +
-      "```diff\n- " +
-      e +
-      "```"
+        "```diff\n- " +
+        e +
+        "```"
     );
     console.log(e);
   }

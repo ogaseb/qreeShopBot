@@ -1,4 +1,4 @@
-import { MessageEmbed } from "discord.js";
+import { RichEmbed } from "discord.js";
 import { Embeds } from "discord-paginationembed";
 import { checkIfDM } from "../../helpers/helpers";
 
@@ -11,7 +11,7 @@ export function createEmbeddedHelper(
 
   if (checkIfDM(receivedMessage)) {
     embeds.push(
-      new MessageEmbed()
+      new RichEmbed()
         .addField("**COMMAND**: ", "```search```")
         .addField(
           "Description",
@@ -22,7 +22,7 @@ export function createEmbeddedHelper(
     );
   } else {
     embeds.push(
-      new MessageEmbed()
+      new RichEmbed()
         .addField("**COMMAND**: ", "```upload```")
         .addField(
           "Description",
@@ -54,7 +54,7 @@ export function createEmbeddedHelper(
     );
 
     embeds.push(
-      new MessageEmbed()
+      new RichEmbed()
         .addField("**COMMAND**: ", "```edit```")
         .addField(
           "Description",
@@ -86,7 +86,7 @@ export function createEmbeddedHelper(
     );
 
     embeds.push(
-      new MessageEmbed()
+      new RichEmbed()
         .addField("**COMMAND**: ", "```search```")
         .addField(
           "Description",
@@ -107,7 +107,7 @@ export function createEmbeddedHelper(
     );
 
     embeds.push(
-      new MessageEmbed()
+      new RichEmbed()
         .addField("**COMMAND**: ", "```invoke```")
         .addField(
           "Description",

@@ -170,7 +170,7 @@ export async function handleGameUpload(
             obj.qr_data,
             obj.qr_image_url,
             obj.qr_link,
-            obj.name.replace(/'/g,"''"),
+            obj.name.replace(/'/g, "''"),
             obj.platform,
             obj.region,
             obj.size,
