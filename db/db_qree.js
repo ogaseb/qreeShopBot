@@ -1,12 +1,21 @@
 require("dotenv").config();
 import { Client } from "pg";
-import escape from "pg-escape";
 
 function createDBclient() {
   return new Client({
     connectionString: process.env.DATABASE_URL
   });
 }
+//
+// obj.qr_data,
+//   obj.qr_image_url,
+//   obj.qr_link,
+//   obj.name,
+//   obj.platform,
+//   obj.region,
+//   obj.size,
+//   obj.uploader_discord_id,
+//   obj.uploader_name
 
 export async function createQree(
   qrData,
@@ -17,19 +26,25 @@ export async function createQree(
   region,
   size,
   uploader_discord_id,
-  uploader_name
+  uploader_name,
+  receivedMessage
 ) {
   const client = createDBclient();
   try {
     await client.connect();
-
     await client.query(
-      `INSERT INTO qre_items(qr_data, qr_link, qr_image_url, name, platform, region, size, uploader_discord_id, uploader_name) 
-      VALUES('${qrData}', '${qrLink}', '${qrImageUrl}' , '${name}' , '${platform}', '${region}', '${size}', '${uploader_discord_id}' , '${uploader_name}')`
+      `INSERT INTO qre_items(qr_data, qr_link, name, platform, region, size, uploader_discord_id, uploader_name , qr_image_url) 
+      VALUES('${qrData}', '${qrLink}', '${name}' , '${platform}', '${region}', '${size}', '${uploader_discord_id}' , '${uploader_name}', '${qrImageUrl}');`
     );
     await client.end();
     console.log("DB -> save qr in DB");
   } catch (e) {
+    await receivedMessage.channel.send(
+      "something went wrong, send it to developer: \n" +
+      "```diff\n- " +
+      e +
+      "```"
+    );
     console.log(e);
   }
 }
@@ -58,7 +73,7 @@ export async function editQree(
       region = '${region}' ,   
       size = '${size}' ,  
       uploader_discord_id = '${uploader_discord_id}' ,   
-      uploader_name = '${uploader_name}' WHERE id = ${id}`
+      uploader_name = '${uploader_name}' WHERE id = ${id};`
     );
     console.log("DB -> edited in DB");
     await client.end();

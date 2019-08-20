@@ -97,8 +97,6 @@ export async function handleGameUpload(
       }
     }
 
-    console.log(url);
-
     const obj = {
       name: title.replace(/^"(.*)"$/, "$1"),
       qr_link: url,
@@ -177,7 +175,8 @@ export async function handleGameUpload(
             obj.region,
             obj.size,
             obj.uploader_discord_id,
-            obj.uploader_name
+            obj.uploader_name,
+            receivedMessage
           );
 
           const QrCodesSubscription = sendToQrGames(
