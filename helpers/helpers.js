@@ -129,8 +129,9 @@ export function sendToQrGames(args, receivedMessage, client) {
   return (
     new Embeds()
       .setArray(embeds)
-      .setAuthorizedUsers([receivedMessage.author.id])
-      .setChannel(client.channels.get("582266411166990346"))
+      .setPageIndicator(false)
+      .setAuthorizedUsers([])
+      .setChannel(client.channels.get("604231930703118348"))
       .setPage(1)
       // Methods below are for customising all embeds
       .setTitle("QR Code 3DS games subscription module")
