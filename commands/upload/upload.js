@@ -109,7 +109,7 @@ export async function handleGameUpload(
     string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
     await imageDataURI.outputFile(obj.qr_image_url, "./img/" + string + ".png");
 
-    const { rows } = await findGame(obj.name.replace(/'/g, "''"));
+    const rows = await findGame(obj.name);
     const text =
       rows.length === 0
         ? "```diff\n" +
