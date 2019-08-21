@@ -24,7 +24,6 @@ export async function getStats(receivedMessage) {
 
 );
 
-
   const result = _.countBy(rows, 'search_name')
   let sortable = [];
   for (let search in result) {
@@ -34,12 +33,10 @@ export async function getStats(receivedMessage) {
     return a[1] - b[1];
   });
 
-  console.log(sortable)
+  // console.log(sortable)
   // console.log(JSON.stringify(result, null, 2));
-  console.log(sortable[sortable.length - 1],sortable[sortable.length - 2],sortable[sortable.length - 3],sortable[sortable.length - 4], sortable[sortable.length - 5])
-
+  // console.log(sortable[sortable.length - 1],sortable[sortable.length - 2],sortable[sortable.length - 3],sortable[sortable.length - 4], sortable[sortable.length - 5])
   // console.log(countBy(rows.search_name));
-
 
   return await receivedMessage.channel.send(
     "```" +

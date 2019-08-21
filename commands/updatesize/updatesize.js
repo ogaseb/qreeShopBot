@@ -7,7 +7,7 @@ import axios from "axios";
 import pretty from "prettysize";
 
 export async function updateSize() {
-  const { rows } = await getWholeDB();
+  const rows = await getWholeDB();
   for (const { id, qr_link, name, region } of rows) {
     try {
       console.log(`starting scanning ${name}`);

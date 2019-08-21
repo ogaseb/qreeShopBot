@@ -10,7 +10,7 @@ export async function makeQrImagesfromDB(
   client
 ) {
   try {
-    const { rows } = await getWholeDB();
+    const rows = await getWholeDB();
     for (const {
       id,
       qr_image_url,

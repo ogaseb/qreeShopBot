@@ -57,10 +57,8 @@ client.on("ready", async () => {
 
   setInterval(async () => {
     const qrCount = await approxQrCount();
-    qrCount.rows.map(async ({ count }) => {
-      await client.user.setActivity(`QR Codes count: ${count}`, {
-        type: "PLAYING"
-      });
+    await client.user.setActivity(`QR Codes count: ${qrCount.count}`, {
+      type: "PLAYING"
     });
   }, 60000);
 

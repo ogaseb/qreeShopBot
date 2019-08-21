@@ -7,11 +7,22 @@ import {
 } from "../../helpers/helpers";
 import pgEscape from "pg-escape";
 import imageDataURI from "image-data-uri";
+import axios from "axios";
+import pretty from "prettysize";
 
 export async function handleGameEdit(messageArguments, receivedMessage) {
   try {
     const id = parseInt(messageArguments[1]);
-    const { rows } = await findGameToEdit(id);
+    const rows = await findGameToEdit(id);
+    const { qr_data,
+      qr_image_url,
+      qr_link,
+      name,
+      platform,
+      region,
+      size,
+      uploader_discord_id,
+      uploader_name} = rows[0]
     if (rows.length) {
       const collector = new MessageCollector(
         receivedMessage.channel,
@@ -20,23 +31,23 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
       );
 
       await receivedMessage.channel.send("", {
-        files: [rows[0].qr_image_url]
+        files: [qr_image_url]
       });
 
       await receivedMessage.channel.send(
         "```" +
           "\nLink: " +
-          rows[0].qr_link +
+          qr_link +
           "\n\nName: " +
-          rows[0].name +
+          name +
           "\nPlatform: " +
-          rows[0].platform +
+          platform +
           "\nRegion: " +
-          rows[0].region +
+          region +
           "\nSize: " +
-          rows[0].size +
+          size +
           "\nUploader: " +
-          rows[0].uploader_name +
+          uploader_name +
           "```" +
           "```" +
           "Is this the game you wish to edit? type 'yes'/'no'" +
@@ -70,14 +81,14 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
         collectedArguments.pop();
         const args = collectedArguments.join(" ").match(regexes.ARGUMENTS);
 
-        let url, title, region, platform, size;
+        let newUrl, newTitle, newRegion, newPlatform, newSize;
         const urlIndex = await args.findIndex(value => regexes.URL.test(value));
         if (urlIndex === -1) {
           await receivedMessage.channel.send(
             `argument \`URL\` is missing continue...`
           );
         } else {
-          url = args[urlIndex];
+          newUrl = args[urlIndex];
           args.splice(urlIndex, 1);
           await receivedMessage.channel.send(`argument \`URL\` is present!`);
         }
@@ -90,7 +101,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
             `argument \`TITLE\` is missing continue...`
           );
         } else {
-          title = args[titleIndex];
+          newTitle = args[titleIndex];
           args.splice(titleIndex, 1);
           await receivedMessage.channel.send(`argument \`TITLE\` is present!`);
         }
@@ -103,7 +114,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
             `argument \`REGION\` is missing continue...`
           );
         } else {
-          region = args[regionIndex];
+          newRegion = args[regionIndex];
           args.splice(regionIndex, 1);
           await receivedMessage.channel.send(`argument \`REGION\` is present!`);
         }
@@ -116,7 +127,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
             `argument \`PLATFORM\` is missing continue...`
           );
         } else {
-          platform = args[platformIndex];
+          newPlatform = args[platformIndex];
           args.splice(platformIndex, 1);
           await receivedMessage.channel.send(
             `argument \`PLATFORM\` is present!`
@@ -131,34 +142,27 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
             `argument \`SIZE\` is missing continue...`
           );
         } else {
-          size = args[sizeIndex];
+          newSize = args[sizeIndex];
           args.splice(sizeIndex, 1);
           await receivedMessage.channel.send(`argument \`SIZE\` is present!`);
         }
 
-        console.log(url, title, region, size, platform);
-
-        if (title) {
-          title = pgEscape
-            .string(title.replace(/^"(.*)"$/, "$1"))
-            .replace(/'/g, "''");
-        }
-
         const obj = {
-          name: title ? title : rows[0].name,
-          qr_link: url || rows[0].qr_link,
-          qr_data: url ? await createASCIIQrCode(url) : rows[0].qr_data,
-          qr_image_url: url
-            ? await createDataURLQrCode(url)
-            : rows[0].qr_image_url,
-          platform: platform || rows[0].platform,
-          region: region || rows[0].region,
-          size: size || rows[0].size,
-          uploader_discord_id: rows[0].uploader_discord_id,
-          uploader_name: rows[0].uploader_name
+          name: newTitle ? newTitle : name,
+          qr_link: newUrl || qr_link,
+          qr_data: newUrl ? await createASCIIQrCode(newUrl) : qr_data,
+          qr_image_url: newUrl
+            ? await createDataURLQrCode(newUrl)
+            : qr_image_url,
+          platform: newPlatform|| platform,
+          region: newRegion || region,
+          size: newSize || size,
+          uploader_discord_id: uploader_discord_id,
+          uploader_name: uploader_name
         };
 
-        if (url) {
+        let urlMetadataSize
+        if (newUrl) {
           let string =
             obj.name + obj.platform + obj.region + obj.uploader_discord_id;
           string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
@@ -174,10 +178,16 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
             .then(msg => {
               obj.qr_image_url = msg.attachments.values().next().value.proxyURL;
             });
+
+          const urlMetadata = await axios.head(newUrl, { timeout: 15000 });
+          if (urlMetadata && urlMetadata.status !== 404) {
+            if (urlMetadata.headers["content-length"]) {
+              urlMetadataSize = pretty(urlMetadata.headers["content-length"], true)
+            }
+          }
+          obj.size = urlMetadataSize
         }
-        obj.name = pgEscape
-          .string(obj.name.replace(/^"(.*)"$/, "$1"))
-          .replace(/'/g, "''");
+
         await editQree(
           id,
           obj.qr_data,
@@ -188,9 +198,10 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           obj.region,
           obj.size,
           obj.uploader_discord_id,
-          obj.uploader_name
+          obj.uploader_name,
+          receivedMessage
         );
-        await receivedMessage.channel.send("Edited!");
+
       });
     } else {
       await receivedMessage.channel.send("cant find it in database");

@@ -113,12 +113,13 @@ export async function createEmbeddedAnswer(args, receivedMessage, destination) {
 export function sendToQrGames(args, receivedMessage, client) {
   const embeds = [];
 
-  console.log(client.channels.get("582266411166990346"));
+  console.log(args);
   embeds.push(
     new RichEmbed()
       .setImage(args.qr_image_url)
       .addField("Name: ", args.name, true)
       .addField("QR link: ", args.qr_link)
+      .addField("DB ID: ", args.id, true)
       .addField("Platform: ", args.platform, true)
       .addField("Region: ", args.region, true)
       .addField("Size: ", args.size)
@@ -131,7 +132,7 @@ export function sendToQrGames(args, receivedMessage, client) {
       .setArray(embeds)
       .setPageIndicator(false)
       .setAuthorizedUsers([])
-      .setChannel(client.channels.get("582266411166990346"))
+      .setChannel(client.channels.get(process.env.BOT_SUBSCRIPTION_CHANNEL))
       .setPage(1)
       // Methods below are for customising all embeds
       .setTitle("QR Code 3DS games subscription module")

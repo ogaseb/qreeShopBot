@@ -27,7 +27,7 @@
   "homepage": "https://github.com/ProPanek/qreeShopBot#readme",
   "dependencies": {
     "axios": "^0.19.0",
-    "discord-paginationembed": "^1.0.1",
+    "discord-paginationembed": "^1.0.2",
     "discord.js": "^11.5.1",
     "dotenv": "^8.0.0",
     "fs": "^0.0.1-security",
@@ -41,6 +41,7 @@
     "qrcode-generator": "^1.4.3",
     "qrcode-reader": "^1.0.4",
     "request": "^2.88.0",
+    "sequelize": "^5.15.2",
     "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {

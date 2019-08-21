@@ -7,9 +7,11 @@ import {
   sendToQrGames,
   createDataURLQrCode
 } from "../../helpers/helpers";
-import { createQree, findGame } from "../../db/db_qree";
+import {createQree, findGame} from "../../db/db_qree";
 import { MessageCollector } from "discord.js";
 import imageDataURI from "image-data-uri";
+import axios from "axios";
+import pretty from "prettysize";
 
 export async function handleGameUpload(
   messageArguments,
@@ -17,7 +19,7 @@ export async function handleGameUpload(
   client
 ) {
   try {
-    if (messageArguments.length !== 6) {
+    if (messageArguments.length !== 5) {
       return receivedMessage.channel.send(
         `invalid arguments count for upload command`
       );
@@ -27,7 +29,7 @@ export async function handleGameUpload(
       regexes.URL.test(value)
     );
 
-    let url, title, region, platform, size;
+    let url, title, region, platform;
     if (urlIndex === -1) {
       return await receivedMessage.channel.send(
         `invalid arguments \`URL\` for upload command`
@@ -73,20 +75,6 @@ export async function handleGameUpload(
       messageArguments.splice(platformIndex, 1);
     }
 
-    const sizeIndex = messageArguments.findIndex(value =>
-      regexes.SIZE.test(value)
-    );
-    if (sizeIndex === -1) {
-      return await receivedMessage.channel.send(
-        `invalid arguments \`SIZE\` for upload command`
-      );
-    } else {
-      size = messageArguments[sizeIndex];
-      messageArguments.splice(sizeIndex, 1);
-    }
-
-    console.log(url, title, region, platform, size, messageArguments);
-
     if (url && url.match(regexes.GDRIVE)) {
       url = parseGDriveLink(url);
     } else if (url && url.match(regexes.DROPBOX)) {
@@ -97,21 +85,26 @@ export async function handleGameUpload(
       }
     }
 
+    let urlMetadataSize
+    const urlMetadata = await axios.head(url, { timeout: 15000 });
+    if (urlMetadata && urlMetadata.status !== 404) {
+      if (urlMetadata.headers["content-length"]) {
+        urlMetadataSize = pretty(urlMetadata.headers["content-length"], true)
+      }
+    }
+
     const obj = {
-      name: title.replace(/^"(.*)"$/, "$1"),
+      name: title,
       qr_link: url,
       qr_data: await createASCIIQrCode(url),
       qr_image_url: await createDataURLQrCode(url),
       platform: platform,
       region: region,
-      size: size,
+      size: urlMetadataSize,
       uploader_discord_id: receivedMessage.author.id,
       uploader_name: receivedMessage.author.username
     };
 
-    console.log(obj);
-
-    // imageDataURI.decode(obj.qr_data);
     let string = obj.name + obj.platform + obj.region + obj.uploader_discord_id;
     string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
     await imageDataURI.outputFile(obj.qr_image_url, "./img/" + string + ".png");
@@ -165,20 +158,11 @@ export async function handleGameUpload(
       if (message.content.toLowerCase() === "yes") {
         collector.stop();
         try {
-          await receivedMessage.channel.send("Saving in database!");
-          await createQree(
-            obj.qr_data,
-            obj.qr_image_url,
-            obj.qr_link,
-            obj.name.replace(/'/g, "''"),
-            obj.platform,
-            obj.region,
-            obj.size,
-            obj.uploader_discord_id,
-            obj.uploader_name,
+          const lastId = await createQree(
+            obj,
             receivedMessage
           );
-
+          obj.id = lastId
           const QrCodesSubscription = sendToQrGames(
             obj,
             receivedMessage,

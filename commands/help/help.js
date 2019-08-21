@@ -35,21 +35,20 @@ export function createEmbeddedHelper(
           "```" +
             "<platform> -  GBA, GBC, NES, SNES, 3DS, DSI, ESHOP, NEW 3DS, NEO GEO, VIRTUAL CONSOLE, MEGA DRIVE, SEGA GENESIS, MAME \n\n" +
             "<regions> - USA, JPN, EUR, GLOBAL, HACK \n\n" +
-            "<size> - *KB, *MB, *GB \n" +
             "```"
         )
         .addField(
           "Command: ",
           "```" +
             serverInvokers.get(receivedMessage.guild.id) +
-            ' upload <url> "<name>" <platform> <region> <size> ```'
+            ' upload <url> "<name>" <platform> <region>```'
         )
 
         .addField(
           "Example: ",
           "```" +
             serverInvokers.get(receivedMessage.guild.id) +
-            ' upload https://files.catbox.moe/au9pkx.cia "Super Castlevania IV" GBA USA 5MB ```'
+            ' upload https://files.catbox.moe/au9pkx.cia "Super Castlevania IV" GBA USA```'
         )
     );
 
