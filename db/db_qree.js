@@ -199,28 +199,14 @@ export async function getWholeDB() {
   } catch (e) {
     console.log(e);
   }
-  // const client = createDBclient();
-  // try {
-  //   await client.connect();
-  //   const res = await client.query(`SELECT * FROM qre_items`);
-  //   console.log("DB -> getting whole DB");
-  //   await client.end();
-  //   return res;
-  // } catch (e) {
-  //   console.log(e);
-  // }
 }
 
-export async function updateQrImageUrl(id, qrImageUrl) {
-  const client = createDBclient();
+export async function updateQrImageUrl(id, qr_image_url) {
   try {
-    await client.connect();
-    const res = await client.query(
-      `UPDATE qre_items SET qr_image_url = '${qrImageUrl}' WHERE id = ${id}`
-    );
+    await QreeItems.update({
+      qr_image_url,
+    },{where: {id}})
     console.log("DB -> updating qr url image");
-    await client.end();
-    return res;
   } catch (e) {
     console.log(e);
   }
