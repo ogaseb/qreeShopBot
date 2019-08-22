@@ -156,6 +156,7 @@ function processCommand(receivedMessage) {
         return receivedMessage.channel.send(
           "You have no permissions to use this command"
         );
+      }
 
 
       if (primaryCommand === "scrap") {
