@@ -1,14 +1,14 @@
 import {
   createASCIIQrCode,
+  createDataURLQrCode,
   createEmbeddedAnswer,
   parseDropboxLink,
   parseGDriveLink,
   regexes,
-  sendToQrGames,
-  createDataURLQrCode
+  sendToQrGames
 } from "../../helpers/helpers";
 import {createQree, findGame} from "../../db/db_qree";
-import { MessageCollector } from "discord.js";
+import {MessageCollector} from "discord.js";
 import imageDataURI from "image-data-uri";
 import axios from "axios";
 import pretty from "prettysize";
@@ -47,7 +47,7 @@ export async function handleGameUpload(
         `invalid arguments \`TITLE\` for upload command`
       );
     } else {
-      title = messageArguments[titleIndex];
+      title = messageArguments[titleIndex].replace(/["]+/g, '');
       messageArguments.splice(titleIndex, 1);
     }
 
@@ -148,6 +148,8 @@ export async function handleGameUpload(
         text
     );
 
+    console.log(obj)
+
     const collector = new MessageCollector(
       receivedMessage.channel,
       m => m.author.id === receivedMessage.author.id,
@@ -158,11 +160,11 @@ export async function handleGameUpload(
       if (message.content.toLowerCase() === "yes") {
         collector.stop();
         try {
-          const lastId = await createQree(
+
+          obj.id = await createQree(
             obj,
             receivedMessage
-          );
-          obj.id = lastId
+          )
           const QrCodesSubscription = sendToQrGames(
             obj,
             receivedMessage,
