@@ -142,13 +142,21 @@ function processCommand(receivedMessage) {
         return handleGameUpload(messageArguments, receivedMessage, client);
       }
 
-      if (primaryCommand === "invoke") {
-        return changeInvokeCommand(
-          messageArguments,
-          receivedMessage,
-          serverInvokers
+      if (receivedMessage.member.roles.some(r =>
+        process.env.BOT_PERMISSIONS_INVOKE.includes(r.name)
+      )) {
+        if (primaryCommand === "invoke") {
+          return changeInvokeCommand(
+            messageArguments,
+            receivedMessage,
+            serverInvokers
+          );
+        }
+      } else {
+        return receivedMessage.channel.send(
+          "You have no permissions to use this command"
         );
-      }
+
 
       if (primaryCommand === "scrap") {
         return scrapChannelForQrCodes(messageArguments, receivedMessage);
