@@ -30,6 +30,8 @@ export function parseURL(link) {
       link = link.match(/^(.*?)\.?dl=1/gi);
       return link[0];
     }
+  } else {
+    return link
   }
 }
 
