@@ -1,6 +1,7 @@
 import { editQree, findGameToEdit } from "../../db/db_qree";
 import { MessageCollector } from "discord.js";
 import {
+  checkFileSize,
   createASCIIQrCode,
   createDataURLQrCode,
   regexes
@@ -101,7 +102,6 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           uploader_name: uploader_name
         };
 
-        let urlMetadataSize
         if (foundArgsObj.URL) {
           let string =
             obj.name + obj.platform + obj.region + obj.uploader_discord_id;
@@ -119,13 +119,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
               obj.qr_image_url = msg.attachments.values().next().value.proxyURL;
             });
 
-          const urlMetadata = await axios.head(newUrl, { timeout: 15000 });
-          if (urlMetadata && urlMetadata.status !== 404) {
-            if (urlMetadata.headers["content-length"]) {
-              urlMetadataSize = pretty(urlMetadata.headers["content-length"], true)
-            }
-          }
-          obj.size = urlMetadataSize
+          obj.size = checkFileSize(foundArgsObj.URL)
         }
 
         await editQree(

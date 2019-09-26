@@ -1,6 +1,8 @@
 import qrCode from "qrcode-generator";
 import { RichEmbed } from "discord.js";
 import { Embeds } from "discord-paginationembed";
+import axios from "axios";
+import pretty from "prettysize";
 
 export function parseDropboxLink(link) {
   let string = link;
@@ -17,6 +19,18 @@ export function parseDropboxLink(link) {
 
 export function parseGDriveLink(link) {
   return link.replace(/\/file\/d\/(.+)\/(.+)/, "/uc?export=download&id=$1");
+}
+
+export function parseURL(link) {
+  if (link && link.match(regexes.GDRIVE)) {
+   return  link = parseGDriveLink(link);
+  } else if (link && link.match(regexes.DROPBOX)) {
+    if (link.slice(-1) === "0" || link.slice(-1) === "1") {
+      link = parseDropboxLink(link);
+      link = link.match(/^(.*?)\.?dl=1/gi);
+      return link[0];
+    }
+  }
 }
 
 export function createASCIIQrCode(link) {
@@ -148,6 +162,24 @@ export function sendToQrGames(args, receivedMessage, client) {
 
 export function checkIfDM(receivedMessage) {
   return receivedMessage.channel.type === "dm";
+}
+
+export function filteredRegexes(array) {
+  return  Object.keys(regexes)
+    .filter(key => array.includes(key))
+    .reduce((obj, key) => {
+      obj[key] = regexes[key];
+      return obj;
+    }, {});
+}
+
+export async function checkFileSize(url) {
+  const urlMetadata = await axios.head(url, { timeout: 15000 });
+  if (urlMetadata && urlMetadata.status !== 404) {
+    if (urlMetadata.headers["content-length"]) {
+      return pretty(urlMetadata.headers["content-length"], true)
+    }
+  }
 }
 
 export const regexes = {

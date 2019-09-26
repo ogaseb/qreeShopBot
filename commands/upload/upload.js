@@ -1,17 +1,16 @@
 import {
+  checkFileSize,
   createASCIIQrCode,
   createDataURLQrCode,
   createEmbeddedAnswer,
-  parseDropboxLink,
-  parseGDriveLink,
-  regexes,
+  filteredRegexes,
+  parseURL,
   sendToQrGames
 } from "../../helpers/helpers";
-import {createQree, findGame} from "../../db/db_qree";
-import {MessageCollector} from "discord.js";
+import { createQree, findGame } from "../../db/db_qree";
+import { MessageCollector } from "discord.js";
 import imageDataURI from "image-data-uri";
-import axios from "axios";
-import pretty from "prettysize";
+import axios from "axios"
 
 export async function handleGameUpload(
   messageArguments,
@@ -25,89 +24,71 @@ export async function handleGameUpload(
       );
     }
 
-    const urlIndex = messageArguments.findIndex(value =>
-      regexes.URL.test(value)
+    const giphy = {
+      baseURL: "https://api.giphy.com/v1/gifs/",
+      apiKey: "0UTRbFtkMxAplrohufYco5IY74U8hOes",
+      tag: "fail",
+      type: "random",
+      rating: "PG-13"
+    };
+
+    let giphyURL = encodeURI(
+      giphy.baseURL +
+      giphy.type +
+      "?api_key=" +
+      giphy.apiKey +
+      "&tag=" +
+      giphy.tag +
+      "&rating=" +
+      giphy.rating
     );
 
-    let url, title, region, platform;
-    if (urlIndex === -1) {
-      return await receivedMessage.channel.send(
-        `invalid arguments \`URL\` for upload command`
-      );
-    } else {
-      url = messageArguments[urlIndex];
-      messageArguments.splice(urlIndex, 1);
-    }
-
-    const titleIndex = messageArguments.findIndex(value =>
-      regexes.TITLE.test(value)
-    );
-    if (titleIndex === -1) {
-      return await receivedMessage.channel.send(
-        `invalid arguments \`TITLE\` for upload command`
-      );
-    } else {
-      title = messageArguments[titleIndex].replace(/["]+/g, '');
-      messageArguments.splice(titleIndex, 1);
-    }
-
-    const regionIndex = messageArguments.findIndex(value =>
-      regexes.REGIONS.test(value)
-    );
-    if (regionIndex === -1) {
-      return await receivedMessage.channel.send(
-        `invalid arguments \`REGION\` for upload command`
-      );
-    } else {
-      region = messageArguments[regionIndex];
-      messageArguments.splice(regionIndex, 1);
-    }
-
-    const platformIndex = messageArguments.findIndex(value =>
-      regexes.PLATFORMS.test(value)
-    );
-    if (platformIndex === -1) {
-      return await receivedMessage.channel.send(
-        `invalid arguments \`PLATFORM\` for upload command`
-      );
-    } else {
-      platform = messageArguments[platformIndex];
-      messageArguments.splice(platformIndex, 1);
-    }
-
-    if (url && url.match(regexes.GDRIVE)) {
-      url = parseGDriveLink(url);
-    } else if (url && url.match(regexes.DROPBOX)) {
-      if (url.slice(-1) === "0" || url.slice(-1) === "1") {
-        url = parseDropboxLink(url);
-        url = url.match(/^(.*?)\.?dl=1/gi);
-        url = url[0];
+    const giphyResponse = await axios.get(giphyURL)
+    let loadingMessageId, response
+    response = await receivedMessage.channel.send(
+      `wait a moment...`,{
+        files: [giphyResponse.data.data.image_url]
       }
-    }
+    )
+    loadingMessageId = response.id
 
-    let urlMetadataSize
-    const urlMetadata = await axios.head(url, { timeout: 15000 });
-    if (urlMetadata && urlMetadata.status !== 404) {
-      if (urlMetadata.headers["content-length"]) {
-        urlMetadataSize = pretty(urlMetadata.headers["content-length"], true)
+    const regexesObj = filteredRegexes([
+      "URL",
+      "TITLE",
+      "REGIONS",
+      "PLATFORMS"
+    ]);
+
+    let foundArgsObj = {};
+    for (const regex in regexesObj) {
+      const itemIndex = await messageArguments.findIndex(value =>
+        regexesObj[regex].test(value)
+      );
+      if (itemIndex === -1) {
+        return await receivedMessage.channel.send(
+          `invalid arguments \`${regex}\` for upload command`
+        );
+      } else {
+        foundArgsObj[regex] = messageArguments[itemIndex];
+        messageArguments.splice(itemIndex, 1);
       }
     }
 
     const obj = {
-      name: title,
-      qr_link: url,
-      qr_data: await createASCIIQrCode(url),
-      qr_image_url: await createDataURLQrCode(url),
-      platform: platform,
-      region: region,
-      size: urlMetadataSize,
+      name: foundArgsObj.TITLE,
+      qr_link: await parseURL(foundArgsObj.URL),
+      qr_data: await createASCIIQrCode(await parseURL(foundArgsObj.URL)),
+      qr_image_url: await createDataURLQrCode(await parseURL(foundArgsObj.URL)),
+      platform: foundArgsObj.PLATFORMS,
+      region: foundArgsObj.REGIONS,
+      size: await checkFileSize(parseURL(foundArgsObj.URL)),
       uploader_discord_id: receivedMessage.author.id,
       uploader_name: receivedMessage.author.username
     };
 
     let string = obj.name + obj.platform + obj.region + obj.uploader_discord_id;
     string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
-    await imageDataURI.outputFile(obj.qr_image_url, "./img/" + string + ".png");
+    await imageDataURI.outputFile(obj.qr_image_url, "./img/" + string + ".jpg");
 
     const rows = await findGame(obj.name);
     const text =
@@ -121,17 +102,20 @@ export async function handleGameUpload(
           "```diff\n" +
           "+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)" +
           "\n```";
+    //delete loading message
+    setTimeout(async ()=>{
+      receivedMessage.channel.messages.get(loadingMessageId).delete()
 
-    await receivedMessage.channel
-      .send("", {
-        files: ["./img/" + string + ".png"]
-      })
-      .then(msg => {
-        obj.qr_image_url = msg.attachments.values().next().value.proxyURL;
-      });
+      await receivedMessage.channel
+        .send("", {
+          files: ["./img/" + string + ".jpg"]
+        })
+        .then(msg => {
+          obj.qr_image_url = msg.attachments.values().next().value.proxyURL;
+        });
 
-    await receivedMessage.channel.send(
-      "```" +
+      await receivedMessage.channel.send(
+        "```" +
         "\nLink: " +
         obj.qr_link +
         "\n\nName: " +
@@ -146,9 +130,8 @@ export async function handleGameUpload(
         obj.uploader_name +
         "```" +
         text
-    );
-
-    console.log(obj)
+      );
+    }, 3000)
 
     const collector = new MessageCollector(
       receivedMessage.channel,
@@ -160,11 +143,7 @@ export async function handleGameUpload(
       if (message.content.toLowerCase() === "yes") {
         collector.stop();
         try {
-
-          obj.id = await createQree(
-            obj,
-            receivedMessage
-          )
+          obj.id = await createQree(obj, receivedMessage);
           const QrCodesSubscription = sendToQrGames(
             obj,
             receivedMessage,
