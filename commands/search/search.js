@@ -35,14 +35,14 @@ export async function searchGame(messageArguments, receivedMessage) {
       if (checkIfDM(receivedMessage)) {
         await insertOnSearchCommand(
           receivedMessage.author.id,
-          nameEscaped,
+          finalArgs,
           "dm",
           true
         );
       } else {
         await insertOnSearchCommand(
           receivedMessage.author.id,
-          nameEscaped,
+          finalArgs,
           "server",
           true
         );
