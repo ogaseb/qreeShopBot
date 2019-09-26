@@ -10,7 +10,7 @@ import {
   makeQrImagesfromDB,
   urlStatus,
   updateSize,
-  getStats
+  getStats,
 } from "./commands/index";
 import { regexes, checkIfDM } from "./helpers/helpers";
 import { initializeDb } from "./models/database";

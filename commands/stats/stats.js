@@ -8,20 +8,18 @@ export async function getStats(receivedMessage) {
     searchCountFromDm = 0,
     searchCountFromServer = 0;
   rows.forEach(
-    ({ search_name, search_user_id, search_from, search_success }) => {
+    ({ search_from, search_success }) => {
       if (search_success) {
         successCounter++;
       } else {
         failureCounter++;
       }
-
       if (search_from === "dm") {
         searchCountFromDm++;
       } else if (search_from === "server") {
         searchCountFromServer++;
       }
     }
-
 );
 
   const result = _.countBy(rows, 'search_name')
@@ -32,11 +30,6 @@ export async function getStats(receivedMessage) {
   sortable.sort(function(a, b) {
     return a[1] - b[1];
   });
-
-  // console.log(sortable)
-  // console.log(JSON.stringify(result, null, 2));
-  // console.log(sortable[sortable.length - 1],sortable[sortable.length - 2],sortable[sortable.length - 3],sortable[sortable.length - 4], sortable[sortable.length - 5])
-  // console.log(countBy(rows.search_name));
 
   return await receivedMessage.channel.send(
     "```" +

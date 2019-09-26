@@ -15,6 +15,11 @@ module.exports = {
     path: path.resolve(__dirname),
     filename: 'server.min.js'
   },
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  },
   plugins: [
     new NodemonPlugin(), // Dong
   ],

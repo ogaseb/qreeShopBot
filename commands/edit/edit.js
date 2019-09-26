@@ -5,7 +5,6 @@ import {
   createDataURLQrCode,
   regexes
 } from "../../helpers/helpers";
-import pgEscape from "pg-escape";
 import imageDataURI from "image-data-uri";
 import axios from "axios";
 import pretty from "prettysize";
@@ -24,35 +23,20 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
       uploader_discord_id,
       uploader_name} = rows[0]
     if (rows.length) {
+      await receivedMessage.channel.send(
+        "```" +
+        "\nLink: " + qr_link + "\n\nName: " + name + "\nPlatform: " + platform + "\nRegion: " + region +
+        "\nSize: " + size + "\nUploader: " + uploader_name + "```" + "```" + "Is this the game you wish to edit? type 'yes'/'no'" + "```", {
+          files: [qr_image_url]
+        }
+      );
+
       const collector = new MessageCollector(
         receivedMessage.channel,
         m => m.author.id === receivedMessage.author.id,
         { time: 120000 }
       );
 
-      await receivedMessage.channel.send("", {
-        files: [qr_image_url]
-      });
-
-      await receivedMessage.channel.send(
-        "```" +
-          "\nLink: " +
-          qr_link +
-          "\n\nName: " +
-          name +
-          "\nPlatform: " +
-          platform +
-          "\nRegion: " +
-          region +
-          "\nSize: " +
-          size +
-          "\nUploader: " +
-          uploader_name +
-          "```" +
-          "```" +
-          "Is this the game you wish to edit? type 'yes'/'no'" +
-          "```"
-      );
       collector.on("collect", async message => {
         if (message.content.toLowerCase() === "yes") {
           await receivedMessage.channel.send(
@@ -77,103 +61,59 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
         for (const item of collected) {
           collectedArguments.push(item[1].content);
         }
-        collectedArguments.shift();
-        collectedArguments.pop();
-        const args = collectedArguments.join(" ").match(regexes.ARGUMENTS);
 
-        let newUrl, newTitle, newRegion, newPlatform, newSize;
-        const urlIndex = await args.findIndex(value => regexes.URL.test(value));
-        if (urlIndex === -1) {
-          await receivedMessage.channel.send(
-            `argument \`URL\` is missing continue...`
-          );
-        } else {
-          newUrl = args[urlIndex];
-          args.splice(urlIndex, 1);
-          await receivedMessage.channel.send(`argument \`URL\` is present!`);
-        }
+        const args = collectedArguments
+          .filter(function(e) {return this.indexOf(e.toLowerCase()) < 0;}, ['end', 'yes', 'no'])
+          .join(" ").match(regexes.ARGUMENTS);
 
-        const titleIndex = await args.findIndex(value =>
-          regexes.TITLE.test(value)
-        );
-        if (titleIndex === -1) {
-          await receivedMessage.channel.send(
-            `argument \`TITLE\` is missing continue...`
-          );
-        } else {
-          newTitle = args[titleIndex];
-          args.splice(titleIndex, 1);
-          await receivedMessage.channel.send(`argument \`TITLE\` is present!`);
-        }
+        const filteredRegexes = Object.keys(regexes)
+          .filter(key => ['URL', 'TITLE', 'REGIONS', 'PLATFORMS', 'SIZE'].includes(key))
+          .reduce((obj, key) => {
+            obj[key] = regexes[key];
+            return obj;
+          }, {});
 
-        const regionIndex = await args.findIndex(value =>
-          regexes.REGIONS.test(value)
-        );
-        if (regionIndex === -1) {
-          await receivedMessage.channel.send(
-            `argument \`REGION\` is missing continue...`
-          );
-        } else {
-          newRegion = args[regionIndex];
-          args.splice(regionIndex, 1);
-          await receivedMessage.channel.send(`argument \`REGION\` is present!`);
-        }
-
-        const platformIndex = await args.findIndex(value =>
-          regexes.PLATFORMS.test(value)
-        );
-        if (platformIndex === -1) {
-          await receivedMessage.channel.send(
-            `argument \`PLATFORM\` is missing continue...`
-          );
-        } else {
-          newPlatform = args[platformIndex];
-          args.splice(platformIndex, 1);
-          await receivedMessage.channel.send(
-            `argument \`PLATFORM\` is present!`
-          );
-        }
-
-        const sizeIndex = await args.findIndex(value =>
-          regexes.SIZE.test(value)
-        );
-        if (sizeIndex === -1) {
-          await receivedMessage.channel.send(
-            `argument \`SIZE\` is missing continue...`
-          );
-        } else {
-          newSize = args[sizeIndex];
-          args.splice(sizeIndex, 1);
-          await receivedMessage.channel.send(`argument \`SIZE\` is present!`);
+        let foundArgsObj = {}
+        for (const regex in filteredRegexes) {
+          const itemIndex = await args.findIndex(value => regexes[regex].test(value));
+          if (itemIndex === -1) {
+            await receivedMessage.channel.send(
+              `argument \`${regex}\` is missing continue...`
+            );
+          } else {
+            foundArgsObj[regex] = args[itemIndex];
+            args.splice(itemIndex, 1);
+            await receivedMessage.channel.send(`argument \`${regex}\` is present! : \`${foundArgsObj[regex]}\``);
+          }
         }
 
         const obj = {
-          name: newTitle ? newTitle : name,
-          qr_link: newUrl || qr_link,
-          qr_data: newUrl ? await createASCIIQrCode(newUrl) : qr_data,
-          qr_image_url: newUrl
-            ? await createDataURLQrCode(newUrl)
+          name: foundArgsObj.TITLE ? foundArgsObj.TITLE : name,
+          qr_link: foundArgsObj.URL || qr_link,
+          qr_data: foundArgsObj.URL ? await createASCIIQrCode(foundArgsObj.URL) : qr_data,
+          qr_image_url: foundArgsObj.URL
+            ? await createDataURLQrCode(foundArgsObj.URL)
             : qr_image_url,
-          platform: newPlatform|| platform,
-          region: newRegion || region,
-          size: newSize || size,
+          platform: foundArgsObj.PLATFORMS || platform,
+          region: foundArgsObj.REGIONS || region,
+          size: foundArgsObj.SIZE || size,
           uploader_discord_id: uploader_discord_id,
           uploader_name: uploader_name
         };
 
         let urlMetadataSize
-        if (newUrl) {
+        if (foundArgsObj.URL) {
           let string =
             obj.name + obj.platform + obj.region + obj.uploader_discord_id;
           string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
           await imageDataURI.outputFile(
             obj.qr_image_url,
-            "./img/" + string + ".png"
+            "./img/" + string + ".jpg"
           );
 
           await receivedMessage.channel
             .send("", {
-              files: ["./img/" + string + ".png"]
+              files: ["./img/" + string + ".jpg"]
             })
             .then(msg => {
               obj.qr_image_url = msg.attachments.values().next().value.proxyURL;

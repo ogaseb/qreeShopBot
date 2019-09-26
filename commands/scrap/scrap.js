@@ -1,15 +1,12 @@
 import {
   createASCIIQrCode,
-  createDataURLQrCode,
   limitlessFetchMessages,
-  parseDropboxLink,
   regexes
 } from "../../helpers/helpers";
 import fetch from "node-fetch";
 import jimp from "jimp";
 import QRReader from "qrcode-reader";
 import { createQree, findGame } from "../../db/db_qree";
-import pgEscape from "pg-escape";
 
 export async function scrapChannelForQrCodes(
   messageArguments,
@@ -22,7 +19,6 @@ export async function scrapChannelForQrCodes(
   }
   try {
     await receivedMessage.author.send(`Starting scrapping`);
-    // await receivedMessage.channel.send(`scrapping...`);
     limitlessFetchMessages(receivedMessage.channel).then(async messages => {
       for (const item of messages) {
         if (!!item.attachments.size) {
@@ -81,17 +77,6 @@ export async function scrapChannelForQrCodes(
           }).catch(e => {
             console.log(e);
           });
-          if (value) {
-            // if (
-            //   value.result.match(regexes.DROPBOX) &&
-            //   value.result.match(regexes.CIA)
-            // ) {
-            //   value.result = parseDropboxLink(value.result);
-            //   value.result = value.result.match(/^(.*?)\.?dl=1/gi);
-            // }
-          } else {
-            continue;
-          }
 
           const obj = {
             name: name,

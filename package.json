@@ -36,7 +36,6 @@
     "lodash": "^4.17.15",
     "node-fetch": "^2.6.0",
     "pg": "^7.11.0",
-    "pg-escape": "^0.2.0",
     "prettysize": "^2.0.0",
     "qrcode-generator": "^1.4.3",
     "qrcode-reader": "^1.0.4",
@@ -50,7 +49,7 @@
     "babel-preset-stage-2": "^6.24.1",
     "nodemon-webpack-plugin": "^4.0.8",
     "prettier": "^1.18.2",
-    "webpack": "^4.37.0",
+    "webpack": "^4.41.0",
     "webpack-cli": "^3.3.6"
   }
 }

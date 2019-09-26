@@ -19,5 +19,5 @@ export {
   makeQrImagesfromDB,
   urlStatus,
   updateSize,
-  getStats
+  getStats,
 };
