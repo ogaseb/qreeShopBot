@@ -3,10 +3,7 @@ import { getWholeDB, updateQrImageUrl } from "../../db/db_qree";
 import imageDataURI from "image-data-uri";
 import fs from "fs";
 
-export async function makeQrImagesfromDB(
-  messageArguments,
-  receivedMessage,
-) {
+export async function makeQrImagesfromDB(messageArguments, receivedMessage) {
   try {
     const rows = await getWholeDB();
     for (const {

@@ -4,13 +4,13 @@ import {
   createDataURLQrCode,
   createEmbeddedAnswer,
   filteredRegexes,
+  getRandomMeme,
   parseURL,
   sendToQrGames
 } from "../../helpers/helpers";
 import { createQree, findGame } from "../../db/db_qree";
 import { MessageCollector } from "discord.js";
 import imageDataURI from "image-data-uri";
-import axios from "axios"
 
 export async function handleGameUpload(
   messageArguments,
@@ -23,34 +23,11 @@ export async function handleGameUpload(
         `invalid arguments count for upload command`
       );
     }
-
-    const giphy = {
-      baseURL: "https://api.giphy.com/v1/gifs/",
-      apiKey: "0UTRbFtkMxAplrohufYco5IY74U8hOes",
-      tag: "fail",
-      type: "random",
-      rating: "PG-13"
-    };
-
-    let giphyURL = encodeURI(
-      giphy.baseURL +
-      giphy.type +
-      "?api_key=" +
-      giphy.apiKey +
-      "&tag=" +
-      giphy.tag +
-      "&rating=" +
-      giphy.rating
-    );
-
-    const giphyResponse = await axios.get(giphyURL)
-    let loadingMessageId, response
-    response = await receivedMessage.channel.send(
-      `wait a moment...`,{
-        files: [giphyResponse.data.data.image_url]
-      }
-    )
-    loadingMessageId = response.id
+    const meme = await getRandomMeme("head-pat-anime-gifs");
+    const response = await receivedMessage.channel.send(`wait a moment...`, {
+      files: [meme]
+    });
+    const loadingMessageId = response.id;
 
     const regexesObj = filteredRegexes([
       "URL",
@@ -75,7 +52,7 @@ export async function handleGameUpload(
     }
 
     const obj = {
-      name: foundArgsObj.TITLE,
+      name: foundArgsObj.TITLE.replace(/['"]+/g, ""),
       qr_link: await parseURL(foundArgsObj.URL),
       qr_data: await createASCIIQrCode(await parseURL(foundArgsObj.URL)),
       qr_image_url: await createDataURLQrCode(await parseURL(foundArgsObj.URL)),
@@ -103,8 +80,8 @@ export async function handleGameUpload(
           "+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)" +
           "\n```";
     //delete loading message
-    setTimeout(async ()=>{
-      receivedMessage.channel.messages.get(loadingMessageId).delete()
+    setTimeout(async () => {
+      receivedMessage.channel.messages.get(loadingMessageId).delete();
 
       await receivedMessage.channel
         .send("", {
@@ -116,22 +93,22 @@ export async function handleGameUpload(
 
       await receivedMessage.channel.send(
         "```" +
-        "\nLink: " +
-        obj.qr_link +
-        "\n\nName: " +
-        obj.name +
-        "\nPlatform: " +
-        obj.platform +
-        "\nRegion: " +
-        obj.region +
-        "\nSize: " +
-        obj.size +
-        "\nUploader: " +
-        obj.uploader_name +
-        "```" +
-        text
+          "\nLink: " +
+          obj.qr_link +
+          "\n\nName: " +
+          obj.name +
+          "\nPlatform: " +
+          obj.platform +
+          "\nRegion: " +
+          obj.region +
+          "\nSize: " +
+          obj.size +
+          "\nUploader: " +
+          obj.uploader_name +
+          "```" +
+          text
       );
-    }, 3000)
+    }, 3000);
 
     const collector = new MessageCollector(
       receivedMessage.channel,

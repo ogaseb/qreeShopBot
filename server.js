@@ -11,6 +11,7 @@ import {
   urlStatus,
   updateSize,
   getStats,
+  headPat
 } from "./commands/index";
 import { regexes, checkIfDM } from "./helpers/helpers";
 import { initializeDb } from "./models/database";
@@ -127,6 +128,10 @@ function processCommand(receivedMessage) {
     return createEmbeddedHelper(serverInvokers, receivedMessage).build();
   }
 
+  if (primaryCommand === "headpat") {
+    return headPat(messageArguments, receivedMessage);
+  }
+
   if (primaryCommand === "search") {
     return searchGame(fullCommand, receivedMessage);
   }
@@ -142,9 +147,11 @@ function processCommand(receivedMessage) {
         return handleGameUpload(messageArguments, receivedMessage, client);
       }
 
-      if (receivedMessage.member.roles.some(r =>
-        process.env.BOT_PERMISSIONS_INVOKE.includes(r.name)
-      )) {
+      if (
+        receivedMessage.member.roles.some(r =>
+          process.env.BOT_PERMISSIONS_INVOKE.includes(r.name)
+        )
+      ) {
         if (primaryCommand === "invoke") {
           return changeInvokeCommand(
             messageArguments,
@@ -157,7 +164,6 @@ function processCommand(receivedMessage) {
           "You have no permissions to use this command"
         );
       }
-
 
       if (primaryCommand === "scrap") {
         return scrapChannelForQrCodes(messageArguments, receivedMessage);

@@ -23,7 +23,7 @@ export function parseGDriveLink(link) {
 
 export function parseURL(link) {
   if (link && link.match(regexes.GDRIVE)) {
-   return  link = parseGDriveLink(link);
+    return (link = parseGDriveLink(link));
   } else if (link && link.match(regexes.DROPBOX)) {
     if (link.slice(-1) === "0" || link.slice(-1) === "1") {
       link = parseDropboxLink(link);
@@ -31,7 +31,7 @@ export function parseURL(link) {
       return link[0];
     }
   } else {
-    return link
+    return link;
   }
 }
 
@@ -167,7 +167,7 @@ export function checkIfDM(receivedMessage) {
 }
 
 export function filteredRegexes(array) {
-  return  Object.keys(regexes)
+  return Object.keys(regexes)
     .filter(key => array.includes(key))
     .reduce((obj, key) => {
       obj[key] = regexes[key];
@@ -179,9 +179,31 @@ export async function checkFileSize(url) {
   const urlMetadata = await axios.head(url, { timeout: 15000 });
   if (urlMetadata && urlMetadata.status !== 404) {
     if (urlMetadata.headers["content-length"]) {
-      return pretty(urlMetadata.headers["content-length"], true)
+      return pretty(urlMetadata.headers["content-length"], true);
     }
   }
+}
+
+export async function getRandomMeme(searchPhrase) {
+  const tenor = {
+    baseURL: "https://api.tenor.com/v1/random",
+    apiKey: "T64EWZS77O3H",
+    tag: searchPhrase,
+    rating: "medium"
+  };
+
+  let tenorURL = encodeURI(
+    tenor.baseURL +
+      "?key=" +
+      tenor.apiKey +
+      "&q=" +
+      tenor.tag +
+      "&contentfilter=" +
+      tenor.rating +
+      "&media_filter=minimal&limit=1"
+  );
+  const tenorResponse = await axios.get(tenorURL);
+  return tenorResponse.data.results[0].media[0].gif.url;
 }
 
 export const regexes = {
@@ -196,4 +218,5 @@ export const regexes = {
   SIZE: /(\d*\.?\d+)\s*(KB|MB|GB|Bytes|Kilobytes|Megabytes)/gi,
   SCRAPER: /\b([^\(]+)|\((.*?)\)|(\w*GBA|GBC|GAMEBOY|NES|SNES|MEGA DRIVE|PCE|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS|VIRTUAL CONSOLE|MAME|TURBOGRAFX\w*)\b|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\S+/gi
 };
+
 //(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?\w+|"(?:\\"|[^"])+"|'(?:\\'|[^"])+'|\w+
