@@ -23,7 +23,7 @@ export async function handleGameUpload(
         `invalid arguments count for upload command`
       );
     }
-    const meme = await getRandomMeme("head-pat-anime-gifs");
+    const meme = await getRandomMeme("head-pat-anime");
     const response = await receivedMessage.channel.send(`wait a moment...`, {
       files: [meme]
     });
