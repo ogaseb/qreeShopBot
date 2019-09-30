@@ -1,5 +1,4 @@
-import dotEnv from "dotenv";
-dotEnv.config();
+import dotenv from "dotenv";
 import { Client } from "discord.js";
 import {
   scrapChannelForQrCodes,
@@ -15,9 +14,9 @@ import {
   headPat
 } from "./commands/index";
 import { regexes, checkIfDM } from "./helpers/helpers";
-import { initializeDb } from "./models/database";
 import { approxQrCount } from "./db/db_qree";
-
+dotenv.config();
+console.log(process.env.BOT_PERMISSIONS_ROLES);
 process.on("unhandledRejection", (err, p) => {
   console.log("An unhandledRejection occurred");
   console.log(`Rejected Promise: ${p}`);
@@ -29,13 +28,6 @@ let botInvoker = process.env.BOT_DEFAULT_INVOKE;
 let serverInvokers = new Map();
 
 void (async function() {
-  try {
-    await initializeDb();
-    console.log("DB -> init DB");
-  } catch (e) {
-    console.log(e);
-  }
-
   try {
     await client.login(process.env.BOT_TOKEN);
   } catch (e) {
@@ -108,11 +100,7 @@ function processCommand(receivedMessage) {
     primaryCommand = messageArguments[0]; // The first word directly after the exclamation is the command
   }
 
-  if (
-    primaryCommand === "" ||
-    primaryCommand === null ||
-    primaryCommand === undefined
-  ) {
+  if (!primaryCommand) {
     checkIfDM(receivedMessage)
       ? receivedMessage.channel.send(
           `You need to specify which command you want to use type "!qre help" to display available commands`
@@ -150,7 +138,7 @@ function processCommand(receivedMessage) {
 
       if (
         receivedMessage.member.roles.some(r =>
-          process.env.BOT_PERMISSIONS_INVOKE.includes(r.name)
+          process.env.BOT_PERMISSIONS_ROLES.includes(r.name)
         )
       ) {
         if (primaryCommand === "invoke") {

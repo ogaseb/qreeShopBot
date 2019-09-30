@@ -1,18 +1,12 @@
 import dotEnv from "dotenv";
-dotEnv.config();
 import { Sequelize } from "sequelize";
-import { Client } from "pg";
+dotEnv.config();
 const Op = Sequelize.Op;
-
-function createDBclient() {
-  return new Client({
-    connectionString: process.env.DATABASE_URL
-  });
-}
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   define: { timestamps: false }
 });
+
 sequelize
   .authenticate()
   .then(() => {
@@ -74,6 +68,8 @@ QreeItems.init(
     // options
   }
 );
+
+sequelize.sync();
 
 export async function createQree(
   {
@@ -224,14 +220,15 @@ export async function updateQrImageUrl(id, qr_image_url) {
 }
 
 export async function updateSizeArgument(id, size) {
-  const client = createDBclient();
   try {
-    await client.connect();
-    const res = await client.query(
-      `UPDATE qre_items SET size = '${size}' WHERE id = ${id}`
+    const res = await QreeItems.update(
+      {
+        size
+      },
+      { where: { id } }
     );
+
     console.log("DB -> updating size for id: " + id);
-    await client.end();
     return res;
   } catch (e) {
     console.log(e);
@@ -239,14 +236,15 @@ export async function updateSizeArgument(id, size) {
 }
 
 export async function updateRegionArgument(id, region) {
-  const client = createDBclient();
   try {
-    await client.connect();
-    const res = await client.query(
-      `UPDATE qre_items SET region = '${region}' WHERE id = ${id}`
+    const res = await QreeItems.update(
+      {
+        region
+      },
+      { where: { id } }
     );
+
     console.log("DB -> updating region for id: " + id);
-    await client.end();
     return res;
   } catch (e) {
     console.log(e);

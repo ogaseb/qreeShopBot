@@ -7,7 +7,6 @@ import { createEmbeddedHelper } from "./help/help.js";
 import { makeQrImagesfromDB } from "./images/images";
 import { urlStatus } from "./checkurls/checkurls";
 import { updateSize } from "./updatesize/updatesize";
-import { getStats } from "./stats/stats";
 import { headPat } from "./headpat/headpat";
 
 export {
@@ -20,6 +19,5 @@ export {
   makeQrImagesfromDB,
   urlStatus,
   updateSize,
-  getStats,
   headPat
 };

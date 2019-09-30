@@ -16,14 +16,14 @@ export async function makeQrImagesfromDB(messageArguments, receivedMessage) {
       uploader_discord_id
     } of rows) {
       const obj = {
-        qr_image: await createDataURLQrCode(qr_link),
+        qr_image: createDataURLQrCode(qr_link),
         uploader_discord_id,
         id
       };
 
       if (qr_image_url === "null") {
         let string = name + platform + region + uploader_discord_id;
-        string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
+        string = string.replace(/[^a-z0-9]/gim, "");
         await imageDataURI.outputFile(obj.qr_image, "./img/" + string + ".jpg");
         fs.access("./img/" + string + ".jpg", fs.F_OK, async err => {
           if (err) {
@@ -33,7 +33,7 @@ export async function makeQrImagesfromDB(messageArguments, receivedMessage) {
           const msg = await receivedMessage.channel.send("", {
             files: ["./img/" + string + ".jpg"]
           });
-          //file exists
+          // file exists
           console.log(msg.attachments.values().next().value.proxyURL);
           obj.qr_image = msg.attachments.values().next().value.proxyURL;
           await updateQrImageUrl(obj.id, obj.qr_image);

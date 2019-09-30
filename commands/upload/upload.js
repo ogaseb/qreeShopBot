@@ -53,9 +53,9 @@ export async function handleGameUpload(
 
     const obj = {
       name: foundArgsObj.TITLE.replace(/['"]+/g, ""),
-      qr_link: await parseURL(foundArgsObj.URL),
-      qr_data: await createASCIIQrCode(await parseURL(foundArgsObj.URL)),
-      qr_image_url: await createDataURLQrCode(await parseURL(foundArgsObj.URL)),
+      qr_link: parseURL(foundArgsObj.URL),
+      qr_data: createASCIIQrCode(parseURL(foundArgsObj.URL)),
+      qr_image_url: createDataURLQrCode(parseURL(foundArgsObj.URL)),
       platform: foundArgsObj.PLATFORMS,
       region: foundArgsObj.REGIONS,
       size: await checkFileSize(parseURL(foundArgsObj.URL)),
@@ -79,7 +79,7 @@ export async function handleGameUpload(
           "```diff\n" +
           "+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)" +
           "\n```";
-    //delete loading message
+    // delete loading message
     setTimeout(async () => {
       receivedMessage.channel.messages.get(loadingMessageId).delete();
 

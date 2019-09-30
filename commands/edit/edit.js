@@ -4,11 +4,10 @@ import {
   checkFileSize,
   createASCIIQrCode,
   createDataURLQrCode,
+  filteredRegexes,
   regexes
 } from "../../helpers/helpers";
 import imageDataURI from "image-data-uri";
-import axios from "axios";
-import pretty from "prettysize";
 
 export async function handleGameEdit(messageArguments, receivedMessage) {
   try {
@@ -90,19 +89,17 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           .join(" ")
           .match(regexes.ARGUMENTS);
 
-        const filteredRegexes = Object.keys(regexes)
-          .filter(key =>
-            ["URL", "TITLE", "REGIONS", "PLATFORMS", "SIZE"].includes(key)
-          )
-          .reduce((obj, key) => {
-            obj[key] = regexes[key];
-            return obj;
-          }, {});
-
+        const regexesObj = filteredRegexes([
+          "URL",
+          "TITLE",
+          "REGIONS",
+          "PLATFORMS",
+          "SIZE"
+        ]);
         let foundArgsObj = {};
-        for (const regex in filteredRegexes) {
+        for (const regex in regexesObj) {
           const itemIndex = await args.findIndex(value =>
-            regexes[regex].test(value)
+            regexesObj[regex].test(value)
           );
           if (itemIndex === -1) {
             await receivedMessage.channel.send(
@@ -136,7 +133,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
         if (foundArgsObj.URL) {
           let string =
             obj.name + obj.platform + obj.region + obj.uploader_discord_id;
-          string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
+          string = string.replace(/[^a-z0-9]/gim, "");
           await imageDataURI.outputFile(
             obj.qr_image_url,
             "./img/" + string + ".jpg"
