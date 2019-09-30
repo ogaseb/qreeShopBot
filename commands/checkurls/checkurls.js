@@ -8,7 +8,7 @@ export async function urlStatus(client) {
   const rows = await getWholeDB();
   for (const { id, qr_link, name, uploader_discord_id } of rows) {
     try {
-      console.time(`scanningTime - ${name}`)
+      console.time(`scanningTime - ${name}`);
       await axios.head(qr_link, { timeout: 30000 });
       console.timeEnd(`scanningTime - ${name}`);
     } catch (e) {

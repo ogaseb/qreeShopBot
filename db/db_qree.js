@@ -1,8 +1,8 @@
-require("dotenv").config();
-import {Client} from "pg";
-
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op
+import dotEnv from "dotenv";
+dotEnv.config();
+import { Sequelize } from "sequelize";
+import { Client } from "pg";
+const Op = Sequelize.Op;
 
 function createDBclient() {
   return new Client({
@@ -11,81 +11,86 @@ function createDBclient() {
 }
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
-    define: {timestamps:false}
+  define: { timestamps: false }
 });
 sequelize
   .authenticate()
   .then(() => {
-    console.log('sequelize -> Connection has been established successfully.');
+    console.log("sequelize -> Connection has been established successfully.");
   })
   .catch(err => {
-    console.error('sequelize -> Unable to connect to the database:', err);
+    console.error("sequelize -> Unable to connect to the database:", err);
   });
 
 class QreeItems extends Sequelize.Model {}
-QreeItems.init({
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true
+QreeItems.init(
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      autoIncrement: true,
+      allowNull: false,
+      primaryKey: true
+    },
+    qr_data: {
+      type: Sequelize.TEXT,
+      allowNull: false
+    },
+    qr_image_url: {
+      type: Sequelize.TEXT,
+      allowNull: false
+    },
+    qr_link: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    platform: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    region: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    size: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    uploader_discord_id: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    uploader_name: {
+      type: Sequelize.STRING,
+      allowNull: false
+    }
   },
-  qr_data: {
-    type: Sequelize.TEXT,
-    allowNull: false
-  },
-  qr_image_url: {
-    type: Sequelize.TEXT,
-    allowNull: false
-  },
-  qr_link: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  platform: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  region: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  size: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  uploader_discord_id: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  uploader_name: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-}, {
-  sequelize,
-  modelName: 'qre_items'
-  // options
-});
+  {
+    sequelize,
+    modelName: "qre_items"
+    // options
+  }
+);
 
 export async function createQree(
-  {qr_data,
-  qr_image_url,
-  qr_link,
-  name,
-  platform,
-  region,
-  size,
-  uploader_discord_id,
-  uploader_name},
+  {
+    qr_data,
+    qr_image_url,
+    qr_link,
+    name,
+    platform,
+    region,
+    size,
+    uploader_discord_id,
+    uploader_name
+  },
   receivedMessage
 ) {
   try {
-   const item = await QreeItems.create({
+    const item = await QreeItems.create({
       qr_data,
       qr_image_url,
       qr_link,
@@ -95,10 +100,10 @@ export async function createQree(
       size,
       uploader_discord_id,
       uploader_name
-    })
+    });
     await receivedMessage.channel.send("Saving in database!");
-    console.log("DB -> save qr in DB")
-    return item.id
+    console.log("DB -> save qr in DB");
+    return item.id;
   } catch (e) {
     await receivedMessage.channel.send(
       "something went wrong, send it to developer: \n" +
@@ -124,47 +129,50 @@ export async function editQree(
   receivedMessage
 ) {
   try {
-      await QreeItems.update({
-      qr_data,
-      qr_image_url,
-      qr_link,
-      name,
-      platform,
-      region,
-      size,
-      uploader_discord_id,
-      uploader_name
-    },{where: {id}})
+    await QreeItems.update(
+      {
+        qr_data,
+        qr_image_url,
+        qr_link,
+        name,
+        platform,
+        region,
+        size,
+        uploader_discord_id,
+        uploader_name
+      },
+      { where: { id } }
+    );
     await receivedMessage.channel.send("Edited!");
-    console.log("DB -> save qr in DB")
+    console.log("DB -> save qr in DB");
   } catch (e) {
     await receivedMessage.channel.send(
       "something went wrong, send it to developer: \n" +
-      "```diff\n- " +
-      e +
-      "```"
+        "```diff\n- " +
+        e +
+        "```"
     );
     console.log(e);
   }
 }
 
 export async function findGame(name) {
-  let filter = []
-  let words = name.split(" ")
-  words.forEach((word)=>{
+  let filter = [];
+  let words = name.split(" ");
+  words.forEach(word => {
     filter.push({
       name: {
         [Op.iLike]: `%${word}%`
       }
-    })
-  })
+    });
+  });
 
   try {
     const res = await QreeItems.findAll({
       where: {
         [Op.and]: filter
       }
-    })
+    });
     return res;
   } catch (e) {
     console.log(e);
@@ -177,8 +185,8 @@ export async function findGameToEdit(id) {
       where: {
         id
       },
-      limit:1
-    })
+      limit: 1
+    });
     return res;
   } catch (e) {
     console.log(e);
@@ -203,9 +211,12 @@ export async function getWholeDB() {
 
 export async function updateQrImageUrl(id, qr_image_url) {
   try {
-    await QreeItems.update({
-      qr_image_url,
-    },{where: {id}})
+    await QreeItems.update(
+      {
+        qr_image_url
+      },
+      { where: { id } }
+    );
     console.log("DB -> updating qr url image");
   } catch (e) {
     console.log(e);

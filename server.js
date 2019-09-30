@@ -1,4 +1,5 @@
-require("dotenv").config();
+import dotEnv from "dotenv";
+dotEnv.config();
 import { Client } from "discord.js";
 import {
   scrapChannelForQrCodes,
@@ -23,6 +24,10 @@ process.on("unhandledRejection", (err, p) => {
   console.log(`Rejection: ${err}`);
 });
 
+const client = new Client();
+let botInvoker = process.env.BOT_DEFAULT_INVOKE;
+let serverInvokers = new Map();
+
 void (async function() {
   try {
     await initializeDb();
@@ -37,10 +42,6 @@ void (async function() {
     console.log(e);
   }
 })();
-
-const client = new Client();
-let botInvoker = process.env.BOT_DEFAULT_INVOKE;
-let serverInvokers = new Map();
 
 client.on("ready", async () => {
   console.log("On Discord!");
