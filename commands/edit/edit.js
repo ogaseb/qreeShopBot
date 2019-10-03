@@ -98,7 +98,8 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
         ]);
         let foundArgsObj = {};
         for (const regex in regexesObj) {
-          const itemIndex = await args.findIndex(value =>
+          console.log(regexesObj[regex]);
+          const itemIndex = args.findIndex(value =>
             regexesObj[regex].test(value)
           );
           if (itemIndex === -1) {
@@ -114,22 +115,25 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           }
         }
 
+        console.log(foundArgsObj);
+
         const obj = {
           name: foundArgsObj.TITLE ? foundArgsObj.TITLE : name,
-          qr_link: foundArgsObj.URL || qr_link,
+          qr_link: foundArgsObj.URL ? foundArgsObj.URL : qr_link,
           qr_data: foundArgsObj.URL
-            ? await createASCIIQrCode(foundArgsObj.URL)
+            ? createASCIIQrCode(foundArgsObj.URL)
             : qr_data,
           qr_image_url: foundArgsObj.URL
-            ? await createDataURLQrCode(foundArgsObj.URL)
+            ? createDataURLQrCode(foundArgsObj.URL)
             : qr_image_url,
-          platform: foundArgsObj.PLATFORMS || platform,
-          region: foundArgsObj.REGIONS || region,
-          size: foundArgsObj.SIZE || size,
+          platform: foundArgsObj.PLATFORMS ? foundArgsObj.PLATFORMS : platform,
+          region: foundArgsObj.REGIONS ? foundArgsObj.REGIONS : region,
+          size: foundArgsObj.SIZE ? foundArgsObj.SIZE : size,
           uploader_discord_id: uploader_discord_id,
           uploader_name: uploader_name
         };
 
+        let newSize = "";
         if (foundArgsObj.URL) {
           let string =
             obj.name + obj.platform + obj.region + obj.uploader_discord_id;
@@ -147,7 +151,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
               obj.qr_image_url = msg.attachments.values().next().value.proxyURL;
             });
 
-          obj.size = checkFileSize(foundArgsObj.URL);
+          newSize = await checkFileSize(foundArgsObj.URL);
         }
 
         await editQree(
@@ -158,7 +162,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           obj.name,
           obj.platform,
           obj.region,
-          obj.size,
+          newSize ? newSize : obj.size,
           obj.uploader_discord_id,
           obj.uploader_name,
           receivedMessage
