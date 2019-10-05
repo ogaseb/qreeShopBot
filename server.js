@@ -148,6 +148,10 @@ function processCommand(receivedMessage) {
             serverInvokers
           );
         }
+
+        if (primaryCommand === "edit") {
+          return handleGameEdit(messageArguments, receivedMessage);
+        }
       } else {
         return receivedMessage.channel.send(
           "You have no permissions to use this command"
@@ -160,10 +164,6 @@ function processCommand(receivedMessage) {
 
       if (primaryCommand === "images") {
         return makeQrImagesfromDB(messageArguments, receivedMessage);
-      }
-
-      if (primaryCommand === "edit") {
-        return handleGameEdit(messageArguments, receivedMessage);
       }
 
       if (primaryCommand === "checkurls") {
