@@ -28,10 +28,7 @@ export async function searchGame(messageArguments, receivedMessage) {
   } catch (e) {
     console.log(e);
     await receivedMessage.channel.send(
-      "something went wrong, send it to developer: \n" +
-        "```diff\n- " +
-        e +
-        "```"
+      `something went wrong, send it to developer: \n\`\`\`diff\n- ${e}\`\`\``
     );
   }
 }

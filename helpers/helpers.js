@@ -4,16 +4,23 @@ import { Embeds } from "discord-paginationembed";
 import axios from "axios";
 import pretty from "prettysize";
 
+export function checkForPermissions(receivedMessage) {
+  return (
+    process.env.BOT_PERMISSIONS_GUILD.includes(receivedMessage.guild.id) &&
+    receivedMessage.member.roles.some(r =>
+      process.env.BOT_PERMISSIONS_ROLES.includes(r.name)
+    )
+  );
+}
+
 export function parseDropboxLink(link) {
   let string = link;
   string = string.split("/");
   if (string[3] === "sh") {
-    let string_sh = string.join("/");
-    return string_sh;
+    return string.join("/");
   } else {
     string[5] = "?dl=1";
-    let string_db = string.join("/");
-    return string_db;
+    return string.join("/");
   }
 }
 
@@ -193,14 +200,7 @@ export async function getRandomMeme(searchPhrase) {
   };
 
   let tenorURL = encodeURI(
-    tenor.baseURL +
-      "?key=" +
-      tenor.apiKey +
-      "&q=" +
-      tenor.tag +
-      "&contentfilter=" +
-      tenor.rating +
-      "&media_filter=minimal&limit=1"
+    `${tenor.baseURL}?key=${tenor.apiKey}&q=${tenor.tag}&contentfilter=${tenor.rating}&media_filter=minimal&limit=1`
   );
   const tenorResponse = await axios.get(tenorURL);
   return tenorResponse.data.results[0].media[0].gif.url;

@@ -26,23 +26,8 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
     } = rows[0];
     if (rows.length) {
       await receivedMessage.channel.send(
-        "```" +
-          "\nLink: " +
-          qr_link +
-          "\n\nName: " +
-          name +
-          "\nPlatform: " +
-          platform +
-          "\nRegion: " +
-          region +
-          "\nSize: " +
-          size +
-          "\nUploader: " +
-          uploader_name +
-          "```" +
-          "```" +
-          "Is this the game you wish to edit? type 'yes'/'no'" +
-          "```",
+        `\`\`\`\nLink: ${qr_link}\n\nName: ${name}\nPlatform: ${platform}\nRegion: ${region}\nSize: ${size}\nUploader: ${uploader_name}\`\`\` 
+        \`\`\`Is this the game you wish to edit? type 'yes'/'no'\`\`\``,
         {
           files: [qr_image_url]
         }
@@ -57,8 +42,8 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
       collector.on("collect", async message => {
         if (message.content.toLowerCase() === "yes") {
           await receivedMessage.channel.send(
-            "```please type all the information you want to edit, remember that title NEEDS to be in quotation marks. You can type all info you want to edit in one or more messages.```" +
-              "```type `end` if you want to finish```"
+            `\`\`\`please type all the information you want to edit, remember that title NEEDS to be in quotation marks. You can type all info you want to edit in one or more messages.\`\`\`
+            \`\`\`type \`end\` if you want to finish\`\`\``
           );
         }
         if (message.content.toLowerCase() === "no") {
@@ -154,19 +139,7 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
           newSize = await checkFileSize(foundArgsObj.URL);
         }
 
-        await editQree(
-          id,
-          obj.qr_data,
-          obj.qr_image_url,
-          obj.qr_link,
-          obj.name,
-          obj.platform,
-          obj.region,
-          newSize ? newSize : obj.size,
-          obj.uploader_discord_id,
-          obj.uploader_name,
-          receivedMessage
-        );
+        await editQree(id, obj, newSize ? newSize : obj.size, receivedMessage);
       });
     } else {
       await receivedMessage.channel.send("cant find it in database");

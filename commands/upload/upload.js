@@ -70,15 +70,8 @@ export async function handleGameUpload(
     const rows = await findGame(obj.name);
     const text =
       rows.length === 0
-        ? "```diff\n" +
-          "+ This is how it will look, save in database? Type 'yes'/'no'" +
-          "\n```"
-        : "```diff\n" +
-          "- I FOUND THE GAMES WITH SIMILAR NAME, CHECK THEM BEFORE SAYING 'yes' BY TYPING 'search'" +
-          "\n```" +
-          "```diff\n" +
-          "+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)" +
-          "\n```";
+        ? `\`\`\`diff\n This is how it will look, save in database? Type 'yes'/'no'\n\`\`\``
+        : `\`\`\`diff\n- I FOUND THE GAMES WITH SIMILAR NAME, CHECK THEM BEFORE SAYING 'yes' BY TYPING 'search'"\n\`\`\`\`\`\`diff\n+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)"\n\`\`\``;
     // delete loading message
     setTimeout(async () => {
       receivedMessage.channel.messages.get(loadingMessageId).delete();
@@ -92,21 +85,7 @@ export async function handleGameUpload(
         });
 
       await receivedMessage.channel.send(
-        "```" +
-          "\nLink: " +
-          obj.qr_link +
-          "\n\nName: " +
-          obj.name +
-          "\nPlatform: " +
-          obj.platform +
-          "\nRegion: " +
-          obj.region +
-          "\nSize: " +
-          obj.size +
-          "\nUploader: " +
-          obj.uploader_name +
-          "```" +
-          text
+        `\`\`\`\nLink: ${obj.qr_link}\n\nName: ${obj.name}\nPlatform: ${obj.platform}\nRegion: ${obj.region}\nSize: ${obj.size}\nUploader: ${obj.uploader_name}\`\`\`${text}`
       );
     }, 3000);
 
@@ -130,10 +109,7 @@ export async function handleGameUpload(
         } catch (e) {
           console.log(e);
           await receivedMessage.channel.send(
-            "something went wrong, send it to developer: \n" +
-              "```diff\n- " +
-              e +
-              "```"
+            `something went wrong, send it to developer: \n\`\`\`diff\n- ${e}\`\`\``
           );
         }
       } else if (message.content.toLowerCase() === "no") {
@@ -144,16 +120,13 @@ export async function handleGameUpload(
         } catch (e) {
           console.log(e);
           await receivedMessage.channel.send(
-            "something went wrong, send it to developer: \n" +
-              "```diff\n- " +
-              e +
-              "```"
+            `something went wrong, send it to developer: \n\`\`\`diff\n- ${e}\`\`\``
           );
         }
       } else if (message.content.toLowerCase() === "search") {
         try {
           await receivedMessage.channel.send(
-            "```Ok, displaying games that I have found you can type 'yes'/'no' still```"
+            `\`\`\`Ok, displaying games that I have found you can type 'yes'/'no' still\`\`\`\``
           );
 
           const QrCodesSearchResults = await createEmbeddedAnswer(
@@ -164,10 +137,7 @@ export async function handleGameUpload(
         } catch (e) {
           console.log(e);
           await receivedMessage.channel.send(
-            "something went wrong, send it to developer: \n" +
-              "```diff\n- " +
-              e +
-              "```"
+            `something went wrong, send it to developer: \n\`\`\`diff\n- ${e}\`\`\``
           );
         }
       }
@@ -179,10 +149,7 @@ export async function handleGameUpload(
   } catch (e) {
     console.log(e);
     await receivedMessage.channel.send(
-      "something went wrong, send it to developer: \n" +
-        "```diff\n- " +
-        e +
-        "```"
+      `something went wrong, send it to developer: \n\`\`\`diff\n- ${e}\`\`\``
     );
   }
 }

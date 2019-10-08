@@ -113,15 +113,17 @@ export async function createQree(
 
 export async function editQree(
   id,
-  qr_data,
-  qr_image_url,
-  qr_link,
-  name,
-  platform,
-  region,
-  size,
-  uploader_discord_id,
-  uploader_name,
+  {
+    qr_data,
+    qr_image_url,
+    qr_link,
+    name,
+    platform,
+    region,
+    uploader_discord_id,
+    uploader_name
+  },
+  newSize,
   receivedMessage
 ) {
   try {
@@ -133,7 +135,7 @@ export async function editQree(
         name,
         platform,
         region,
-        size,
+        newSize,
         uploader_discord_id,
         uploader_name
       },
