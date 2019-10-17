@@ -1,22 +1,17 @@
-const path = require('path')
-const nodeExternals = require('webpack-node-externals')
-const NodemonPlugin = require( 'nodemon-webpack-plugin' ) // Ding
+const path = require("path");
+const nodeExternals = require("webpack-node-externals");
+const NodemonPlugin = require("nodemon-webpack-plugin"); // Ding
 
 module.exports = {
-  target: 'node',
-  watch: false,
-  mode: 'development',
-  devtool: false,
-  entry: './server.js',
-  node: {
-    __dirname: false
-  },
+  target: "node",
+  mode: "production",
+  entry: "./server.js",
   output: {
     path: path.resolve(__dirname),
-    filename: 'server.min.js',
+    filename: "build/[name].js"
   },
   plugins: [
-    new NodemonPlugin(), // Dong
+    new NodemonPlugin() // Dong
   ],
   externals: [nodeExternals()]
-}
+};
