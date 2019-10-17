@@ -1,17 +1,9 @@
+require("dotenv").config();
 import qrCode from "qrcode-generator";
 import { RichEmbed } from "discord.js";
 import { Embeds } from "discord-paginationembed";
 import axios from "axios";
 import pretty from "prettysize";
-
-export function checkForPermissions(receivedMessage) {
-  return (
-    process.env.BOT_PERMISSIONS_GUILD.includes(receivedMessage.guild.id) &&
-    receivedMessage.member.roles.some(r =>
-      process.env.BOT_PERMISSIONS_ROLES.includes(r.name)
-    )
-  );
-}
 
 export function parseDropboxLink(link) {
   let string = link;
@@ -204,6 +196,30 @@ export async function getRandomMeme(searchPhrase) {
   );
   const tenorResponse = await axios.get(tenorURL);
   return tenorResponse.data.results[0].media[0].gif.url;
+}
+
+export function validateGuilds(receivedMessage) {
+  if (!checkIfDM(receivedMessage)) {
+    return !!process.env.BOT_PERMISSIONS_GUILD.includes(
+      receivedMessage.guild.id
+    );
+  }
+}
+
+export function validatePermissions(receivedMessage) {
+  if (!checkIfDM(receivedMessage)) {
+    return !!receivedMessage.member.roles.some(r =>
+      process.env.BOT_PERMISSIONS_ROLES.includes(r.name)
+    );
+  }
+}
+
+export function validateAdmin(receivedMessage) {
+  if (!checkIfDM(receivedMessage)) {
+    return !!receivedMessage.member.roles.some(r =>
+      process.env.BOT_PERMISSIONS_ADMIN.includes(r.name)
+    );
+  }
 }
 
 export const regexes = {

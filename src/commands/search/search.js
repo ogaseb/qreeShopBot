@@ -11,7 +11,7 @@ export async function searchGame(messageArguments, receivedMessage) {
     if (rows.length === 0) {
       if (checkIfDM(receivedMessage)) {
         return await receivedMessage.channel.send(
-          `I didn't find anything called \`${finalArgs}\` in my database. If you want to request games join https://discord.gg/uJnP5q`
+          `I didn't find anything called \`${finalArgs}\` in my database. If you want to request games join https://discord.gg/tXJfdNp`
         );
       } else {
         return await receivedMessage.channel.send(

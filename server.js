@@ -11,15 +11,25 @@ import {
   urlStatus,
   updateSize,
   headPat
-} from "./commands/index";
-import { regexes, checkIfDM } from "./helpers/helpers";
-import { approxQrCount } from "./db/db_qree";
+} from "./src/commands/index";
+import {
+  regexes,
+  checkIfDM,
+  validateGuilds,
+  validatePermissions,
+  validateAdmin
+} from "./src/helpers/helpers";
+import { approxQrCount } from "./src/db/db_qree";
 
 process.on("unhandledRejection", (err, p) => {
   console.log("An unhandledRejection occurred");
   console.log(`Rejected Promise: ${p}`);
   console.log(`Rejection: ${err}`);
 });
+
+const client = new Client();
+let botInvoker = process.env.BOT_DEFAULT_INVOKE;
+let serverInvokers = new Map();
 
 void (async function() {
   try {
@@ -28,10 +38,6 @@ void (async function() {
     console.log(e);
   }
 })();
-
-const client = new Client();
-let botInvoker = process.env.BOT_DEFAULT_INVOKE;
-let serverInvokers = new Map();
 
 client.on("ready", async () => {
   console.log("On Discord!");
@@ -98,11 +104,9 @@ function processCommand(receivedMessage) {
     primaryCommand = messageArguments[0]; // The first word directly after the exclamation is the command
   }
 
-  if (
-    primaryCommand === "" ||
-    primaryCommand === null ||
-    primaryCommand === undefined
-  ) {
+  console.log(primaryCommand);
+
+  if (!primaryCommand) {
     checkIfDM(receivedMessage)
       ? receivedMessage.channel.send(
           `You need to specify which command you want to use type "!qre help" to display available commands`
@@ -112,83 +116,66 @@ function processCommand(receivedMessage) {
             receivedMessage.guild.id
           )} help" to display available commands`
         );
-    return;
   }
 
   if (primaryCommand === "help") {
     return createEmbeddedHelper(serverInvokers, receivedMessage).build();
   }
 
-  if (primaryCommand === "headpat") {
-    return headPat(messageArguments, receivedMessage);
-  }
-
   if (primaryCommand === "search") {
     return searchGame(fullCommand, receivedMessage);
   }
 
-  if (!checkIfDM(receivedMessage)) {
-    if (
-      process.env.BOT_PERMISSIONS_GUILD.includes(receivedMessage.guild.id) &&
-      receivedMessage.member.roles.some(r =>
-        process.env.BOT_PERMISSIONS_ROLES.includes(r.name)
-      )
-    ) {
-      if (primaryCommand === "upload") {
-        return handleGameUpload(messageArguments, receivedMessage, client);
-      }
-
-      if (
-        receivedMessage.member.roles.some(r =>
-          process.env.BOT_PERMISSIONS_INVOKE.includes(r.name)
-        )
-      ) {
-        if (primaryCommand === "invoke") {
-          return changeInvokeCommand(
-            messageArguments,
-            receivedMessage,
-            serverInvokers
-          );
-        }
-      } else {
-        return receivedMessage.channel.send(
-          "You have no permissions to use this command"
-        );
-      }
-
-      if (primaryCommand === "scrap") {
-        return scrapChannelForQrCodes(messageArguments, receivedMessage);
-      }
-
-      if (primaryCommand === "images") {
-        return makeQrImagesfromDB(messageArguments, receivedMessage);
-      }
-
-      if (primaryCommand === "edit") {
-        return handleGameEdit(messageArguments, receivedMessage);
-      }
-
-      if (primaryCommand === "checkurls") {
-        return urlStatus(client);
-      }
-
-      if (primaryCommand === "updatesize") {
-        return updateSize(client);
-      }
-
-      if (primaryCommand === "stats") {
-        return getStats(receivedMessage);
-      }
-    } else {
-      return receivedMessage.channel.send(
-        "You have no permissions to use this command"
-      );
-    }
-  } else {
-    return receivedMessage.channel.send(
-      "this command is available only on qreeShop server"
-    );
+  if (primaryCommand === "headpat") {
+    validateGuilds(receivedMessage)
+      ? headPat(messageArguments, receivedMessage)
+      : null;
   }
 
-  return receivedMessage.channel.send(`Command not found`);
+  if (primaryCommand === "upload") {
+    if (
+      validateGuilds(receivedMessage) &&
+      validatePermissions(receivedMessage)
+    ) {
+      return handleGameUpload(messageArguments, receivedMessage, client);
+    } else {
+      return receivedMessage.channel.send(
+        `You need to have permissions to use this command`
+      );
+    }
+  }
+
+  if (validateGuilds(receivedMessage) && validateAdmin(receivedMessage)) {
+    if (primaryCommand === "invoke") {
+      return changeInvokeCommand(
+        messageArguments,
+        receivedMessage,
+        serverInvokers
+      );
+    }
+
+    if (primaryCommand === "scrap") {
+      return scrapChannelForQrCodes(messageArguments, receivedMessage);
+    }
+
+    if (primaryCommand === "images") {
+      return makeQrImagesfromDB(messageArguments, receivedMessage);
+    }
+
+    if (primaryCommand === "edit") {
+      return handleGameEdit(messageArguments, receivedMessage);
+    }
+
+    if (primaryCommand === "checkurls") {
+      return urlStatus(client);
+    }
+
+    if (primaryCommand === "updatesize") {
+      return updateSize(client);
+    }
+  }
+
+  return receivedMessage.channel.send(
+    `You need to specify which command you want to use type "!qre help" to display available commands`
+  );
 }
