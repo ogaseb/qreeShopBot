@@ -374,7 +374,7 @@
         const p = await M(d.name),
           E =
             0 === p.length
-              ? "```diff\n This is how it will look, save in database? Type 'yes'/'no'\n```"
+              ? "```diff\n+ This is how it will look, save in database? Type 'yes'/'no'\n```"
               : "```diff\n- I FOUND THE GAMES WITH SIMILAR NAME, CHECK THEM BEFORE SAYING 'yes' BY TYPING 'search'\"\n``````diff\n+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)\"\n```";
         setTimeout(async () => {
           n.channel.messages.get(i).delete(),

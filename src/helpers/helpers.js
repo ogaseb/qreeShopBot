@@ -75,7 +75,6 @@ export async function createEmbeddedAnswer(args, receivedMessage, destination) {
   args.map(
     async ({
       id,
-      qr_link,
       name,
       platform,
       region,
@@ -88,7 +87,6 @@ export async function createEmbeddedAnswer(args, receivedMessage, destination) {
         new RichEmbed()
           .setImage(qr_image_url)
           .addField("Name: ", name, true)
-          .addField("QR link: ", qr_link)
           .addField("DB ID: ", id, true)
           .addField("Platform: ", platform, true)
           .addField("Region: ", region, true)
