@@ -103,7 +103,9 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
         console.log(foundArgsObj);
 
         const obj = {
-          name: foundArgsObj.TITLE ? foundArgsObj.TITLE : name,
+          name: foundArgsObj.TITLE
+            ? foundArgsObj.TITLE.replace(/['"]+/g, "")
+            : name,
           qr_link: foundArgsObj.URL ? foundArgsObj.URL : qr_link,
           qr_data: foundArgsObj.URL
             ? createASCIIQrCode(foundArgsObj.URL)

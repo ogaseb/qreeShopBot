@@ -580,7 +580,7 @@
               }
               console.log(f);
               const w = {
-                name: f.TITLE ? f.TITLE : r,
+                name: f.TITLE ? f.TITLE.replace(/['"]+/g, "") : r,
                 qr_link: f.URL ? f.URL : l,
                 qr_data: f.URL ? A(f.URL) : i,
                 qr_image_url: f.URL ? I(f.URL) : s,
