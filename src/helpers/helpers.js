@@ -235,8 +235,9 @@ export async function getGameCover(name, id) {
     }
   };
   try {
+    const title = name.replace(/[^a-zA-Z0-9 ]/gm, "");
     const game = await axios.get(
-      `https://api-v3.igdb.com/games/?search=${name}}&fields=id,name,cover`,
+      `https://api-v3.igdb.com/games/?search=${title}}&fields=id,name,cover`,
       config
     );
     console.log(game.data[0].cover);

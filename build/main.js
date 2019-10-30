@@ -240,15 +240,15 @@
           : void 0
         : e;
     }
-    function I(e) {
+    function A(e) {
       let n = w()(0, "L");
       return n.addData(`${e}`), n.make(), n.createASCII(2, 1);
     }
-    function v(e) {
+    function I(e) {
       let n = w()(0, "M");
       return n.addData(`${e}`), n.make(), n.createDataURL(5, 5);
     }
-    async function A(e, n, t, o) {
+    async function v(e, n, t, o) {
       const i = [];
       for (const {
         id: n,
@@ -328,13 +328,14 @@
         }
       };
       try {
-        const a = await S.a.get(
-          `https://api-v3.igdb.com/games/?search=${e}}&fields=id,name,cover`,
-          t
-        );
-        if ((console.log(a.data[0].cover), a.data.length)) {
+        const a = e.replace(/[^a-zA-Z0-9 ]/gm, ""),
+          o = await S.a.get(
+            `https://api-v3.igdb.com/games/?search=${a}}&fields=id,name,cover`,
+            t
+          );
+        if ((console.log(o.data[0].cover), o.data.length)) {
           const e = await S.a.get(
-            `https://api-v3.igdb.com/covers/${a.data[0].cover}/?fields=url`,
+            `https://api-v3.igdb.com/covers/${o.data[0].cover}/?fields=url`,
             t
           );
           return (
@@ -395,8 +396,8 @@
         const r = {
           name: l.TITLE.replace(/['"]+/g, ""),
           qr_link: R(l.URL),
-          qr_data: I(R(l.URL)),
-          qr_image_url: v(R(l.URL)),
+          qr_data: A(R(l.URL)),
+          qr_image_url: I(R(l.URL)),
           platform: l.PLATFORMS,
           region: l.REGIONS,
           size: await O(R(l.URL)),
@@ -488,7 +489,7 @@
               await n.channel.send(
                 "```Ok, displaying games that I have found you can type 'yes'/'no' still````"
               );
-              const e = await A(m, n);
+              const e = await v(m, n);
               await e.build();
             } catch (e) {
               console.log(e),
@@ -581,8 +582,8 @@
               const w = {
                 name: f.TITLE ? f.TITLE : r,
                 qr_link: f.URL ? f.URL : l,
-                qr_data: f.URL ? I(f.URL) : i,
-                qr_image_url: f.URL ? v(f.URL) : s,
+                qr_data: f.URL ? A(f.URL) : i,
+                qr_image_url: f.URL ? I(f.URL) : s,
                 platform: f.PLATFORMS ? f.PLATFORMS : c,
                 region: f.REGIONS ? f.REGIONS : u,
                 size: f.SIZE ? f.SIZE : m,
@@ -853,7 +854,7 @@
               const e = await T("anime"),
                 t = (await n.channel.send("wait a moment...", { files: [e] }))
                   .id,
-                a = await A(o, n, t);
+                a = await v(o, n, t);
               await a.build();
             }
           } catch (e) {
@@ -976,7 +977,7 @@
                         p = {
                           name: a,
                           qr_link: h.result,
-                          qr_data: await I(h.result),
+                          qr_data: await A(h.result),
                           qr_image_url: null,
                           platform: e[s] || "3DS",
                           region: e[i] || "N/A",
@@ -1025,7 +1026,7 @@
                 region: l,
                 uploader_discord_id: r
               } of e) {
-                const e = { qr_image: v(o), uploader_discord_id: r, id: t };
+                const e = { qr_image: I(o), uploader_discord_id: r, id: t };
                 if ("null" === a) {
                   let t = i + s + l + r;
                   (t = t.replace(/[^a-z0-9]/gim, "")),
