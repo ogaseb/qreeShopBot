@@ -291,6 +291,9 @@
           .setPageIndicator(!0)
           .setPage(1)
           .setTitle("Qr Code 3DS games search collection")
+          .setDescription(
+            "=========================================================="
+          )
           .setFooter("Bot created by: ProPanek#0188")
           .setColor(0)
           .setNavigationEmojis({
@@ -302,10 +305,10 @@
           .setTimeout(6e5)
       );
     }
-    function O(e) {
+    function q(e) {
       return "dm" === e.channel.type;
     }
-    function q(e) {
+    function O(e) {
       return Object.keys(M)
         .filter(n => e.includes(n))
         .reduce((e, n) => ((e[n] = M[n]), e), {});
@@ -322,7 +325,7 @@
       return (await _.a.get(n)).data.results[0].media[0].gif.url;
     }
     function G(e) {
-      if (!O(e))
+      if (!q(e))
         return !!process.env.BOT_PERMISSIONS_GUILD.includes(e.guild.id);
     }
     async function L(e, n) {
@@ -371,8 +374,8 @@
     };
     var B = t(9),
       C = t.n(B),
-      $ = t(10),
-      F = t.n($),
+      F = t(10),
+      $ = t.n(F),
       k = t(11),
       U = t.n(k);
     var P = t(3),
@@ -383,7 +386,7 @@
           return n.channel.send("invalid arguments count for upload command");
         const o = await D("head-pat-anime"),
           i = (await n.channel.send("wait a moment...", { files: [o] })).id,
-          s = q(["URL", "TITLE", "REGIONS", "PLATFORMS"]);
+          s = O(["URL", "TITLE", "REGIONS", "PLATFORMS"]);
         let l = {};
         for (const t in s) {
           const a = await e.findIndex(e => s[t].test(e));
@@ -435,23 +438,18 @@
               r.id = await c(r, n);
               const e = (async function(e, n, t) {
                 const o = [];
-                console.log(e);
-                const i = await L(e.id, e.name);
                 return (
                   o.push(
                     new a.RichEmbed()
                       .setImage(e.qr_image_url)
                       .addField("Name: ", e.name, !0)
+                      .addField("QR link: ", e.qr_link)
                       .addField("DB ID: ", e.id, !0)
                       .addField("Platform: ", e.platform, !0)
                       .addField("Region: ", e.region, !0)
                       .addField("Size: ", e.size)
                       .addField("QR: ", "===================", !0)
                       .addField("Author: ", e.uploader_name, !0)
-                      .setThumbnail(
-                        i ||
-                          "https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png"
-                      )
                   ),
                   new E.Embeds()
                     .setArray(o)
@@ -461,7 +459,7 @@
                       t.channels.get(process.env.BOT_SUBSCRIPTION_CHANNEL)
                     )
                     .setPage(1)
-                    .setTitle("QR Code 3DS games")
+                    .setTitle("QR Code 3DS games subscription module")
                     .setFooter("Bot created by: ProPanek#0188")
                     .setColor(0)
                     .setDisabledNavigationEmojis(["ALL"])
@@ -564,7 +562,7 @@
                   )
                   .join(" ")
                   .match(M.ARGUMENTS),
-                p = q(["URL", "TITLE", "REGIONS", "PLATFORMS", "SIZE"]);
+                p = O(["URL", "TITLE", "REGIONS", "PLATFORMS", "SIZE"]);
               let f = {};
               for (const e in p) {
                 console.log(p[e]);
@@ -696,16 +694,16 @@
     const K = new a.Client();
     let W = process.env.BOT_DEFAULT_INVOKE,
       X = new Map();
-    function Z(e) {
+    function Q(e) {
       let n, t;
-      const o = (n = O(e)
+      const o = (n = q(e)
         ? e.content.substr(W.length + 1)
         : e.content.substr(X.get(e.guild.id).length + 1)).match(M.ARGUMENTS);
       if (
         (null !== o && o.length && (t = o[0]),
         console.log(t),
         t ||
-          (O(e)
+          (q(e)
             ? e.channel.send(
                 'You need to specify which command you want to use type "!qre help" to display available commands'
               )
@@ -719,7 +717,7 @@
         return (function(e, n, t) {
           const o = [];
           return (
-            O(n)
+            q(n)
               ? o.push(
                   new a.RichEmbed()
                     .addField("**COMMAND**: ", "```search```")
@@ -844,7 +842,7 @@
             let a = t.join(" ");
             const o = await u(a);
             if (0 === o.length)
-              return O(n)
+              return q(n)
                 ? await n.channel.send(
                     `I didn't find anything called \`${a}\` in my database. If you want to request games join https://discord.gg/tXJfdNp`
                   )
@@ -885,7 +883,7 @@
       )
         return G(e) &&
           (function(e) {
-            if (!O(e))
+            if (!q(e))
               return !!e.member.roles.some(e =>
                 process.env.BOT_PERMISSIONS_ROLES.includes(e.name)
               );
@@ -895,7 +893,7 @@
       if (
         G(e) &&
         (function(e) {
-          if (!O(e))
+          if (!q(e))
             return !!e.member.roles.some(e =>
               process.env.BOT_PERMISSIONS_ADMIN.includes(e.name)
             );
@@ -962,7 +960,7 @@
                           `${t.attachments.values().next().value.proxyURL}`
                         ),
                         d = await r.buffer(),
-                        m = await F.a.read(d).catch(e => {
+                        m = await $.a.read(d).catch(e => {
                           console.log(e);
                         });
                       if (!m) continue;
@@ -1120,8 +1118,8 @@
               return e.channel.send(
                 'You need to specify which command you want to use type "!qre help" to display available commands'
               );
-            Z(e);
-          } else e.content.startsWith(`${X.get(e.guild.id)}`) && Z(e);
+            Q(e);
+          } else e.content.startsWith(`${X.get(e.guild.id)}`) && Q(e);
       });
   }
 ]);
