@@ -186,6 +186,14 @@
     }
     async function p(e, n) {
       try {
+        const t = await d.update({ thumbnail: n }, { where: { id: e } });
+        return console.log("DB -> updating thumbnail for id: " + e), t;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    async function f(e, n) {
+      try {
         const t = await d.update({ region: n }, { where: { id: e } });
         return console.log("DB -> updating region for id: " + e), t;
       } catch (e) {
@@ -214,22 +222,22 @@
       { sequelize: r, modelName: "qre_items" }
     ),
       r.sync();
-    var f = t(7),
-      w = t.n(f),
-      y = t(4),
-      E = t(2),
-      S = t.n(E),
-      _ = t(5),
-      b = t.n(_);
-    function R(e) {
-      return e && e.match(L.GDRIVE)
+    var w = t(7),
+      y = t.n(w),
+      E = t(4),
+      S = t(2),
+      _ = t.n(S),
+      b = t(5),
+      R = t.n(b);
+    function A(e) {
+      return e && e.match(M.GDRIVE)
         ? (function(e) {
             return e.replace(
               /\/file\/d\/(.+)\/(.+)/,
               "/uc?export=download&id=$1"
             );
           })(e)
-        : e && e.match(L.DROPBOX)
+        : e && e.match(M.DROPBOX)
         ? "0" === e.slice(-1) || "1" === e.slice(-1)
           ? (e = (e = (function(e) {
               let n = e;
@@ -240,15 +248,15 @@
           : void 0
         : e;
     }
-    function A(e) {
-      let n = w()(0, "L");
+    function I(e) {
+      let n = y()(0, "L");
       return n.addData(`${e}`), n.make(), n.createASCII(2, 1);
     }
-    function I(e) {
-      let n = w()(0, "M");
+    function v(e) {
+      let n = y()(0, "M");
       return n.addData(`${e}`), n.make(), n.createDataURL(5, 5);
     }
-    async function v(e, n, t, o) {
+    async function N(e, n, t, o) {
       const i = [];
       for (const {
         id: n,
@@ -260,7 +268,7 @@
         qr_image_url: d,
         thumbnail: c
       } of e) {
-        const e = c || (await G(t, n));
+        const e = c || (await L(t, n));
         i.push(
           new a.RichEmbed()
             .setImage(d)
@@ -276,16 +284,13 @@
       }
       return (
         await n.channel.messages.get(t).delete(),
-        new y.Embeds()
+        new E.Embeds()
           .setArray(i)
           .setAuthorizedUsers([n.author.id])
           .setChannel("pm" === o ? n.author : n.channel)
           .setPageIndicator(!0)
           .setPage(1)
           .setTitle("Qr Code 3DS games search collection")
-          .setDescription(
-            "=========================================================="
-          )
           .setFooter("Bot created by: ProPanek#0188")
           .setColor(0)
           .setNavigationEmojis({
@@ -297,30 +302,30 @@
           .setTimeout(6e5)
       );
     }
-    function N(e) {
+    function O(e) {
       return "dm" === e.channel.type;
     }
     function q(e) {
-      return Object.keys(L)
+      return Object.keys(M)
         .filter(n => e.includes(n))
-        .reduce((e, n) => ((e[n] = L[n]), e), {});
-    }
-    async function O(e) {
-      const n = await S.a.head(e, { timeout: 15e3 });
-      if (n && 404 !== n.status && n.headers["content-length"])
-        return b()(n.headers["content-length"], !0);
+        .reduce((e, n) => ((e[n] = M[n]), e), {});
     }
     async function T(e) {
+      const n = await _.a.head(e, { timeout: 15e3 });
+      if (n && 404 !== n.status && n.headers["content-length"])
+        return R()(n.headers["content-length"], !0);
+    }
+    async function D(e) {
       let n = encodeURI(
         `${"https://api.tenor.com/v1/random"}?key=${"T64EWZS77O3H"}&q=${e}&contentfilter=${"medium"}&media_filter=minimal&limit=1`
       );
-      return (await S.a.get(n)).data.results[0].media[0].gif.url;
+      return (await _.a.get(n)).data.results[0].media[0].gif.url;
     }
-    function D(e) {
-      if (!N(e))
+    function G(e) {
+      if (!O(e))
         return !!process.env.BOT_PERMISSIONS_GUILD.includes(e.guild.id);
     }
-    async function G(e, n) {
+    async function L(e, n) {
       let t = {
         headers: {
           "user-key": process.env.IGDB_TOKEN,
@@ -329,35 +334,30 @@
       };
       try {
         const a = e.replace(/[^a-zA-Z0-9 ]/gm, ""),
-          o = await S.a.get(
+          o = await _.a.get(
             `https://api-v3.igdb.com/games/?search=${a}}&fields=id,name,cover`,
             t
           );
         if ((console.log(o.data[0].cover), o.data.length)) {
-          const e = await S.a.get(
+          const e = await _.a.get(
             `https://api-v3.igdb.com/covers/${o.data[0].cover}/?fields=url`,
             t
           );
           return (
             console.log(e.data[0].url),
-            await (async function(e, n) {
-              try {
-                const t = await d.update(
-                  { thumbnail: n },
-                  { where: { id: e } }
-                );
-                return console.log("DB -> updating thumbnail for id: " + e), t;
-              } catch (e) {
-                console.log(e);
-              }
-            })(n, `https:${e.data[0].url}`),
+            n && (await p(n, `https:${e.data[0].url}`)),
             `https:${e.data[0].url}`
           );
         }
+        n &&
+          (await p(
+            n,
+            "https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png"
+          ));
       } catch (e) {}
     }
     t(6).config();
-    const L = {
+    const M = {
       DROPBOX: /\b(\w*dropbox\w*)\b/g,
       CIA: /\b(\w*cia\w*)\b/g,
       GDRIVE: /\b(\w*drive.google.com\w*)\b/g,
@@ -369,19 +369,19 @@
       SIZE: /(\d*\.?\d+)\s*(KB|MB|GB|Bytes|Kilobytes|Megabytes)/gi,
       SCRAPER: /\b([^\(]+)|\((.*?)\)|(\w*GBA|GBC|GAMEBOY|NES|SNES|MEGA DRIVE|PCE|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS|VIRTUAL CONSOLE|MAME|TURBOGRAFX\w*)\b|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\S+/gi
     };
-    var M = t(9),
-      B = t.n(M),
-      C = t(10),
-      F = t.n(C),
-      $ = t(11),
-      k = t.n($);
-    var U = t(3),
-      P = t.n(U);
-    async function z(e, n, t) {
+    var B = t(9),
+      C = t.n(B),
+      $ = t(10),
+      F = t.n($),
+      k = t(11),
+      U = t.n(k);
+    var P = t(3),
+      z = t.n(P);
+    async function x(e, n, t) {
       try {
         if (5 !== e.length)
           return n.channel.send("invalid arguments count for upload command");
-        const o = await T("head-pat-anime"),
+        const o = await D("head-pat-anime"),
           i = (await n.channel.send("wait a moment...", { files: [o] })).id,
           s = q(["URL", "TITLE", "REGIONS", "PLATFORMS"]);
         let l = {};
@@ -395,18 +395,18 @@
         }
         const r = {
           name: l.TITLE.replace(/['"]+/g, ""),
-          qr_link: R(l.URL),
-          qr_data: A(R(l.URL)),
-          qr_image_url: I(R(l.URL)),
+          qr_link: A(l.URL),
+          qr_data: I(A(l.URL)),
+          qr_image_url: v(A(l.URL)),
           platform: l.PLATFORMS,
           region: l.REGIONS,
-          size: await O(R(l.URL)),
+          size: await T(A(l.URL)),
           uploader_discord_id: n.author.id,
           uploader_name: n.author.username
         };
         let d = r.name + r.platform + r.region + r.uploader_discord_id;
         (d = d.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "")),
-          await P.a.outputFile(r.qr_image_url, "./img/" + d + ".jpg");
+          await z.a.outputFile(r.qr_image_url, "./img/" + d + ".jpg");
         const m = await u(r.name),
           g =
             0 === m.length
@@ -433,23 +433,27 @@
             h.stop();
             try {
               r.id = await c(r, n);
-              const e = (function(e, n, t) {
+              const e = (async function(e, n, t) {
                 const o = [];
+                console.log(e);
+                const i = await L(e.id, e.name);
                 return (
-                  console.log(e),
                   o.push(
                     new a.RichEmbed()
                       .setImage(e.qr_image_url)
                       .addField("Name: ", e.name, !0)
-                      .addField("QR link: ", e.qr_link)
                       .addField("DB ID: ", e.id, !0)
                       .addField("Platform: ", e.platform, !0)
                       .addField("Region: ", e.region, !0)
                       .addField("Size: ", e.size)
                       .addField("QR: ", "===================", !0)
                       .addField("Author: ", e.uploader_name, !0)
+                      .setThumbnail(
+                        i ||
+                          "https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png"
+                      )
                   ),
-                  new y.Embeds()
+                  new E.Embeds()
                     .setArray(o)
                     .setPageIndicator(!1)
                     .setAuthorizedUsers([])
@@ -457,10 +461,7 @@
                       t.channels.get(process.env.BOT_SUBSCRIPTION_CHANNEL)
                     )
                     .setPage(1)
-                    .setTitle("QR Code 3DS games subscription module")
-                    .setDescription(
-                      "=========================================================="
-                    )
+                    .setTitle("QR Code 3DS games")
                     .setFooter("Bot created by: ProPanek#0188")
                     .setColor(0)
                     .setDisabledNavigationEmojis(["ALL"])
@@ -489,7 +490,7 @@
               await n.channel.send(
                 "```Ok, displaying games that I have found you can type 'yes'/'no' still````"
               );
-              const e = await v(m, n);
+              const e = await N(m, n);
               await e.build();
             } catch (e) {
               console.log(e),
@@ -508,7 +509,7 @@
           );
       }
     }
-    async function x(e, n) {
+    async function j(e, n) {
       try {
         const t = parseInt(e[1]),
           o = await (async function(e) {
@@ -562,7 +563,7 @@
                     ["end", "yes", "no"]
                   )
                   .join(" ")
-                  .match(L.ARGUMENTS),
+                  .match(M.ARGUMENTS),
                 p = q(["URL", "TITLE", "REGIONS", "PLATFORMS", "SIZE"]);
               let f = {};
               for (const e in p) {
@@ -582,8 +583,8 @@
               const w = {
                 name: f.TITLE ? f.TITLE.replace(/['"]+/g, "") : r,
                 qr_link: f.URL ? f.URL : l,
-                qr_data: f.URL ? A(f.URL) : i,
-                qr_image_url: f.URL ? I(f.URL) : s,
+                qr_data: f.URL ? I(f.URL) : i,
+                qr_image_url: f.URL ? v(f.URL) : s,
                 platform: f.PLATFORMS ? f.PLATFORMS : c,
                 region: f.REGIONS ? f.REGIONS : u,
                 size: f.SIZE ? f.SIZE : m,
@@ -594,7 +595,7 @@
               if (f.URL) {
                 let e = w.name + w.platform + w.region + w.uploader_discord_id;
                 (e = e.replace(/[^a-z0-9]/gim, "")),
-                  await P.a.outputFile(w.qr_image_url, "./img/" + e + ".jpg"),
+                  await z.a.outputFile(w.qr_image_url, "./img/" + e + ".jpg"),
                   await n.channel
                     .send("", { files: ["./img/" + e + ".jpg"] })
                     .then(e => {
@@ -602,7 +603,7 @@
                         .values()
                         .next().value.proxyURL;
                     }),
-                  (y = await O(f.URL));
+                  (y = await T(f.URL));
               }
               await (async function(
                 e,
@@ -656,9 +657,9 @@
           );
       }
     }
-    var j = t(8),
-      V = t.n(j);
-    async function Y(e) {
+    var V = t(8),
+      Y = t.n(V);
+    async function H(e) {
       await e.channels
         .get("604692367018033152")
         .send("Checking urls started... I will do it every 24 hours");
@@ -666,7 +667,7 @@
       for (const { id: t, qr_link: a, name: o, uploader_discord_id: i } of n)
         try {
           console.time(`scanningTime - ${o}`),
-            await S.a.head(a, { timeout: 3e4 }),
+            await _.a.head(a, { timeout: 3e4 }),
             console.timeEnd(`scanningTime - ${o}`);
         } catch (n) {
           n.response
@@ -692,24 +693,24 @@
           console.log(`Rejected Promise: ${n}`),
           console.log(`Rejection: ${e}`);
       });
-    const H = new a.Client();
-    let K = process.env.BOT_DEFAULT_INVOKE,
-      W = new Map();
-    function X(e) {
+    const K = new a.Client();
+    let W = process.env.BOT_DEFAULT_INVOKE,
+      X = new Map();
+    function Z(e) {
       let n, t;
-      const o = (n = N(e)
-        ? e.content.substr(K.length + 1)
-        : e.content.substr(W.get(e.guild.id).length + 1)).match(L.ARGUMENTS);
+      const o = (n = O(e)
+        ? e.content.substr(W.length + 1)
+        : e.content.substr(X.get(e.guild.id).length + 1)).match(M.ARGUMENTS);
       if (
         (null !== o && o.length && (t = o[0]),
         console.log(t),
         t ||
-          (N(e)
+          (O(e)
             ? e.channel.send(
                 'You need to specify which command you want to use type "!qre help" to display available commands'
               )
             : e.channel.send(
-                `You need to specify which command you want to use type "${W.get(
+                `You need to specify which command you want to use type "${X.get(
                   e.guild.id
                 )} help" to display available commands`
               )),
@@ -718,7 +719,7 @@
         return (function(e, n, t) {
           const o = [];
           return (
-            N(n)
+            O(n)
               ? o.push(
                   new a.RichEmbed()
                     .addField("**COMMAND**: ", "```search```")
@@ -810,7 +811,7 @@
                       "```" + e.get(n.guild.id) + "invoke %qre```"
                     )
                 )),
-            new y.Embeds()
+            new E.Embeds()
               .setArray(o)
               .setAuthorizedUsers([n.author.id])
               .setChannel("pm" === t ? n.author : n.channel)
@@ -834,7 +835,7 @@
               })
               .setTimeout(6e5)
           );
-        })(W, e).build();
+        })(X, e).build();
       if ("search" === t)
         return (async function(e, n) {
           try {
@@ -843,7 +844,7 @@
             let a = t.join(" ");
             const o = await u(a);
             if (0 === o.length)
-              return N(n)
+              return O(n)
                 ? await n.channel.send(
                     `I didn't find anything called \`${a}\` in my database. If you want to request games join https://discord.gg/tXJfdNp`
                   )
@@ -851,10 +852,10 @@
                     `I didn't find anything called \`${a}\` in my database. You can request game on <#582262747937505290> channel`
                   );
             {
-              const e = await T("anime"),
+              const e = await D("anime"),
                 t = (await n.channel.send("wait a moment...", { files: [e] }))
                   .id,
-                a = await v(o, n, t);
+                a = await N(o, n, t);
               await a.build();
             }
           } catch (e) {
@@ -866,12 +867,12 @@
         })(n, e);
       if (
         ("headpat" === t &&
-          D(e) &&
+          G(e) &&
           (async function(e, n) {
             if (2 !== e.length)
               return n.channel.send("hey, specify who you want to headpat!");
             n.channel.messages.get(n.id).delete();
-            const t = await T("head-pat-anime"),
+            const t = await D("head-pat-anime"),
               o = new a.RichEmbed()
                 .setColor(
                   `${"#" + Math.floor(16777215 * Math.random()).toString(16)}`
@@ -882,19 +883,19 @@
           })(o, e),
         "upload" === t)
       )
-        return D(e) &&
+        return G(e) &&
           (function(e) {
-            if (!N(e))
+            if (!O(e))
               return !!e.member.roles.some(e =>
                 process.env.BOT_PERMISSIONS_ROLES.includes(e.name)
               );
           })(e)
-          ? z(o, e, H)
+          ? x(o, e, K)
           : e.channel.send("You need to have permissions to use this command");
       if (
-        D(e) &&
+        G(e) &&
         (function(e) {
-          if (!N(e))
+          if (!O(e))
             return !!e.member.roles.some(e =>
               process.env.BOT_PERMISSIONS_ADMIN.includes(e.name)
             );
@@ -910,7 +911,7 @@
               ? (t.set(n.guild.id, e[1]),
                 n.channel.send("Successfully changed your invoke command"))
               : void 0;
-          })(o, e, W);
+          })(o, e, X);
         if ("scrap" === t)
           return (async function(e, n) {
             if ("dm" === n.channel.type)
@@ -937,7 +938,7 @@
                 })(n.channel).then(async e => {
                   for (const t of e)
                     if (t.attachments.size) {
-                      let e = t.content.match(L.SCRAPER);
+                      let e = t.content.match(M.SCRAPER);
                       if (!e) continue;
                       let a = (e = e
                         .map(Function.prototype.call, String.prototype.trim)
@@ -954,10 +955,10 @@
                         );
                         continue;
                       }
-                      const i = e.findIndex(e => L.REGIONS.test(e)),
-                        s = e.findIndex(e => L.PLATFORMS.test(e)),
-                        l = e.findIndex(e => L.SIZE.test(e)),
-                        r = await B()(
+                      const i = e.findIndex(e => M.REGIONS.test(e)),
+                        s = e.findIndex(e => M.PLATFORMS.test(e)),
+                        l = e.findIndex(e => M.SIZE.test(e)),
+                        r = await C()(
                           `${t.attachments.values().next().value.proxyURL}`
                         ),
                         d = await r.buffer(),
@@ -965,7 +966,7 @@
                           console.log(e);
                         });
                       if (!m) continue;
-                      const g = await new k.a(),
+                      const g = await new U.a(),
                         h = await new Promise((e, n) => {
                           (g.callback = (t, a) => {
                             null != t ? n(t) : e(a);
@@ -977,7 +978,7 @@
                         p = {
                           name: a,
                           qr_link: h.result,
-                          qr_data: await A(h.result),
+                          qr_data: await I(h.result),
                           qr_image_url: null,
                           platform: e[s] || "3DS",
                           region: e[i] || "N/A",
@@ -1026,12 +1027,12 @@
                 region: l,
                 uploader_discord_id: r
               } of e) {
-                const e = { qr_image: I(o), uploader_discord_id: r, id: t };
+                const e = { qr_image: v(o), uploader_discord_id: r, id: t };
                 if ("null" === a) {
                   let t = i + s + l + r;
                   (t = t.replace(/[^a-z0-9]/gim, "")),
-                    await P.a.outputFile(e.qr_image, "./img/" + t + ".jpg"),
-                    V.a.access("./img/" + t + ".jpg", V.a.F_OK, async a => {
+                    await z.a.outputFile(e.qr_image, "./img/" + t + ".jpg"),
+                    Y.a.access("./img/" + t + ".jpg", Y.a.F_OK, async a => {
                       if (a) return void console.error(a);
                       const o = await n.channel.send("", {
                         files: ["./img/" + t + ".jpg"]
@@ -1048,15 +1049,15 @@
               console.log(e);
             }
           })(0, e);
-        if ("edit" === t) return x(o, e);
-        if ("checkurls" === t) return Y(H);
+        if ("edit" === t) return j(o, e);
+        if ("checkurls" === t) return H(K);
         if ("updatesize" === t)
           return (async function() {
             const e = await m();
             for (const { id: n, qr_link: t, name: a, region: o } of e)
               try {
                 console.log(`starting scanning ${a}`);
-                const e = await S.a.head(t, { timeout: 15e3 });
+                const e = await _.a.head(t, { timeout: 15e3 });
                 if (e && 404 !== e.status) {
                   let t;
                   e.headers["content-disposition"] &&
@@ -1064,9 +1065,9 @@
                       /\b\w*USA|JPN|EUR|GLOBAL|HACK|RF\w*\b/i
                     )),
                     e.headers["content-length"] &&
-                      (await h(n, b()(e.headers["content-length"], !0)),
-                      console.log(b()(e.headers["content-length"], !0), a, n)),
-                    t && "N/A" === o && (console.log(t[0]), await p(n, t[0]));
+                      (await h(n, R()(e.headers["content-length"], !0)),
+                      console.log(R()(e.headers["content-length"], !0), a, n)),
+                    t && "N/A" === o && (console.log(t[0]), await f(n, t[0]));
                 }
               } catch (e) {
                 e.response ? console.log(e.response.status) : console.log(e);
@@ -1079,22 +1080,22 @@
     }
     !(async function() {
       try {
-        await H.login(process.env.BOT_TOKEN);
+        await K.login(process.env.BOT_TOKEN);
       } catch (e) {
         console.log(e);
       }
     })(),
-      H.on("ready", async () => {
+      K.on("ready", async () => {
         console.log("On Discord!"),
-          console.log("Connected as " + H.user.tag),
+          console.log("Connected as " + K.user.tag),
           console.log("Servers:"),
-          H.guilds.forEach(e => {
-            W.set(e.id, K),
+          K.guilds.forEach(e => {
+            X.set(e.id, W),
               console.log(" - " + e.id),
               e.channels.forEach(e => {
                 console.log(` -- ${e.name} (${e.type}) - ${e.id}`);
               }),
-              console.log(W);
+              console.log(X);
           }),
           setInterval(async () => {
             const e = await (async function() {
@@ -1104,23 +1105,23 @@
                 console.log(e);
               }
             })();
-            await H.user.setActivity(`QR Codes count: ${e.count}`, {
+            await K.user.setActivity(`QR Codes count: ${e.count}`, {
               type: "PLAYING"
             });
           }, 6e4),
           setInterval(async () => {
-            await Y(H);
+            await H(K);
           }, 864e5);
       }),
-      H.on("message", e => {
-        if (e.author !== H.user)
+      K.on("message", e => {
+        if (e.author !== K.user)
           if ("dm" === e.channel.type) {
-            if (!e.content.startsWith(`${K}`))
+            if (!e.content.startsWith(`${W}`))
               return e.channel.send(
                 'You need to specify which command you want to use type "!qre help" to display available commands'
               );
-            X(e);
-          } else e.content.startsWith(`${W.get(e.guild.id)}`) && X(e);
+            Z(e);
+          } else e.content.startsWith(`${X.get(e.guild.id)}`) && Z(e);
       });
   }
 ]);
