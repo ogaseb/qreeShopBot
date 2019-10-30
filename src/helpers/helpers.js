@@ -88,7 +88,7 @@ export async function createEmbeddedAnswer(
     qr_image_url,
     thumbnail
   } of args) {
-    const gameThumbnail = thumbnail || (await getGameCover(name, id));
+    const gameThumbnail = thumbnail ? thumbnail : await getGameCover(name, id);
     embeds.push(
       new RichEmbed()
         .setImage(qr_image_url)
