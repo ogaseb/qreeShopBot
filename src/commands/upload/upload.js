@@ -4,6 +4,7 @@ import {
   createDataURLQrCode,
   createEmbeddedAnswer,
   filteredRegexes,
+  getGameCover,
   getRandomMeme,
   parseURL,
   sendToQrGames
@@ -100,12 +101,14 @@ export async function handleGameUpload(
         collector.stop();
         try {
           obj.id = await createQree(obj, receivedMessage);
-          const QrCodesSubscription = sendToQrGames(
+          const gameThumbnail = await getGameCover(obj.id, obj.name);
+          const qrCodesSubscription = sendToQrGames(
             obj,
             receivedMessage,
-            client
+            client,
+            gameThumbnail
           );
-          await QrCodesSubscription.build();
+          await qrCodesSubscription.build();
         } catch (e) {
           console.log(e);
           await receivedMessage.channel.send(

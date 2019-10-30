@@ -1,1125 +1,474 @@
-!(function(e) {
-  var n = {};
-  function t(a) {
-    if (n[a]) return n[a].exports;
-    var o = (n[a] = { i: a, l: !1, exports: {} });
-    return e[a].call(o.exports, o, o.exports, t), (o.l = !0), o.exports;
-  }
-  (t.m = e),
-    (t.c = n),
-    (t.d = function(e, n, a) {
-      t.o(e, n) || Object.defineProperty(e, n, { enumerable: !0, get: a });
-    }),
-    (t.r = function(e) {
-      "undefined" != typeof Symbol &&
-        Symbol.toStringTag &&
-        Object.defineProperty(e, Symbol.toStringTag, { value: "Module" }),
-        Object.defineProperty(e, "__esModule", { value: !0 });
-    }),
-    (t.t = function(e, n) {
-      if ((1 & n && (e = t(e)), 8 & n)) return e;
-      if (4 & n && "object" == typeof e && e && e.__esModule) return e;
-      var a = Object.create(null);
-      if (
-        (t.r(a),
-        Object.defineProperty(a, "default", { enumerable: !0, value: e }),
-        2 & n && "string" != typeof e)
-      )
-        for (var o in e)
-          t.d(
-            a,
-            o,
-            function(n) {
-              return e[n];
-            }.bind(null, o)
-          );
-      return a;
-    }),
-    (t.n = function(e) {
-      var n =
-        e && e.__esModule
-          ? function() {
-              return e.default;
-            }
-          : function() {
-              return e;
-            };
-      return t.d(n, "a", n), n;
-    }),
-    (t.o = function(e, n) {
-      return Object.prototype.hasOwnProperty.call(e, n);
-    }),
-    (t.p = ""),
-    t((t.s = 12));
-})([
-  function(e, n) {
-    e.exports = require("discord.js");
-  },
-  function(e, n) {
-    e.exports = require("sequelize");
-  },
-  function(e, n) {
-    e.exports = require("axios");
-  },
-  function(e, n) {
-    e.exports = require("image-data-uri");
-  },
-  function(e, n) {
-    e.exports = require("discord-paginationembed");
-  },
-  function(e, n) {
-    e.exports = require("prettysize");
-  },
-  function(e, n) {
-    e.exports = require("dotenv");
-  },
-  function(e, n) {
-    e.exports = require("qrcode-generator");
-  },
-  function(e, n) {
-    e.exports = require("fs");
-  },
-  function(e, n) {
-    e.exports = require("node-fetch");
-  },
-  function(e, n) {
-    e.exports = require("jimp");
-  },
-  function(e, n) {
-    e.exports = require("qrcode-reader");
-  },
-  function(e, n, t) {
-    "use strict";
-    t.r(n);
-    var a = t(0),
-      o = t(6),
-      i = t.n(o),
-      s = t(1);
-    i.a.config();
-    const l = s.Sequelize.Op,
-      r = new s.Sequelize(process.env.DATABASE_URL, {
-        define: { timestamps: !1 }
+/******/ (function(modules) {
+  // webpackBootstrap
+  /******/ // The module cache
+  /******/ var installedModules = {}; // The require function
+  /******/
+  /******/ /******/ function __webpack_require__(moduleId) {
+    /******/
+    /******/ // Check if module is in cache
+    /******/ if (installedModules[moduleId]) {
+      /******/ return installedModules[moduleId].exports;
+      /******/
+    } // Create a new module (and put it into the cache)
+    /******/ /******/ var module = (installedModules[moduleId] = {
+      /******/ i: moduleId,
+      /******/ l: false,
+      /******/ exports: {}
+      /******/
+    }); // Execute the module function
+    /******/
+    /******/ /******/ modules[moduleId].call(
+      module.exports,
+      module,
+      module.exports,
+      __webpack_require__
+    ); // Flag the module as loaded
+    /******/
+    /******/ /******/ module.l = true; // Return the exports of the module
+    /******/
+    /******/ /******/ return module.exports;
+    /******/
+  } // expose the modules object (__webpack_modules__)
+  /******/
+  /******/
+  /******/ /******/ __webpack_require__.m = modules; // expose the module cache
+  /******/
+  /******/ /******/ __webpack_require__.c = installedModules; // define getter function for harmony exports
+  /******/
+  /******/ /******/ __webpack_require__.d = function(exports, name, getter) {
+    /******/ if (!__webpack_require__.o(exports, name)) {
+      /******/ Object.defineProperty(exports, name, {
+        enumerable: true,
+        get: getter
       });
-    r.authenticate()
-      .then(() => {
-        console.log(
-          "sequelize -> Connection has been established successfully."
-        );
-      })
-      .catch(e => {
-        console.error("sequelize -> Unable to connect to the database:", e);
+      /******/
+    }
+    /******/
+  }; // define __esModule on exports
+  /******/
+  /******/ /******/ __webpack_require__.r = function(exports) {
+    /******/ if (typeof Symbol !== "undefined" && Symbol.toStringTag) {
+      /******/ Object.defineProperty(exports, Symbol.toStringTag, {
+        value: "Module"
       });
-    class d extends s.Sequelize.Model {}
-    async function c(
-      {
-        qr_data: e,
-        qr_image_url: n,
-        qr_link: t,
-        name: a,
-        platform: o,
-        region: i,
-        size: s,
-        uploader_discord_id: l,
-        uploader_name: r
-      },
-      c
-    ) {
-      try {
-        const u = await d.create({
-          qr_data: e,
-          qr_image_url: n,
-          qr_link: t,
-          name: a,
-          platform: o,
-          region: i,
-          size: s,
-          uploader_discord_id: l,
-          uploader_name: r
-        });
-        return (
-          await c.channel.send("Saving in database!"),
-          console.log("DB -> save qr in DB"),
-          u.id
+      /******/
+    }
+    /******/ Object.defineProperty(exports, "__esModule", { value: true });
+    /******/
+  }; // create a fake namespace object // mode & 1: value is a module id, require it // mode & 2: merge all properties of value into the ns // mode & 4: return value when already ns object // mode & 8|1: behave like require
+  /******/
+  /******/ /******/ /******/ /******/ /******/ /******/ __webpack_require__.t = function(
+    value,
+    mode
+  ) {
+    /******/ if (mode & 1) value = __webpack_require__(value);
+    /******/ if (mode & 8) return value;
+    /******/ if (
+      mode & 4 &&
+      typeof value === "object" &&
+      value &&
+      value.__esModule
+    )
+      return value;
+    /******/ var ns = Object.create(null);
+    /******/ __webpack_require__.r(ns);
+    /******/ Object.defineProperty(ns, "default", {
+      enumerable: true,
+      value: value
+    });
+    /******/ if (mode & 2 && typeof value != "string")
+      for (var key in value)
+        __webpack_require__.d(
+          ns,
+          key,
+          function(key) {
+            return value[key];
+          }.bind(null, key)
         );
-      } catch (e) {
-        await c.channel.send(
-          "something went wrong, send it to developer: \n```diff\n- " +
-            e +
-            "```"
-        ),
-          console.log(e);
-      }
-    }
-    async function u(e) {
-      let n = [];
-      e.split(" ").forEach(e => {
-        n.push({ name: { [l.iLike]: `%${e}%` } });
-      });
-      try {
-        return await d.findAll({ where: { [l.and]: n } });
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    async function m() {
-      try {
-        return await d.findAll();
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    async function g(e, n) {
-      try {
-        await d.update({ qr_image_url: n }, { where: { id: e } }),
-          console.log("DB -> updating qr url image");
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    async function h(e, n) {
-      try {
-        const t = await d.update({ size: n }, { where: { id: e } });
-        return console.log("DB -> updating size for id: " + e), t;
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    async function p(e, n) {
-      try {
-        const t = await d.update({ thumbnail: n }, { where: { id: e } });
-        return console.log("DB -> updating thumbnail for id: " + e), t;
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    async function f(e, n) {
-      try {
-        const t = await d.update({ region: n }, { where: { id: e } });
-        return console.log("DB -> updating region for id: " + e), t;
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    d.init(
-      {
-        id: {
-          type: s.Sequelize.INTEGER,
-          autoIncrement: !0,
-          allowNull: !1,
-          primaryKey: !0
-        },
-        qr_data: { type: s.Sequelize.TEXT, allowNull: !1 },
-        qr_image_url: { type: s.Sequelize.TEXT, allowNull: !1 },
-        qr_link: { type: s.Sequelize.STRING, allowNull: !1 },
-        name: { type: s.Sequelize.STRING, allowNull: !1 },
-        thumbnail: { type: s.Sequelize.STRING, allowNull: !0 },
-        platform: { type: s.Sequelize.STRING, allowNull: !1 },
-        region: { type: s.Sequelize.STRING, allowNull: !1 },
-        size: { type: s.Sequelize.STRING, allowNull: !1 },
-        uploader_discord_id: { type: s.Sequelize.STRING, allowNull: !1 },
-        uploader_name: { type: s.Sequelize.STRING, allowNull: !1 }
-      },
-      { sequelize: r, modelName: "qre_items" }
-    ),
-      r.sync();
-    var w = t(7),
-      y = t.n(w),
-      E = t(4),
-      S = t(2),
-      _ = t.n(S),
-      b = t(5),
-      R = t.n(b);
-    function A(e) {
-      return e && e.match(M.GDRIVE)
-        ? (function(e) {
-            return e.replace(
-              /\/file\/d\/(.+)\/(.+)/,
-              "/uc?export=download&id=$1"
-            );
-          })(e)
-        : e && e.match(M.DROPBOX)
-        ? "0" === e.slice(-1) || "1" === e.slice(-1)
-          ? (e = (e = (function(e) {
-              let n = e;
-              return "sh" === (n = n.split("/"))[3]
-                ? n.join("/")
-                : ((n[5] = "?dl=1"), n.join("/"));
-            })(e)).match(/^(.*?)\.?dl=1/gi))[0]
-          : void 0
-        : e;
-    }
-    function I(e) {
-      let n = y()(0, "L");
-      return n.addData(`${e}`), n.make(), n.createASCII(2, 1);
-    }
-    function v(e) {
-      let n = y()(0, "M");
-      return n.addData(`${e}`), n.make(), n.createDataURL(5, 5);
-    }
-    async function N(e, n, t, o) {
-      const i = [];
-      for (const {
-        id: n,
-        name: t,
-        platform: o,
-        region: s,
-        size: l,
-        uploader_name: r,
-        qr_image_url: d,
-        thumbnail: c
-      } of e) {
-        const e = c || (await L(t, n));
-        i.push(
-          new a.RichEmbed()
-            .setImage(d)
-            .addField("Name: ", t, !0)
-            .addField("DB ID: ", n, !0)
-            .addField("Platform: ", o, !0)
-            .addField("Region: ", s, !0)
-            .addField("Size: ", l)
-            .addField("QR:", "===================", !0)
-            .addField("Author: ", r, !0)
-            .setThumbnail(e)
-        );
-      }
-      return (
-        await n.channel.messages.get(t).delete(),
-        new E.Embeds()
-          .setArray(i)
-          .setAuthorizedUsers([n.author.id])
-          .setChannel("pm" === o ? n.author : n.channel)
-          .setPageIndicator(!0)
-          .setPage(1)
-          .setTitle("Qr Code 3DS games search collection")
-          .setDescription(
-            "=========================================================="
-          )
-          .setFooter("Bot created by: ProPanek#0188")
-          .setColor(0)
-          .setNavigationEmojis({
-            back: "◀",
-            jump: "↗",
-            forward: "▶",
-            delete: "🗑"
-          })
-          .setTimeout(6e5)
-      );
-    }
-    function q(e) {
-      return "dm" === e.channel.type;
-    }
-    function O(e) {
-      return Object.keys(M)
-        .filter(n => e.includes(n))
-        .reduce((e, n) => ((e[n] = M[n]), e), {});
-    }
-    async function T(e) {
-      const n = await _.a.head(e, { timeout: 15e3 });
-      if (n && 404 !== n.status && n.headers["content-length"])
-        return R()(n.headers["content-length"], !0);
-    }
-    async function D(e) {
-      let n = encodeURI(
-        `${"https://api.tenor.com/v1/random"}?key=${"T64EWZS77O3H"}&q=${e}&contentfilter=${"medium"}&media_filter=minimal&limit=1`
-      );
-      return (await _.a.get(n)).data.results[0].media[0].gif.url;
-    }
-    function G(e) {
-      if (!q(e))
-        return !!process.env.BOT_PERMISSIONS_GUILD.includes(e.guild.id);
-    }
-    async function L(e, n) {
-      let t = {
-        headers: {
-          "user-key": process.env.IGDB_TOKEN,
-          Accepts: "application/json"
-        }
-      };
-      try {
-        const a = e.replace(/[^a-zA-Z0-9 ]/gm, ""),
-          o = await _.a.get(
-            `https://api-v3.igdb.com/games/?search=${a}}&fields=id,name,cover`,
-            t
-          );
-        if ((console.log(o.data[0].cover), o.data.length)) {
-          const e = await _.a.get(
-            `https://api-v3.igdb.com/covers/${o.data[0].cover}/?fields=url`,
-            t
-          );
-          return (
-            console.log(e.data[0].url),
-            n && (await p(n, `https:${e.data[0].url}`)),
-            `https:${e.data[0].url}`
-          );
-        }
-        n &&
-          (await p(
-            n,
-            "https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png"
-          ));
-      } catch (e) {}
-    }
-    t(6).config();
-    const M = {
-      DROPBOX: /\b(\w*dropbox\w*)\b/g,
-      CIA: /\b(\w*cia\w*)\b/g,
-      GDRIVE: /\b(\w*drive.google.com\w*)\b/g,
-      URL: /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?/g,
-      ARGUMENTS: /\b(\w*GBA|GBC|GAMEBOY|NES|SNES|MEGA DRIVE|PCE|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS|VIRTUAL CONSOLE|MAME|TURBOGRAFX\w*)\b|(\d+\.?\d+)\s*(KB|MB|GB|Bytes|Kilobytes|Megabytes)|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+/gi,
-      TITLE: /"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“/g,
-      REGIONS: /\b\w*USA|JPN|EUR|GLOBAL|HACK\w*\b/gi,
-      PLATFORMS: /\b\w*GBA|GBC|GAMEBOY|NES|SNES|MEGA DRIVE|PCE|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS|VIRTUAL CONSOLE|MAME|TURBOGRAFX\w*\b/g,
-      SIZE: /(\d*\.?\d+)\s*(KB|MB|GB|Bytes|Kilobytes|Megabytes)/gi,
-      SCRAPER: /\b([^\(]+)|\((.*?)\)|(\w*GBA|GBC|GAMEBOY|NES|SNES|MEGA DRIVE|PCE|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS|VIRTUAL CONSOLE|MAME|TURBOGRAFX\w*)\b|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\S+/gi
-    };
-    var B = t(9),
-      C = t.n(B),
-      F = t(10),
-      $ = t.n(F),
-      k = t(11),
-      U = t.n(k);
-    var P = t(3),
-      z = t.n(P);
-    async function x(e, n, t) {
-      try {
-        if (5 !== e.length)
-          return n.channel.send("invalid arguments count for upload command");
-        const o = await D("head-pat-anime"),
-          i = (await n.channel.send("wait a moment...", { files: [o] })).id,
-          s = O(["URL", "TITLE", "REGIONS", "PLATFORMS"]);
-        let l = {};
-        for (const t in s) {
-          const a = await e.findIndex(e => s[t].test(e));
-          if (-1 === a)
-            return await n.channel.send(
-              `invalid arguments \`${t}\` for upload command`
-            );
-          (l[t] = e[a]), e.splice(a, 1);
-        }
-        const r = {
-          name: l.TITLE.replace(/['"]+/g, ""),
-          qr_link: A(l.URL),
-          qr_data: I(A(l.URL)),
-          qr_image_url: v(A(l.URL)),
-          platform: l.PLATFORMS,
-          region: l.REGIONS,
-          size: await T(A(l.URL)),
-          uploader_discord_id: n.author.id,
-          uploader_name: n.author.username
-        };
-        let d = r.name + r.platform + r.region + r.uploader_discord_id;
-        (d = d.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "")),
-          await z.a.outputFile(r.qr_image_url, "./img/" + d + ".jpg");
-        const m = await u(r.name),
-          g =
-            0 === m.length
-              ? "```diff\n+ This is how it will look, save in database? Type 'yes'/'no'\n```"
-              : "```diff\n- I FOUND THE GAMES WITH SIMILAR NAME, CHECK THEM BEFORE SAYING 'yes' BY TYPING 'search'\"\n``````diff\n+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)\"\n```";
-        setTimeout(async () => {
-          n.channel.messages.get(i).delete(),
-            await n.channel
-              .send("", { files: ["./img/" + d + ".jpg"] })
-              .then(e => {
-                r.qr_image_url = e.attachments.values().next().value.proxyURL;
-              }),
-            await n.channel.send(
-              `\`\`\`\nLink: ${r.qr_link}\n\nName: ${r.name}\nPlatform: ${r.platform}\nRegion: ${r.region}\nSize: ${r.size}\nUploader: ${r.uploader_name}\`\`\`${g}`
-            );
-        }, 3e3);
-        const h = new a.MessageCollector(
-          n.channel,
-          e => e.author.id === n.author.id,
-          { time: 6e4 }
-        );
-        h.on("collect", async e => {
-          if ("yes" === e.content.toLowerCase()) {
-            h.stop();
-            try {
-              r.id = await c(r, n);
-              const e = (async function(e, n, t) {
-                const o = [];
-                return (
-                  o.push(
-                    new a.RichEmbed()
-                      .setImage(e.qr_image_url)
-                      .addField("Name: ", e.name, !0)
-                      .addField("QR link: ", e.qr_link)
-                      .addField("DB ID: ", e.id, !0)
-                      .addField("Platform: ", e.platform, !0)
-                      .addField("Region: ", e.region, !0)
-                      .addField("Size: ", e.size)
-                      .addField("QR: ", "===================", !0)
-                      .addField("Author: ", e.uploader_name, !0)
-                  ),
-                  new E.Embeds()
-                    .setArray(o)
-                    .setPageIndicator(!1)
-                    .setAuthorizedUsers([])
-                    .setChannel(
-                      t.channels.get(process.env.BOT_SUBSCRIPTION_CHANNEL)
-                    )
-                    .setPage(1)
-                    .setTitle("QR Code 3DS games subscription module")
-                    .setFooter("Bot created by: ProPanek#0188")
-                    .setColor(0)
-                    .setDisabledNavigationEmojis(["ALL"])
-                    .setTimeout(6e5)
-                );
-              })(r, 0, t);
-              await e.build();
-            } catch (e) {
-              console.log(e),
-                await n.channel.send(
-                  `something went wrong, send it to developer: \n\`\`\`diff\n- ${e}\`\`\``
-                );
-            }
-          } else if ("no" === e.content.toLowerCase()) {
-            h.stop();
-            try {
-              await n.channel.send("Ok try again later :P");
-            } catch (e) {
-              console.log(e),
-                await n.channel.send(
-                  `something went wrong, send it to developer: \n\`\`\`diff\n- ${e}\`\`\``
-                );
-            }
-          } else if ("search" === e.content.toLowerCase())
-            try {
-              await n.channel.send(
-                "```Ok, displaying games that I have found you can type 'yes'/'no' still````"
-              );
-              const e = await N(m, n);
-              await e.build();
-            } catch (e) {
-              console.log(e),
-                await n.channel.send(
-                  `something went wrong, send it to developer: \n\`\`\`diff\n- ${e}\`\`\``
-                );
-            }
-        }),
-          h.on("end", async () => {
-            await n.channel.send("upload session ended");
-          });
-      } catch (e) {
-        console.log(e),
-          await n.channel.send(
-            `something went wrong, send it to developer: \n\`\`\`diff\n- ${e}\`\`\``
-          );
-      }
-    }
-    async function j(e, n) {
-      try {
-        const t = parseInt(e[1]),
-          o = await (async function(e) {
-            try {
-              return await d.findAll({ where: { id: e }, limit: 1 });
-            } catch (e) {
-              console.log(e);
-            }
-          })(t),
-          {
-            qr_data: i,
-            qr_image_url: s,
-            qr_link: l,
-            name: r,
-            platform: c,
-            region: u,
-            size: m,
-            uploader_discord_id: g,
-            uploader_name: h
-          } = o[0];
-        if (o.length) {
-          await n.channel.send(
-            `\`\`\`\nLink: ${l}\n\nName: ${r}\nPlatform: ${c}\nRegion: ${u}\nSize: ${m}\nUploader: ${h}\`\`\` \n        \`\`\`Is this the game you wish to edit? type 'yes'/'no'\`\`\``,
-            { files: [s] }
-          );
-          const e = new a.MessageCollector(
-            n.channel,
-            e => e.author.id === n.author.id,
-            { time: 12e4 }
-          );
-          e.on("collect", async t => {
-            "yes" === t.content.toLowerCase() &&
-              (await n.channel.send(
-                "```please type all the information you want to edit, remember that title NEEDS to be in quotation marks. You can type all info you want to edit in one or more messages.```\n            ```type `end` if you want to finish```"
-              )),
-              "no" === t.content.toLowerCase() &&
-                (e.stop(),
-                await n.channel.send(
-                  "``` Ok, will not do anything with it ```"
-                )),
-              "end" === t.content.toLowerCase() && e.stop();
-          }),
-            e.on("end", async e => {
-              let a = [];
-              for (const n of e) a.push(n[1].content);
-              const o = a
-                  .filter(
-                    function(e) {
-                      return this.indexOf(e.toLowerCase()) < 0;
-                    },
-                    ["end", "yes", "no"]
-                  )
-                  .join(" ")
-                  .match(M.ARGUMENTS),
-                p = O(["URL", "TITLE", "REGIONS", "PLATFORMS", "SIZE"]);
-              let f = {};
-              for (const e in p) {
-                console.log(p[e]);
-                const t = o.findIndex(n => p[e].test(n));
-                -1 === t
-                  ? await n.channel.send(
-                      `argument \`${e}\` is missing continue...`
-                    )
-                  : ((f[e] = o[t]),
-                    o.splice(t, 1),
-                    await n.channel.send(
-                      `argument \`${e}\` is present! : \`${f[e]}\``
-                    ));
-              }
-              console.log(f);
-              const w = {
-                name: f.TITLE ? f.TITLE.replace(/['"]+/g, "") : r,
-                qr_link: f.URL ? f.URL : l,
-                qr_data: f.URL ? I(f.URL) : i,
-                qr_image_url: f.URL ? v(f.URL) : s,
-                platform: f.PLATFORMS ? f.PLATFORMS : c,
-                region: f.REGIONS ? f.REGIONS : u,
-                size: f.SIZE ? f.SIZE : m,
-                uploader_discord_id: g,
-                uploader_name: h
-              };
-              let y = "";
-              if (f.URL) {
-                let e = w.name + w.platform + w.region + w.uploader_discord_id;
-                (e = e.replace(/[^a-z0-9]/gim, "")),
-                  await z.a.outputFile(w.qr_image_url, "./img/" + e + ".jpg"),
-                  await n.channel
-                    .send("", { files: ["./img/" + e + ".jpg"] })
-                    .then(e => {
-                      w.qr_image_url = e.attachments
-                        .values()
-                        .next().value.proxyURL;
-                    }),
-                  (y = await T(f.URL));
-              }
-              await (async function(
-                e,
-                {
-                  qr_data: n,
-                  qr_image_url: t,
-                  qr_link: a,
-                  name: o,
-                  platform: i,
-                  region: s,
-                  uploader_discord_id: l,
-                  uploader_name: r
-                },
-                c,
-                u
-              ) {
-                try {
-                  await d.update(
-                    {
-                      qr_data: n,
-                      qr_image_url: t,
-                      qr_link: a,
-                      name: o,
-                      platform: i,
-                      region: s,
-                      newSize: c,
-                      uploader_discord_id: l,
-                      uploader_name: r
-                    },
-                    { where: { id: e } }
-                  ),
-                    await u.channel.send("Edited!"),
-                    console.log("DB -> save qr in DB");
-                } catch (e) {
-                  await u.channel.send(
-                    "something went wrong, send it to developer: \n```diff\n- " +
-                      e +
-                      "```"
-                  ),
-                    console.log(e);
-                }
-              })(t, w, y || w.size, n);
-            });
-        } else await n.channel.send("cant find it in database");
-      } catch (e) {
-        console.log(e),
-          await n.channel.send(
-            "something went wrong, send it to developer: \n```diff\n- " +
-              e +
-              "```"
-          );
-      }
-    }
-    var V = t(8),
-      Y = t.n(V);
-    async function H(e) {
-      await e.channels
-        .get("604692367018033152")
-        .send("Checking urls started... I will do it every 24 hours");
-      const n = await m();
-      for (const { id: t, qr_link: a, name: o, uploader_discord_id: i } of n)
-        try {
-          console.time(`scanningTime - ${o}`),
-            await _.a.head(a, { timeout: 3e4 }),
-            console.timeEnd(`scanningTime - ${o}`);
-        } catch (n) {
-          n.response
-            ? 404 === n.response.status &&
-              (await e.channels
-                .get("604692367018033152")
-                .send(
-                  `${a} sends ${n.response.status} respond code (not found or other error) for game: ${o}. DB ID for updating: ${t} . <@${i}>`
-                ))
-            : await e.channels
-                .get("604692367018033152")
-                .send(
-                  `${a} sends error, but link probably works, check by clicking on it: ${o}. DB ID for updating: ${t} . <@${i}>`
-                );
-        }
-      await e.channels
-        .get("604692367018033152")
-        .send("All games have been scanned!");
-    }
-    t(6).config(),
-      process.on("unhandledRejection", (e, n) => {
-        console.log("An unhandledRejection occurred"),
-          console.log(`Rejected Promise: ${n}`),
-          console.log(`Rejection: ${e}`);
-      });
-    const K = new a.Client();
-    let W = process.env.BOT_DEFAULT_INVOKE,
-      X = new Map();
-    function Q(e) {
-      let n, t;
-      const o = (n = q(e)
-        ? e.content.substr(W.length + 1)
-        : e.content.substr(X.get(e.guild.id).length + 1)).match(M.ARGUMENTS);
-      if (
-        (null !== o && o.length && (t = o[0]),
-        console.log(t),
-        t ||
-          (q(e)
-            ? e.channel.send(
-                'You need to specify which command you want to use type "!qre help" to display available commands'
-              )
-            : e.channel.send(
-                `You need to specify which command you want to use type "${X.get(
-                  e.guild.id
-                )} help" to display available commands`
-              )),
-        "help" === t)
-      )
-        return (function(e, n, t) {
-          const o = [];
-          return (
-            q(n)
-              ? o.push(
-                  new a.RichEmbed()
-                    .addField("**COMMAND**: ", "```search```")
-                    .addField(
-                      "Description",
-                      "```search -  It's available on channels and DM's, it will search for all games containing typed phrase. (emoji navigation in dm's is a little buggy but it works)```"
-                    )
-                    .addField("Command: ", '```!qre search "<name>" ```')
-                    .addField(
-                      "Example: ",
-                      '```!qre search "Super Castlevania IV"```'
-                    )
-                )
-              : (o.push(
-                  new a.RichEmbed()
-                    .addField("**COMMAND**: ", "```upload```")
-                    .addField(
-                      "Description",
-                      "```upload - upload is available only in certain servers on Discord and only available to users containing special role(s). Remember about quotation marks in title of the game!```"
-                    )
-                    .addField(
-                      "Arguments: ",
-                      "```<platform> -  GBA, GBC, GAMEBOY, NES, SNES, 3DS, DSI, ESHOP, NEW 3DS, NEO GEO, VIRTUAL CONSOLE, MEGA DRIVE, SEGA GENESIS, MAME, TURBOGRAFX \n\n<regions> - USA, JPN, EUR, GLOBAL, HACK \n\n```"
-                    )
-                    .addField(
-                      "Command: ",
-                      "```" +
-                        e.get(n.guild.id) +
-                        ' upload <url> "<name>" <platform> <region>```'
-                    )
-                    .addField(
-                      "Example: ",
-                      "```" +
-                        e.get(n.guild.id) +
-                        ' upload https://files.catbox.moe/au9pkx.cia "Super Castlevania IV" GBA USA```'
-                    )
-                ),
-                o.push(
-                  new a.RichEmbed()
-                    .addField("**COMMAND**: ", "```edit```")
-                    .addField(
-                      "Description",
-                      "```edit - edit same as upload is available only in certain servers on Discord and only available to users containing special role(s). First you need to find the game you want to edit, just search it with search command and copy `DB ID` numberthen you proceed by typing edit command with this id ad you copied. After the game is found follow the instructions```"
-                    )
-                    .addField(
-                      "Arguments: ",
-                      "```<platform> - GBA, GBC, GAMEBOY, NES, SNES, 3DS, DSI, ESHOP, NEW 3DS, NEO GEO, VIRTUAL CONSOLE, MEGA DRIVE, SEGA GENESIS, MAME, TURBOGRAFX \n\n<regions> - USA, JPN, EUR, GLOBAL, HACK \n\n<size> - *KB, *MB, *GB \n```"
-                    )
-                    .addField(
-                      "Command: ",
-                      "```" + e.get(n.guild.id) + " edit <id> ```"
-                    )
-                    .addField(
-                      "Example: ",
-                      "```" + e.get(n.guild.id) + " edit 10 ```"
-                    )
-                ),
-                o.push(
-                  new a.RichEmbed()
-                    .addField("**COMMAND**: ", "```search```")
-                    .addField(
-                      "Description",
-                      "```search -  It's available on channels and DM's, it will search for all games containing typed phrase. (emoji navigation in dm's is a little buggy but it works)```"
-                    )
-                    .addField(
-                      "Command: ",
-                      "```" + e.get(n.guild.id) + ' search "<name>" ```'
-                    )
-                    .addField(
-                      "Example: ",
-                      "```" +
-                        e.get(n.guild.id) +
-                        ' search "Super Castlevania IV"```'
-                    )
-                ),
-                o.push(
-                  new a.RichEmbed()
-                    .addField("**COMMAND**: ", "```invoke```")
-                    .addField(
-                      "Description",
-                      "```invoke - server only command which lets you change the command for invoking bot the default is always !qre```"
-                    )
-                    .addField(
-                      "Command: ",
-                      "```" + e.get(n.guild.id) + " invoke <new_command> ```"
-                    )
-                    .addField(
-                      "Example: ",
-                      "```" + e.get(n.guild.id) + "invoke %qre```"
-                    )
-                )),
-            new E.Embeds()
-              .setArray(o)
-              .setAuthorizedUsers([n.author.id])
-              .setChannel("pm" === t ? n.author : n.channel)
-              .setPageIndicator(!0)
-              .setPage(1)
-              .setTitle("Qr Code 3DS help")
-              .setDescription(
-                "=========================================================="
-              )
-              .addField(
-                "NOTE:",
-                "```links - you can provide direct link or normal sharing links from google and dropbox it will be automatically converted into direct ones```"
-              )
-              .setFooter("")
-              .setColor(16777215)
-              .setNavigationEmojis({
-                back: "◀",
-                jump: "↗",
-                forward: "▶",
-                delete: "🗑"
-              })
-              .setTimeout(6e5)
-          );
-        })(X, e).build();
-      if ("search" === t)
-        return (async function(e, n) {
-          try {
-            let t = e.split(" ");
-            t.splice(0, 1);
-            let a = t.join(" ");
-            const o = await u(a);
-            if (0 === o.length)
-              return q(n)
-                ? await n.channel.send(
-                    `I didn't find anything called \`${a}\` in my database. If you want to request games join https://discord.gg/tXJfdNp`
-                  )
-                : await n.channel.send(
-                    `I didn't find anything called \`${a}\` in my database. You can request game on <#582262747937505290> channel`
-                  );
-            {
-              const e = await D("anime"),
-                t = (await n.channel.send("wait a moment...", { files: [e] }))
-                  .id,
-                a = await N(o, n, t);
-              await a.build();
-            }
-          } catch (e) {
-            console.log(e),
-              await n.channel.send(
-                `something went wrong, send it to developer: \n\`\`\`diff\n- ${e}\`\`\``
-              );
+    /******/ return ns;
+    /******/
+  }; // getDefaultExport function for compatibility with non-harmony modules
+  /******/
+  /******/ /******/ __webpack_require__.n = function(module) {
+    /******/ var getter =
+      module && module.__esModule
+        ? /******/ function getDefault() {
+            return module["default"];
           }
-        })(n, e);
-      if (
-        ("headpat" === t &&
-          G(e) &&
-          (async function(e, n) {
-            if (2 !== e.length)
-              return n.channel.send("hey, specify who you want to headpat!");
-            n.channel.messages.get(n.id).delete();
-            const t = await D("head-pat-anime"),
-              o = new a.RichEmbed()
-                .setColor(
-                  `${"#" + Math.floor(16777215 * Math.random()).toString(16)}`
-                )
-                .setDescription(`uwu *<@${n.author.id}> headpats <@${e[1]}>*`)
-                .setImage(t);
-            n.channel.send(o);
-          })(o, e),
-        "upload" === t)
-      )
-        return G(e) &&
-          (function(e) {
-            if (!q(e))
-              return !!e.member.roles.some(e =>
-                process.env.BOT_PERMISSIONS_ROLES.includes(e.name)
-              );
-          })(e)
-          ? x(o, e, K)
-          : e.channel.send("You need to have permissions to use this command");
-      if (
-        G(e) &&
-        (function(e) {
-          if (!q(e))
-            return !!e.member.roles.some(e =>
-              process.env.BOT_PERMISSIONS_ADMIN.includes(e.name)
-            );
-        })(e)
-      ) {
-        if ("invoke" === t)
-          return (function(e, n, t) {
-            return "dm" === n.channel.type
-              ? n.channel.send("This command is available only in servers")
-              : e.length > 3
-              ? n.channel.send("Too much arguments for invoke command")
-              : e[1]
-              ? (t.set(n.guild.id, e[1]),
-                n.channel.send("Successfully changed your invoke command"))
-              : void 0;
-          })(o, e, X);
-        if ("scrap" === t)
-          return (async function(e, n) {
-            if ("dm" === n.channel.type)
-              return n.channel.send(
-                "This command is available only in servers"
-              );
-            try {
-              await n.author.send("Starting scrapping"),
-                (async function(e, n = 9e3) {
-                  const t = [];
-                  let a;
-                  for (;;) {
-                    const o = { limit: 100 };
-                    a && (o.before = a);
-                    const i = await e.messages.fetch(o);
-                    if (
-                      (t.push(...i.array()),
-                      (a = i.last().id),
-                      100 !== i.size || t >= n)
-                    )
-                      break;
-                  }
-                  return t;
-                })(n.channel).then(async e => {
-                  for (const t of e)
-                    if (t.attachments.size) {
-                      let e = t.content.match(M.SCRAPER);
-                      if (!e) continue;
-                      let a = (e = e
-                        .map(Function.prototype.call, String.prototype.trim)
-                        .filter(function(e) {
-                          if (null !== e && " " !== e) return e;
-                        }))[0];
-                      a &&
-                        (a = a.replace(/^"(.*)"$/, "$1").replace(/'/g, "''")),
-                        e.shift();
-                      const { rows: o } = await u(a);
-                      if (o.length) {
-                        console.log(
-                          "Game is already in DB " + a + " Skipping..."
-                        );
-                        continue;
-                      }
-                      const i = e.findIndex(e => M.REGIONS.test(e)),
-                        s = e.findIndex(e => M.PLATFORMS.test(e)),
-                        l = e.findIndex(e => M.SIZE.test(e)),
-                        r = await C()(
-                          `${t.attachments.values().next().value.proxyURL}`
-                        ),
-                        d = await r.buffer(),
-                        m = await $.a.read(d).catch(e => {
-                          console.log(e);
-                        });
-                      if (!m) continue;
-                      const g = await new U.a(),
-                        h = await new Promise((e, n) => {
-                          (g.callback = (t, a) => {
-                            null != t ? n(t) : e(a);
-                          }),
-                            g.decode(m.bitmap);
-                        }).catch(e => {
-                          console.log(e);
-                        }),
-                        p = {
-                          name: a,
-                          qr_link: h.result,
-                          qr_data: await I(h.result),
-                          qr_image_url: null,
-                          platform: e[s] || "3DS",
-                          region: e[i] || "N/A",
-                          size: e[l] || "N/A",
-                          uploader_discord_id: t.author.id,
-                          uploader_name: t.author.username
-                        };
-                      if (!o.length)
-                        try {
-                          await c(
-                            p.qr_data,
-                            p.qr_image_url,
-                            p.qr_link,
-                            p.name,
-                            p.platform,
-                            p.region,
-                            p.size,
-                            p.uploader_discord_id,
-                            p.uploader_name
-                          ),
-                            console.log("Saving in database! " + p.name);
-                        } catch (e) {
-                          console.log(e),
-                            await n.author.send(
-                              "something went wrong, send it to developer: \n```diff\n- " +
-                                e +
-                                "```"
-                            );
-                        }
-                    }
-                });
-            } catch (e) {
-              console.log(e);
-            }
-          })(0, e);
-        if ("images" === t)
-          return (async function(e, n) {
-            try {
-              const e = await m();
-              for (const {
-                id: t,
-                qr_image_url: a,
-                qr_link: o,
-                name: i,
-                platform: s,
-                region: l,
-                uploader_discord_id: r
-              } of e) {
-                const e = { qr_image: v(o), uploader_discord_id: r, id: t };
-                if ("null" === a) {
-                  let t = i + s + l + r;
-                  (t = t.replace(/[^a-z0-9]/gim, "")),
-                    await z.a.outputFile(e.qr_image, "./img/" + t + ".jpg"),
-                    Y.a.access("./img/" + t + ".jpg", Y.a.F_OK, async a => {
-                      if (a) return void console.error(a);
-                      const o = await n.channel.send("", {
-                        files: ["./img/" + t + ".jpg"]
-                      });
-                      console.log(o.attachments.values().next().value.proxyURL),
-                        (e.qr_image = o.attachments
-                          .values()
-                          .next().value.proxyURL),
-                        await g(e.id, e.qr_image);
-                    });
-                }
-              }
-            } catch (e) {
-              console.log(e);
-            }
-          })(0, e);
-        if ("edit" === t) return j(o, e);
-        if ("checkurls" === t) return H(K);
-        if ("updatesize" === t)
-          return (async function() {
-            const e = await m();
-            for (const { id: n, qr_link: t, name: a, region: o } of e)
-              try {
-                console.log(`starting scanning ${a}`);
-                const e = await _.a.head(t, { timeout: 15e3 });
-                if (e && 404 !== e.status) {
-                  let t;
-                  e.headers["content-disposition"] &&
-                    (t = e.headers["content-disposition"].match(
-                      /\b\w*USA|JPN|EUR|GLOBAL|HACK|RF\w*\b/i
-                    )),
-                    e.headers["content-length"] &&
-                      (await h(n, R()(e.headers["content-length"], !0)),
-                      console.log(R()(e.headers["content-length"], !0), a, n)),
-                    t && "N/A" === o && (console.log(t[0]), await f(n, t[0]));
-                }
-              } catch (e) {
-                e.response ? console.log(e.response.status) : console.log(e);
-              }
-          })();
+        : /******/ function getModuleExports() {
+            return module;
+          };
+    /******/ __webpack_require__.d(getter, "a", getter);
+    /******/ return getter;
+    /******/
+  }; // Object.prototype.hasOwnProperty.call
+  /******/
+  /******/ /******/ __webpack_require__.o = function(object, property) {
+    return Object.prototype.hasOwnProperty.call(object, property);
+  }; // __webpack_public_path__
+  /******/
+  /******/ /******/ __webpack_require__.p = ""; // Load entry module and return exports
+  /******/
+  /******/
+  /******/ /******/ return __webpack_require__(
+    (__webpack_require__.s = "./server.js")
+  );
+  /******/
+})(
+  /************************************************************************/
+  /******/ {
+    /***/ "./server.js":
+      /*!*******************!*\
+  !*** ./server.js ***!
+  \*******************/
+      /*! no exports provided */
+      /***/ function(module, __webpack_exports__, __webpack_require__) {
+        "use strict";
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var discord_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! discord.js */ "discord.js");\n/* harmony import */ var discord_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(discord_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _src_commands_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./src/commands/index */ "./src/commands/index.js");\n/* harmony import */ var _src_helpers_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./src/helpers/helpers */ "./src/helpers/helpers.js");\n/* harmony import */ var _src_db_db_qree__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./src/db/db_qree */ "./src/db/db_qree.js");\n__webpack_require__(/*! dotenv */ "dotenv").config();\n\n\n\n\n\nprocess.on("unhandledRejection", (err, p) => {\n  console.log("An unhandledRejection occurred");\n  console.log(`Rejected Promise: ${p}`);\n  console.log(`Rejection: ${err}`);\n});\n\nconst client = new discord_js__WEBPACK_IMPORTED_MODULE_0__["Client"]();\nlet botInvoker = process.env.BOT_DEFAULT_INVOKE;\nlet serverInvokers = new Map();\n\nvoid (async function() {\n  try {\n    await client.login(process.env.BOT_TOKEN);\n  } catch (e) {\n    console.log(e);\n  }\n})();\n\nclient.on("ready", async () => {\n  console.log("On Discord!");\n  console.log("Connected as " + client.user.tag);\n  console.log("Servers:");\n  client.guilds.forEach(guild => {\n    serverInvokers.set(guild.id, botInvoker);\n    console.log(" - " + guild.id);\n    guild.channels.forEach(channel => {\n      console.log(` -- ${channel.name} (${channel.type}) - ${channel.id}`);\n    });\n\n    console.log(serverInvokers);\n  });\n\n  setInterval(async () => {\n    const qrCount = await Object(_src_db_db_qree__WEBPACK_IMPORTED_MODULE_3__["approxQrCount"])();\n    await client.user.setActivity(`QR Codes count: ${qrCount.count}`, {\n      type: "PLAYING"\n    });\n  }, 60000);\n\n  setInterval(async () => {\n    await Object(_src_commands_index__WEBPACK_IMPORTED_MODULE_1__["urlStatus"])(client);\n  }, 1000 * 60 * 60 * 24);\n});\n\nclient.on("message", receivedMessage => {\n  if (receivedMessage.author === client.user) {\n    return;\n  }\n\n  if (receivedMessage.channel.type === "dm") {\n    if (receivedMessage.content.startsWith(`${botInvoker}`)) {\n      processCommand(receivedMessage);\n    } else {\n      return receivedMessage.channel.send(\n        `You need to specify which command you want to use type "!qre help" to display available commands`\n      );\n    }\n  } else {\n    if (\n      receivedMessage.content.startsWith(\n        `${serverInvokers.get(receivedMessage.guild.id)}`\n      )\n    ) {\n      processCommand(receivedMessage);\n    }\n  }\n});\n\nfunction processCommand(receivedMessage) {\n  let fullCommand, primaryCommand;\n\n  Object(_src_helpers_helpers__WEBPACK_IMPORTED_MODULE_2__["checkIfDM"])(receivedMessage)\n    ? (fullCommand = receivedMessage.content.substr(botInvoker.length + 1))\n    : (fullCommand = receivedMessage.content.substr(\n        serverInvokers.get(receivedMessage.guild.id).length + 1\n      ));\n\n  const messageArguments = fullCommand.match(_src_helpers_helpers__WEBPACK_IMPORTED_MODULE_2__["regexes"].ARGUMENTS);\n\n  if (messageArguments !== null && messageArguments.length) {\n    primaryCommand = messageArguments[0]; // The first word directly after the exclamation is the command\n  }\n\n  console.log(primaryCommand);\n\n  if (!primaryCommand) {\n    Object(_src_helpers_helpers__WEBPACK_IMPORTED_MODULE_2__["checkIfDM"])(receivedMessage)\n      ? receivedMessage.channel.send(\n          `You need to specify which command you want to use type "!qre help" to display available commands`\n        )\n      : receivedMessage.channel.send(\n          `You need to specify which command you want to use type "${serverInvokers.get(\n            receivedMessage.guild.id\n          )} help" to display available commands`\n        );\n  }\n\n  if (primaryCommand === "help") {\n    return Object(_src_commands_index__WEBPACK_IMPORTED_MODULE_1__["createEmbeddedHelper"])(serverInvokers, receivedMessage).build();\n  }\n\n  if (primaryCommand === "search") {\n    return Object(_src_commands_index__WEBPACK_IMPORTED_MODULE_1__["searchGame"])(fullCommand, receivedMessage);\n  }\n\n  if (primaryCommand === "headpat") {\n    Object(_src_helpers_helpers__WEBPACK_IMPORTED_MODULE_2__["validateGuilds"])(receivedMessage)\n      ? Object(_src_commands_index__WEBPACK_IMPORTED_MODULE_1__["headPat"])(messageArguments, receivedMessage)\n      : null;\n  }\n\n  if (primaryCommand === "upload") {\n    if (\n      Object(_src_helpers_helpers__WEBPACK_IMPORTED_MODULE_2__["validateGuilds"])(receivedMessage) &&\n      Object(_src_helpers_helpers__WEBPACK_IMPORTED_MODULE_2__["validatePermissions"])(receivedMessage)\n    ) {\n      return Object(_src_commands_index__WEBPACK_IMPORTED_MODULE_1__["handleGameUpload"])(messageArguments, receivedMessage, client);\n    } else {\n      return receivedMessage.channel.send(\n        `You need to have permissions to use this command`\n      );\n    }\n  }\n\n  if (Object(_src_helpers_helpers__WEBPACK_IMPORTED_MODULE_2__["validateGuilds"])(receivedMessage) && Object(_src_helpers_helpers__WEBPACK_IMPORTED_MODULE_2__["validateAdmin"])(receivedMessage)) {\n    if (primaryCommand === "invoke") {\n      return Object(_src_commands_index__WEBPACK_IMPORTED_MODULE_1__["changeInvokeCommand"])(\n        messageArguments,\n        receivedMessage,\n        serverInvokers\n      );\n    }\n\n    if (primaryCommand === "scrap") {\n      return Object(_src_commands_index__WEBPACK_IMPORTED_MODULE_1__["scrapChannelForQrCodes"])(messageArguments, receivedMessage);\n    }\n\n    if (primaryCommand === "images") {\n      return Object(_src_commands_index__WEBPACK_IMPORTED_MODULE_1__["makeQrImagesfromDB"])(messageArguments, receivedMessage);\n    }\n\n    if (primaryCommand === "edit") {\n      return Object(_src_commands_index__WEBPACK_IMPORTED_MODULE_1__["handleGameEdit"])(messageArguments, receivedMessage);\n    }\n\n    if (primaryCommand === "checkurls") {\n      return Object(_src_commands_index__WEBPACK_IMPORTED_MODULE_1__["urlStatus"])(client);\n    }\n\n    if (primaryCommand === "updatesize") {\n      return Object(_src_commands_index__WEBPACK_IMPORTED_MODULE_1__["updateSize"])(client);\n    }\n  }\n\n  return receivedMessage.channel.send(\n    `You need to specify which command you want to use type "!qre help" to display available commands`\n  );\n}\n\n\n//# sourceURL=webpack:///./server.js?'
+        );
+
+        /***/
+      },
+
+    /***/ "./src/commands/checkurls/checkurls.js":
+      /*!*********************************************!*\
+  !*** ./src/commands/checkurls/checkurls.js ***!
+  \*********************************************/
+      /*! exports provided: urlStatus */
+      /***/ function(module, __webpack_exports__, __webpack_require__) {
+        "use strict";
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "urlStatus", function() { return urlStatus; });\n/* harmony import */ var _db_db_qree__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../db/db_qree */ "./src/db/db_qree.js");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "axios");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);\n\n\n\nasync function urlStatus(client) {\n  await client.channels\n    .get("604692367018033152")\n    .send(`Checking urls started... I will do it every 24 hours`);\n  const rows = await Object(_db_db_qree__WEBPACK_IMPORTED_MODULE_0__["getWholeDB"])();\n  for (const { id, qr_link, name, uploader_discord_id } of rows) {\n    try {\n      console.time(`scanningTime - ${name}`);\n      await axios__WEBPACK_IMPORTED_MODULE_1___default.a.head(qr_link, { timeout: 30000 });\n      console.timeEnd(`scanningTime - ${name}`);\n    } catch (e) {\n      if (e.response) {\n        if (e.response.status === 404) {\n          await client.channels\n            .get("604692367018033152")\n            .send(\n              `${qr_link} sends ${e.response.status} respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} . <@${uploader_discord_id}>`\n            );\n        }\n      } else {\n        await client.channels\n          .get("604692367018033152")\n          .send(\n            `${qr_link} sends error, but link probably works, check by clicking on it: ${name}. DB ID for updating: ${id} . <@${uploader_discord_id}>`\n          );\n      }\n    }\n  }\n  await client.channels\n    .get("604692367018033152")\n    .send(`All games have been scanned!`);\n}\n\n\n//# sourceURL=webpack:///./src/commands/checkurls/checkurls.js?'
+        );
+
+        /***/
+      },
+
+    /***/ "./src/commands/edit/edit.js":
+      /*!***********************************!*\
+  !*** ./src/commands/edit/edit.js ***!
+  \***********************************/
+      /*! exports provided: handleGameEdit */
+      /***/ function(module, __webpack_exports__, __webpack_require__) {
+        "use strict";
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleGameEdit", function() { return handleGameEdit; });\n/* harmony import */ var _db_db_qree__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../db/db_qree */ "./src/db/db_qree.js");\n/* harmony import */ var discord_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! discord.js */ "discord.js");\n/* harmony import */ var discord_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(discord_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _helpers_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../helpers/helpers */ "./src/helpers/helpers.js");\n/* harmony import */ var image_data_uri__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! image-data-uri */ "image-data-uri");\n/* harmony import */ var image_data_uri__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(image_data_uri__WEBPACK_IMPORTED_MODULE_3__);\n\n\n\n\n\nasync function handleGameEdit(messageArguments, receivedMessage) {\n  try {\n    const id = parseInt(messageArguments[1]);\n    const rows = await Object(_db_db_qree__WEBPACK_IMPORTED_MODULE_0__["findGameToEdit"])(id);\n    const {\n      qr_data,\n      qr_image_url,\n      qr_link,\n      name,\n      platform,\n      region,\n      size,\n      uploader_discord_id,\n      uploader_name\n    } = rows[0];\n    if (rows.length) {\n      await receivedMessage.channel.send(\n        `\\`\\`\\`\\nLink: ${qr_link}\\n\\nName: ${name}\\nPlatform: ${platform}\\nRegion: ${region}\\nSize: ${size}\\nUploader: ${uploader_name}\\`\\`\\` \n        \\`\\`\\`Is this the game you wish to edit? type \'yes\'/\'no\'\\`\\`\\``,\n        {\n          files: [qr_image_url]\n        }\n      );\n\n      const collector = new discord_js__WEBPACK_IMPORTED_MODULE_1__["MessageCollector"](\n        receivedMessage.channel,\n        m => m.author.id === receivedMessage.author.id,\n        { time: 120000 }\n      );\n\n      collector.on("collect", async message => {\n        if (message.content.toLowerCase() === "yes") {\n          await receivedMessage.channel.send(\n            `\\`\\`\\`please type all the information you want to edit, remember that title NEEDS to be in quotation marks. You can type all info you want to edit in one or more messages.\\`\\`\\`\n            \\`\\`\\`type \\`end\\` if you want to finish\\`\\`\\``\n          );\n        }\n        if (message.content.toLowerCase() === "no") {\n          collector.stop();\n          await receivedMessage.channel.send(\n            "``` Ok, will not do anything with it ```"\n          );\n        }\n\n        if (message.content.toLowerCase() === "end") {\n          collector.stop();\n        }\n      });\n\n      collector.on("end", async collected => {\n        let collectedArguments = [];\n        for (const item of collected) {\n          collectedArguments.push(item[1].content);\n        }\n\n        const args = collectedArguments\n          .filter(\n            function(e) {\n              return this.indexOf(e.toLowerCase()) < 0;\n            },\n            ["end", "yes", "no"]\n          )\n          .join(" ")\n          .match(_helpers_helpers__WEBPACK_IMPORTED_MODULE_2__["regexes"].ARGUMENTS);\n\n        const regexesObj = Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_2__["filteredRegexes"])([\n          "URL",\n          "TITLE",\n          "REGIONS",\n          "PLATFORMS",\n          "SIZE"\n        ]);\n        let foundArgsObj = {};\n        for (const regex in regexesObj) {\n          console.log(regexesObj[regex]);\n          const itemIndex = args.findIndex(value =>\n            regexesObj[regex].test(value)\n          );\n          if (itemIndex === -1) {\n            await receivedMessage.channel.send(\n              `argument \\`${regex}\\` is missing continue...`\n            );\n          } else {\n            foundArgsObj[regex] = args[itemIndex];\n            args.splice(itemIndex, 1);\n            await receivedMessage.channel.send(\n              `argument \\`${regex}\\` is present! : \\`${foundArgsObj[regex]}\\``\n            );\n          }\n        }\n\n        console.log(foundArgsObj);\n\n        const obj = {\n          name: foundArgsObj.TITLE\n            ? foundArgsObj.TITLE.replace(/[\'"]+/g, "")\n            : name,\n          qr_link: foundArgsObj.URL ? foundArgsObj.URL : qr_link,\n          qr_data: foundArgsObj.URL\n            ? Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_2__["createASCIIQrCode"])(foundArgsObj.URL)\n            : qr_data,\n          qr_image_url: foundArgsObj.URL\n            ? Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_2__["createDataURLQrCode"])(foundArgsObj.URL)\n            : qr_image_url,\n          platform: foundArgsObj.PLATFORMS ? foundArgsObj.PLATFORMS : platform,\n          region: foundArgsObj.REGIONS ? foundArgsObj.REGIONS : region,\n          size: foundArgsObj.SIZE ? foundArgsObj.SIZE : size,\n          uploader_discord_id: uploader_discord_id,\n          uploader_name: uploader_name\n        };\n\n        let newSize = "";\n        if (foundArgsObj.URL) {\n          let string =\n            obj.name + obj.platform + obj.region + obj.uploader_discord_id;\n          string = string.replace(/[^a-z0-9]/gim, "");\n          await image_data_uri__WEBPACK_IMPORTED_MODULE_3___default.a.outputFile(\n            obj.qr_image_url,\n            "./img/" + string + ".jpg"\n          );\n\n          await receivedMessage.channel\n            .send("", {\n              files: ["./img/" + string + ".jpg"]\n            })\n            .then(msg => {\n              obj.qr_image_url = msg.attachments.values().next().value.proxyURL;\n            });\n\n          newSize = await Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_2__["checkFileSize"])(foundArgsObj.URL);\n        }\n\n        await Object(_db_db_qree__WEBPACK_IMPORTED_MODULE_0__["editQree"])(id, obj, newSize ? newSize : obj.size, receivedMessage);\n      });\n    } else {\n      await receivedMessage.channel.send("cant find it in database");\n    }\n  } catch (e) {\n    console.log(e);\n    await receivedMessage.channel.send(\n      "something went wrong, send it to developer: \\n" +\n        "```diff\\n- " +\n        e +\n        "```"\n    );\n  }\n}\n\n\n//# sourceURL=webpack:///./src/commands/edit/edit.js?'
+        );
+
+        /***/
+      },
+
+    /***/ "./src/commands/headpat/headpat.js":
+      /*!*****************************************!*\
+  !*** ./src/commands/headpat/headpat.js ***!
+  \*****************************************/
+      /*! exports provided: headPat */
+      /***/ function(module, __webpack_exports__, __webpack_require__) {
+        "use strict";
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "headPat", function() { return headPat; });\n/* harmony import */ var _helpers_helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../helpers/helpers */ "./src/helpers/helpers.js");\n/* harmony import */ var discord_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! discord.js */ "discord.js");\n/* harmony import */ var discord_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(discord_js__WEBPACK_IMPORTED_MODULE_1__);\n\n\n\nasync function headPat(messageArgument, receivedMessage) {\n  if (messageArgument.length !== 2) {\n    return receivedMessage.channel.send(\n      `hey, specify who you want to headpat!`\n    );\n  }\n  receivedMessage.channel.messages.get(receivedMessage.id).delete();\n  const meme = await Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["getRandomMeme"])("head-pat-anime");\n  const embedHeadpat = new discord_js__WEBPACK_IMPORTED_MODULE_1__["RichEmbed"]()\n    .setColor(`${"#" + Math.floor(Math.random() * 16777215).toString(16)}`)\n    .setDescription(\n      `uwu *<@${receivedMessage.author.id}> headpats <@${messageArgument[1]}>*`\n    )\n    .setImage(meme);\n  receivedMessage.channel.send(embedHeadpat);\n}\n\n\n//# sourceURL=webpack:///./src/commands/headpat/headpat.js?'
+        );
+
+        /***/
+      },
+
+    /***/ "./src/commands/help/help.js":
+      /*!***********************************!*\
+  !*** ./src/commands/help/help.js ***!
+  \***********************************/
+      /*! exports provided: createEmbeddedHelper */
+      /***/ function(module, __webpack_exports__, __webpack_require__) {
+        "use strict";
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createEmbeddedHelper", function() { return createEmbeddedHelper; });\n/* harmony import */ var discord_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! discord.js */ "discord.js");\n/* harmony import */ var discord_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(discord_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var discord_paginationembed__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! discord-paginationembed */ "discord-paginationembed");\n/* harmony import */ var discord_paginationembed__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(discord_paginationembed__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _helpers_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../helpers/helpers */ "./src/helpers/helpers.js");\n\n\n\n\nfunction createEmbeddedHelper(\n  serverInvokers,\n  receivedMessage,\n  destination\n) {\n  const embeds = [];\n\n  if (Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_2__["checkIfDM"])(receivedMessage)) {\n    embeds.push(\n      new discord_js__WEBPACK_IMPORTED_MODULE_0__["RichEmbed"]()\n        .addField("**COMMAND**: ", "```search```")\n        .addField(\n          "Description",\n          "```search -  It\'s available on channels and DM\'s, it will search for all games containing typed phrase. (emoji navigation in dm\'s is a little buggy but it works)```"\n        )\n        .addField("Command: ", \'```!qre search "<name>" ```\')\n        .addField("Example: ", \'```!qre search "Super Castlevania IV"```\')\n    );\n  } else {\n    embeds.push(\n      new discord_js__WEBPACK_IMPORTED_MODULE_0__["RichEmbed"]()\n        .addField("**COMMAND**: ", "```upload```")\n        .addField(\n          "Description",\n          "```upload - upload is available only in certain servers on " +\n            "Discord and only available to users containing special role(s). " +\n            "Remember about quotation marks in title of the game!```"\n        )\n        .addField(\n          "Arguments: ",\n          "```" +\n            "<platform> -  GBA, GBC, GAMEBOY, NES, SNES, 3DS, DSI, ESHOP, NEW 3DS, NEO GEO, VIRTUAL CONSOLE, MEGA DRIVE, SEGA GENESIS, MAME, TURBOGRAFX \\n\\n" +\n            "<regions> - USA, JPN, EUR, GLOBAL, HACK \\n\\n" +\n            "```"\n        )\n        .addField(\n          "Command: ",\n          "```" +\n            serverInvokers.get(receivedMessage.guild.id) +\n            \' upload <url> "<name>" <platform> <region>```\'\n        )\n\n        .addField(\n          "Example: ",\n          "```" +\n            serverInvokers.get(receivedMessage.guild.id) +\n            \' upload https://files.catbox.moe/au9pkx.cia "Super Castlevania IV" GBA USA```\'\n        )\n    );\n\n    embeds.push(\n      new discord_js__WEBPACK_IMPORTED_MODULE_0__["RichEmbed"]()\n        .addField("**COMMAND**: ", "```edit```")\n        .addField(\n          "Description",\n          "```edit - edit same as upload is available only in certain servers on " +\n            "Discord and only available to users containing special role(s). " +\n            "First you need to find the game you want to edit, just search it with search command and copy `DB ID` number" +\n            "then you proceed by typing edit command with this id ad you copied. After the game is found follow the instructions" +\n            "```"\n        )\n        .addField(\n          "Arguments: ",\n          "```" +\n            "<platform> - GBA, GBC, GAMEBOY, NES, SNES, 3DS, DSI, ESHOP, NEW 3DS, NEO GEO, VIRTUAL CONSOLE, MEGA DRIVE, SEGA GENESIS, MAME, TURBOGRAFX \\n\\n" +\n            "<regions> - USA, JPN, EUR, GLOBAL, HACK \\n\\n" +\n            "<size> - *KB, *MB, *GB \\n" +\n            "```"\n        )\n        .addField(\n          "Command: ",\n          "```" +\n            serverInvokers.get(receivedMessage.guild.id) +\n            " edit <id> ```"\n        )\n\n        .addField(\n          "Example: ",\n          "```" + serverInvokers.get(receivedMessage.guild.id) + " edit 10 ```"\n        )\n    );\n\n    embeds.push(\n      new discord_js__WEBPACK_IMPORTED_MODULE_0__["RichEmbed"]()\n        .addField("**COMMAND**: ", "```search```")\n        .addField(\n          "Description",\n          "```search -  It\'s available on channels and DM\'s, it will search for all games containing typed phrase. (emoji navigation in dm\'s is a little buggy but it works)```"\n        )\n        .addField(\n          "Command: ",\n          "```" +\n            serverInvokers.get(receivedMessage.guild.id) +\n            \' search "<name>" ```\'\n        )\n        .addField(\n          "Example: ",\n          "```" +\n            serverInvokers.get(receivedMessage.guild.id) +\n            \' search "Super Castlevania IV"```\'\n        )\n    );\n\n    embeds.push(\n      new discord_js__WEBPACK_IMPORTED_MODULE_0__["RichEmbed"]()\n        .addField("**COMMAND**: ", "```invoke```")\n        .addField(\n          "Description",\n          "```invoke - server only command which lets you change the command for invoking bot the default is always !qre```"\n        )\n        .addField(\n          "Command: ",\n          "```" +\n            serverInvokers.get(receivedMessage.guild.id) +\n            " invoke <new_command> ```"\n        )\n        .addField(\n          "Example: ",\n          "```" +\n            serverInvokers.get(receivedMessage.guild.id) +\n            "invoke %qre```"\n        )\n    );\n  }\n\n  return (\n    new discord_paginationembed__WEBPACK_IMPORTED_MODULE_1__["Embeds"]()\n      .setArray(embeds)\n      .setAuthorizedUsers([receivedMessage.author.id])\n      .setChannel(\n        destination === "pm" ? receivedMessage.author : receivedMessage.channel\n      )\n      .setPageIndicator(true)\n      .setPage(1)\n      // Methods below are for customising all embeds\n      .setTitle("Qr Code 3DS help")\n      .setDescription(\n        "=========================================================="\n      )\n      .addField(\n        "NOTE:",\n        "```links - you can provide direct link or normal sharing links from google and dropbox it will be automatically converted into direct ones```"\n      )\n      .setFooter("")\n      .setColor(0xffffff)\n      .setNavigationEmojis({\n        back: "◀",\n        jump: "↗",\n        forward: "▶",\n        delete: "🗑"\n      })\n      .setTimeout(600000)\n  );\n}\n\n\n//# sourceURL=webpack:///./src/commands/help/help.js?'
+        );
+
+        /***/
+      },
+
+    /***/ "./src/commands/images/images.js":
+      /*!***************************************!*\
+  !*** ./src/commands/images/images.js ***!
+  \***************************************/
+      /*! exports provided: makeQrImagesfromDB */
+      /***/ function(module, __webpack_exports__, __webpack_require__) {
+        "use strict";
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeQrImagesfromDB", function() { return makeQrImagesfromDB; });\n/* harmony import */ var _helpers_helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../helpers/helpers */ "./src/helpers/helpers.js");\n/* harmony import */ var _db_db_qree__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../db/db_qree */ "./src/db/db_qree.js");\n/* harmony import */ var image_data_uri__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! image-data-uri */ "image-data-uri");\n/* harmony import */ var image_data_uri__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(image_data_uri__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! fs */ "fs");\n/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(fs__WEBPACK_IMPORTED_MODULE_3__);\n\n\n\n\n\nasync function makeQrImagesfromDB(messageArguments, receivedMessage) {\n  try {\n    const rows = await Object(_db_db_qree__WEBPACK_IMPORTED_MODULE_1__["getWholeDB"])();\n    for (const {\n      id,\n      qr_image_url,\n      qr_link,\n      name,\n      platform,\n      region,\n      uploader_discord_id\n    } of rows) {\n      const obj = {\n        qr_image: Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["createDataURLQrCode"])(qr_link),\n        uploader_discord_id,\n        id\n      };\n\n      if (qr_image_url === "null") {\n        let string = name + platform + region + uploader_discord_id;\n        string = string.replace(/[^a-z0-9]/gim, "");\n        await image_data_uri__WEBPACK_IMPORTED_MODULE_2___default.a.outputFile(obj.qr_image, "./img/" + string + ".jpg");\n        fs__WEBPACK_IMPORTED_MODULE_3___default.a.access("./img/" + string + ".jpg", fs__WEBPACK_IMPORTED_MODULE_3___default.a.F_OK, async err => {\n          if (err) {\n            console.error(err);\n            return;\n          }\n          const msg = await receivedMessage.channel.send("", {\n            files: ["./img/" + string + ".jpg"]\n          });\n          // file exists\n          console.log(msg.attachments.values().next().value.proxyURL);\n          obj.qr_image = msg.attachments.values().next().value.proxyURL;\n          await Object(_db_db_qree__WEBPACK_IMPORTED_MODULE_1__["updateQrImageUrl"])(obj.id, obj.qr_image);\n        });\n      }\n    }\n  } catch (e) {\n    console.log(e);\n  }\n}\n\n\n//# sourceURL=webpack:///./src/commands/images/images.js?'
+        );
+
+        /***/
+      },
+
+    /***/ "./src/commands/index.js":
+      /*!*******************************!*\
+  !*** ./src/commands/index.js ***!
+  \*******************************/
+      /*! exports provided: scrapChannelForQrCodes, changeInvokeCommand, handleGameUpload, searchGame, handleGameEdit, createEmbeddedHelper, makeQrImagesfromDB, urlStatus, updateSize, headPat */
+      /***/ function(module, __webpack_exports__, __webpack_require__) {
+        "use strict";
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _scrap_scrap_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./scrap/scrap.js */ "./src/commands/scrap/scrap.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "scrapChannelForQrCodes", function() { return _scrap_scrap_js__WEBPACK_IMPORTED_MODULE_0__["scrapChannelForQrCodes"]; });\n\n/* harmony import */ var _invoke_invoke_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./invoke/invoke.js */ "./src/commands/invoke/invoke.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "changeInvokeCommand", function() { return _invoke_invoke_js__WEBPACK_IMPORTED_MODULE_1__["changeInvokeCommand"]; });\n\n/* harmony import */ var _upload_upload_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./upload/upload.js */ "./src/commands/upload/upload.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "handleGameUpload", function() { return _upload_upload_js__WEBPACK_IMPORTED_MODULE_2__["handleGameUpload"]; });\n\n/* harmony import */ var _search_search_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./search/search.js */ "./src/commands/search/search.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "searchGame", function() { return _search_search_js__WEBPACK_IMPORTED_MODULE_3__["searchGame"]; });\n\n/* harmony import */ var _edit_edit_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./edit/edit.js */ "./src/commands/edit/edit.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "handleGameEdit", function() { return _edit_edit_js__WEBPACK_IMPORTED_MODULE_4__["handleGameEdit"]; });\n\n/* harmony import */ var _help_help_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./help/help.js */ "./src/commands/help/help.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createEmbeddedHelper", function() { return _help_help_js__WEBPACK_IMPORTED_MODULE_5__["createEmbeddedHelper"]; });\n\n/* harmony import */ var _images_images__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./images/images */ "./src/commands/images/images.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "makeQrImagesfromDB", function() { return _images_images__WEBPACK_IMPORTED_MODULE_6__["makeQrImagesfromDB"]; });\n\n/* harmony import */ var _checkurls_checkurls__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./checkurls/checkurls */ "./src/commands/checkurls/checkurls.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "urlStatus", function() { return _checkurls_checkurls__WEBPACK_IMPORTED_MODULE_7__["urlStatus"]; });\n\n/* harmony import */ var _updatesize_updatesize__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./updatesize/updatesize */ "./src/commands/updatesize/updatesize.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "updateSize", function() { return _updatesize_updatesize__WEBPACK_IMPORTED_MODULE_8__["updateSize"]; });\n\n/* harmony import */ var _headpat_headpat__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./headpat/headpat */ "./src/commands/headpat/headpat.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "headPat", function() { return _headpat_headpat__WEBPACK_IMPORTED_MODULE_9__["headPat"]; });\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n//# sourceURL=webpack:///./src/commands/index.js?'
+        );
+
+        /***/
+      },
+
+    /***/ "./src/commands/invoke/invoke.js":
+      /*!***************************************!*\
+  !*** ./src/commands/invoke/invoke.js ***!
+  \***************************************/
+      /*! exports provided: changeInvokeCommand */
+      /***/ function(module, __webpack_exports__, __webpack_require__) {
+        "use strict";
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeInvokeCommand", function() { return changeInvokeCommand; });\nfunction changeInvokeCommand(\n  messageArguments,\n  receivedMessage,\n  serverInvokers\n) {\n  if (receivedMessage.channel.type === "dm") {\n    return receivedMessage.channel.send(\n      `This command is available only in servers`\n    );\n  }\n\n  if (messageArguments.length > 3) {\n    return receivedMessage.channel.send(\n      `Too much arguments for invoke command`\n    );\n  }\n\n  if (messageArguments[1]) {\n    serverInvokers.set(receivedMessage.guild.id, messageArguments[1]);\n    return receivedMessage.channel.send(\n      `Successfully changed your invoke command`\n    );\n  }\n}\n\n\n//# sourceURL=webpack:///./src/commands/invoke/invoke.js?'
+        );
+
+        /***/
+      },
+
+    /***/ "./src/commands/scrap/scrap.js":
+      /*!*************************************!*\
+  !*** ./src/commands/scrap/scrap.js ***!
+  \*************************************/
+      /*! exports provided: scrapChannelForQrCodes */
+      /***/ function(module, __webpack_exports__, __webpack_require__) {
+        "use strict";
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "scrapChannelForQrCodes", function() { return scrapChannelForQrCodes; });\n/* harmony import */ var _helpers_helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../helpers/helpers */ "./src/helpers/helpers.js");\n/* harmony import */ var node_fetch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! node-fetch */ "node-fetch");\n/* harmony import */ var node_fetch__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(node_fetch__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var jimp__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! jimp */ "jimp");\n/* harmony import */ var jimp__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(jimp__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var qrcode_reader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! qrcode-reader */ "qrcode-reader");\n/* harmony import */ var qrcode_reader__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(qrcode_reader__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var _db_db_qree__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../db/db_qree */ "./src/db/db_qree.js");\n\n\n\n\n\n\nasync function scrapChannelForQrCodes(\n  messageArguments,\n  receivedMessage\n) {\n  if (receivedMessage.channel.type === "dm") {\n    return receivedMessage.channel.send(\n      `This command is available only in servers`\n    );\n  }\n  try {\n    await receivedMessage.author.send(`Starting scrapping`);\n    Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["limitlessFetchMessages"])(receivedMessage.channel).then(async messages => {\n      for (const item of messages) {\n        if (!!item.attachments.size) {\n          let metaInformation = item.content.match(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["regexes"].SCRAPER);\n          if (metaInformation) {\n            metaInformation = metaInformation\n              .map(Function.prototype.call, String.prototype.trim)\n              .filter(function(el) {\n                if (el !== null && el !== " ") return el;\n              });\n          } else {\n            continue;\n          }\n\n          let name = metaInformation[0];\n\n          if (!name) {\n          } else {\n            name = name.replace(/^"(.*)"$/, "$1").replace(/\'/g, "\'\'");\n          }\n          metaInformation.shift();\n          const { rows } = await Object(_db_db_qree__WEBPACK_IMPORTED_MODULE_4__["findGame"])(name);\n          if (rows.length) {\n            console.log("Game is already in DB " + name + " Skipping...");\n            continue;\n          }\n\n          const regionIndex = metaInformation.findIndex(value =>\n            _helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["regexes"].REGIONS.test(value)\n          );\n          const platformIndex = metaInformation.findIndex(value =>\n            _helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["regexes"].PLATFORMS.test(value)\n          );\n          const sizeIndex = metaInformation.findIndex(value =>\n            _helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["regexes"].SIZE.test(value)\n          );\n\n          const res = await node_fetch__WEBPACK_IMPORTED_MODULE_1___default()(\n            `${item.attachments.values().next().value.proxyURL}`\n          );\n          const buffer = await res.buffer();\n\n          const img = await jimp__WEBPACK_IMPORTED_MODULE_2___default.a.read(buffer).catch(e => {\n            console.log(e);\n          });\n          if (!img) {\n            continue;\n          }\n          const qr = await new qrcode_reader__WEBPACK_IMPORTED_MODULE_3___default.a();\n\n          const value = await new Promise((resolve, reject) => {\n            qr.callback = (err, v) => {\n              err != null ? reject(err) : resolve(v);\n            };\n            qr.decode(img.bitmap);\n          }).catch(e => {\n            console.log(e);\n          });\n\n          const obj = {\n            name: name,\n            qr_link: value.result,\n            qr_data: await Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["createASCIIQrCode"])(value.result),\n            qr_image_url: null,\n            platform: metaInformation[platformIndex] || "3DS",\n            region: metaInformation[regionIndex] || "N/A",\n            size: metaInformation[sizeIndex] || "N/A",\n            uploader_discord_id: item.author.id,\n            uploader_name: item.author.username\n          };\n\n          if (!rows.length) {\n            try {\n              await Object(_db_db_qree__WEBPACK_IMPORTED_MODULE_4__["createQree"])(\n                obj.qr_data,\n                obj.qr_image_url,\n                obj.qr_link,\n                obj.name,\n                obj.platform,\n                obj.region,\n                obj.size,\n                obj.uploader_discord_id,\n                obj.uploader_name\n              );\n              console.log("Saving in database! " + obj.name);\n            } catch (e) {\n              console.log(e);\n              await receivedMessage.author.send(\n                "something went wrong, send it to developer: \\n" +\n                  "```diff\\n- " +\n                  e +\n                  "```"\n              );\n            }\n          }\n        }\n      }\n    });\n  } catch (e) {\n    console.log(e);\n  }\n}\n\n\n//# sourceURL=webpack:///./src/commands/scrap/scrap.js?'
+        );
+
+        /***/
+      },
+
+    /***/ "./src/commands/search/search.js":
+      /*!***************************************!*\
+  !*** ./src/commands/search/search.js ***!
+  \***************************************/
+      /*! exports provided: searchGame */
+      /***/ function(module, __webpack_exports__, __webpack_require__) {
+        "use strict";
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "searchGame", function() { return searchGame; });\n/* harmony import */ var _db_db_qree__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../db/db_qree */ "./src/db/db_qree.js");\n/* harmony import */ var _helpers_helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../helpers/helpers */ "./src/helpers/helpers.js");\n\n\n\nasync function searchGame(messageArguments, receivedMessage) {\n  try {\n    // remove "search" from first element of array\n    let args = messageArguments.split(" ");\n    args.splice(0, 1);\n    let finalArgs = args.join(" ");\n    const rows = await Object(_db_db_qree__WEBPACK_IMPORTED_MODULE_0__["findGame"])(finalArgs);\n    if (rows.length === 0) {\n      if (Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_1__["checkIfDM"])(receivedMessage)) {\n        return await receivedMessage.channel.send(\n          `I didn\'t find anything called \\`${finalArgs}\\` in my database. If you want to request games join https://discord.gg/tXJfdNp`\n        );\n      } else {\n        return await receivedMessage.channel.send(\n          `I didn\'t find anything called \\`${finalArgs}\\` in my database. You can request game on <#582262747937505290> channel`\n        );\n      }\n    } else {\n      const meme = await Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_1__["getRandomMeme"])("anime");\n      const response = await receivedMessage.channel.send(`wait a moment...`, {\n        files: [meme]\n      });\n      const loadingMessageId = response.id;\n\n      const QrCodesSearchResults = await Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_1__["createEmbeddedAnswer"])(\n        rows,\n        receivedMessage,\n        loadingMessageId\n      );\n      await QrCodesSearchResults.build();\n    }\n  } catch (e) {\n    console.log(e);\n    await receivedMessage.channel.send(\n      `something went wrong, send it to developer: \\n\\`\\`\\`diff\\n- ${e}\\`\\`\\``\n    );\n  }\n}\n\n\n//# sourceURL=webpack:///./src/commands/search/search.js?'
+        );
+
+        /***/
+      },
+
+    /***/ "./src/commands/updatesize/updatesize.js":
+      /*!***********************************************!*\
+  !*** ./src/commands/updatesize/updatesize.js ***!
+  \***********************************************/
+      /*! exports provided: updateSize */
+      /***/ function(module, __webpack_exports__, __webpack_require__) {
+        "use strict";
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateSize", function() { return updateSize; });\n/* harmony import */ var _db_db_qree__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../db/db_qree */ "./src/db/db_qree.js");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "axios");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var prettysize__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prettysize */ "prettysize");\n/* harmony import */ var prettysize__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prettysize__WEBPACK_IMPORTED_MODULE_2__);\n\n\n\n\nasync function updateSize() {\n  const rows = await Object(_db_db_qree__WEBPACK_IMPORTED_MODULE_0__["getWholeDB"])();\n  for (const { id, qr_link, name, region } of rows) {\n    try {\n      console.log(`starting scanning ${name}`);\n      const response = await axios__WEBPACK_IMPORTED_MODULE_1___default.a.head(qr_link, { timeout: 15000 });\n      if (response && response.status !== 404) {\n        let found_region;\n        if (response.headers["content-disposition"]) {\n          found_region = response.headers["content-disposition"].match(\n            /\\b\\w*USA|JPN|EUR|GLOBAL|HACK|RF\\w*\\b/i\n          );\n        }\n\n        if (response.headers["content-length"]) {\n          await Object(_db_db_qree__WEBPACK_IMPORTED_MODULE_0__["updateSizeArgument"])(\n            id,\n            prettysize__WEBPACK_IMPORTED_MODULE_2___default()(response.headers["content-length"], true)\n          );\n          console.log(\n            prettysize__WEBPACK_IMPORTED_MODULE_2___default()(response.headers["content-length"], true),\n            name,\n            id\n          );\n        }\n\n        if (found_region && region === "N/A") {\n          console.log(found_region[0]);\n          await Object(_db_db_qree__WEBPACK_IMPORTED_MODULE_0__["updateRegionArgument"])(id, found_region[0]);\n        }\n      }\n    } catch (e) {\n      if (e.response) {\n        console.log(e.response.status);\n      } else {\n        console.log(e);\n      }\n    }\n  }\n}\n\n\n//# sourceURL=webpack:///./src/commands/updatesize/updatesize.js?'
+        );
+
+        /***/
+      },
+
+    /***/ "./src/commands/upload/upload.js":
+      /*!***************************************!*\
+  !*** ./src/commands/upload/upload.js ***!
+  \***************************************/
+      /*! exports provided: handleGameUpload */
+      /***/ function(module, __webpack_exports__, __webpack_require__) {
+        "use strict";
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleGameUpload", function() { return handleGameUpload; });\n/* harmony import */ var _helpers_helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../helpers/helpers */ "./src/helpers/helpers.js");\n/* harmony import */ var _db_db_qree__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../db/db_qree */ "./src/db/db_qree.js");\n/* harmony import */ var discord_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! discord.js */ "discord.js");\n/* harmony import */ var discord_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(discord_js__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var image_data_uri__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! image-data-uri */ "image-data-uri");\n/* harmony import */ var image_data_uri__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(image_data_uri__WEBPACK_IMPORTED_MODULE_3__);\n\n\n\n\n\nasync function handleGameUpload(\n  messageArguments,\n  receivedMessage,\n  client\n) {\n  try {\n    if (messageArguments.length !== 5) {\n      return receivedMessage.channel.send(\n        `invalid arguments count for upload command`\n      );\n    }\n    const meme = await Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["getRandomMeme"])("head-pat-anime");\n    const response = await receivedMessage.channel.send(`wait a moment...`, {\n      files: [meme]\n    });\n    const loadingMessageId = response.id;\n\n    const regexesObj = Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["filteredRegexes"])([\n      "URL",\n      "TITLE",\n      "REGIONS",\n      "PLATFORMS"\n    ]);\n\n    let foundArgsObj = {};\n    for (const regex in regexesObj) {\n      const itemIndex = await messageArguments.findIndex(value =>\n        regexesObj[regex].test(value)\n      );\n      if (itemIndex === -1) {\n        return await receivedMessage.channel.send(\n          `invalid arguments \\`${regex}\\` for upload command`\n        );\n      } else {\n        foundArgsObj[regex] = messageArguments[itemIndex];\n        messageArguments.splice(itemIndex, 1);\n      }\n    }\n\n    const obj = {\n      name: foundArgsObj.TITLE.replace(/[\'"]+/g, ""),\n      qr_link: Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["parseURL"])(foundArgsObj.URL),\n      qr_data: Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["createASCIIQrCode"])(Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["parseURL"])(foundArgsObj.URL)),\n      qr_image_url: Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["createDataURLQrCode"])(Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["parseURL"])(foundArgsObj.URL)),\n      platform: foundArgsObj.PLATFORMS,\n      region: foundArgsObj.REGIONS,\n      size: await Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["checkFileSize"])(Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["parseURL"])(foundArgsObj.URL)),\n      uploader_discord_id: receivedMessage.author.id,\n      uploader_name: receivedMessage.author.username\n    };\n\n    let string = obj.name + obj.platform + obj.region + obj.uploader_discord_id;\n    string = string.replace(/[^a-z0-9]/gim, "").replace(/\\s+/g, "");\n    await image_data_uri__WEBPACK_IMPORTED_MODULE_3___default.a.outputFile(obj.qr_image_url, "./img/" + string + ".jpg");\n\n    const rows = await Object(_db_db_qree__WEBPACK_IMPORTED_MODULE_1__["findGame"])(obj.name);\n    const text =\n      rows.length === 0\n        ? `\\`\\`\\`diff\\n+ This is how it will look, save in database? Type \'yes\'/\'no\'\\n\\`\\`\\``\n        : `\\`\\`\\`diff\\n- I FOUND THE GAMES WITH SIMILAR NAME, CHECK THEM BEFORE SAYING \'yes\' BY TYPING \'search\'"\\n\\`\\`\\`\\`\\`\\`diff\\n+ This is how it will look, save in database? Type \'yes\'/\'no\' or \'search\' if you want to check about what games I was talking about :)"\\n\\`\\`\\``;\n    // delete loading message\n    setTimeout(async () => {\n      receivedMessage.channel.messages.get(loadingMessageId).delete();\n\n      await receivedMessage.channel\n        .send("", {\n          files: ["./img/" + string + ".jpg"]\n        })\n        .then(msg => {\n          obj.qr_image_url = msg.attachments.values().next().value.proxyURL;\n        });\n\n      await receivedMessage.channel.send(\n        `\\`\\`\\`\\nLink: ${obj.qr_link}\\n\\nName: ${obj.name}\\nPlatform: ${obj.platform}\\nRegion: ${obj.region}\\nSize: ${obj.size}\\nUploader: ${obj.uploader_name}\\`\\`\\`${text}`\n      );\n    }, 3000);\n\n    const collector = new discord_js__WEBPACK_IMPORTED_MODULE_2__["MessageCollector"](\n      receivedMessage.channel,\n      m => m.author.id === receivedMessage.author.id,\n      { time: 60000 }\n    );\n\n    collector.on("collect", async message => {\n      if (message.content.toLowerCase() === "yes") {\n        collector.stop();\n        try {\n          obj.id = await Object(_db_db_qree__WEBPACK_IMPORTED_MODULE_1__["createQree"])(obj, receivedMessage);\n          const gameThumbnail = await Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["getGameCover"])(obj.id, obj.name);\n          const qrCodesSubscription = Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["sendToQrGames"])(\n            obj,\n            receivedMessage,\n            client,\n            gameThumbnail\n          );\n          await qrCodesSubscription.build();\n        } catch (e) {\n          console.log(e);\n          await receivedMessage.channel.send(\n            `something went wrong, send it to developer: \\n\\`\\`\\`diff\\n- ${e}\\`\\`\\``\n          );\n        }\n      } else if (message.content.toLowerCase() === "no") {\n        collector.stop();\n\n        try {\n          await receivedMessage.channel.send("Ok try again later :P");\n        } catch (e) {\n          console.log(e);\n          await receivedMessage.channel.send(\n            `something went wrong, send it to developer: \\n\\`\\`\\`diff\\n- ${e}\\`\\`\\``\n          );\n        }\n      } else if (message.content.toLowerCase() === "search") {\n        try {\n          await receivedMessage.channel.send(\n            `\\`\\`\\`Ok, displaying games that I have found you can type \'yes\'/\'no\' still\\`\\`\\`\\``\n          );\n\n          const QrCodesSearchResults = await Object(_helpers_helpers__WEBPACK_IMPORTED_MODULE_0__["createEmbeddedAnswer"])(\n            rows,\n            receivedMessage\n          );\n          await QrCodesSearchResults.build();\n        } catch (e) {\n          console.log(e);\n          await receivedMessage.channel.send(\n            `something went wrong, send it to developer: \\n\\`\\`\\`diff\\n- ${e}\\`\\`\\``\n          );\n        }\n      }\n    });\n\n    collector.on("end", async () => {\n      await receivedMessage.channel.send("upload session ended");\n    });\n  } catch (e) {\n    console.log(e);\n    await receivedMessage.channel.send(\n      `something went wrong, send it to developer: \\n\\`\\`\\`diff\\n- ${e}\\`\\`\\``\n    );\n  }\n}\n\n\n//# sourceURL=webpack:///./src/commands/upload/upload.js?'
+        );
+
+        /***/
+      },
+
+    /***/ "./src/db/db_qree.js":
+      /*!***************************!*\
+  !*** ./src/db/db_qree.js ***!
+  \***************************/
+      /*! exports provided: createQree, editQree, findGame, findGameToEdit, approxQrCount, getWholeDB, updateQrImageUrl, updateSizeArgument, updateThumbnail, updateRegionArgument */
+      /***/ function(module, __webpack_exports__, __webpack_require__) {
+        "use strict";
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createQree", function() { return createQree; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editQree", function() { return editQree; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findGame", function() { return findGame; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findGameToEdit", function() { return findGameToEdit; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "approxQrCount", function() { return approxQrCount; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getWholeDB", function() { return getWholeDB; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateQrImageUrl", function() { return updateQrImageUrl; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateSizeArgument", function() { return updateSizeArgument; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateThumbnail", function() { return updateThumbnail; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateRegionArgument", function() { return updateRegionArgument; });\n/* harmony import */ var dotenv__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! dotenv */ "dotenv");\n/* harmony import */ var dotenv__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dotenv__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var sequelize__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sequelize */ "sequelize");\n/* harmony import */ var sequelize__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sequelize__WEBPACK_IMPORTED_MODULE_1__);\n\n\ndotenv__WEBPACK_IMPORTED_MODULE_0___default.a.config();\nconst Op = sequelize__WEBPACK_IMPORTED_MODULE_1__["Sequelize"].Op;\n\nconst sequelize = new sequelize__WEBPACK_IMPORTED_MODULE_1__["Sequelize"](process.env.DATABASE_URL, {\n  define: { timestamps: false }\n});\n\nsequelize\n  .authenticate()\n  .then(() => {\n    console.log("sequelize -> Connection has been established successfully.");\n  })\n  .catch(err => {\n    console.error("sequelize -> Unable to connect to the database:", err);\n  });\n\nclass QreeItems extends sequelize__WEBPACK_IMPORTED_MODULE_1__["Sequelize"].Model {}\nQreeItems.init(\n  {\n    id: {\n      type: sequelize__WEBPACK_IMPORTED_MODULE_1__["Sequelize"].INTEGER,\n      autoIncrement: true,\n      allowNull: false,\n      primaryKey: true\n    },\n    qr_data: {\n      type: sequelize__WEBPACK_IMPORTED_MODULE_1__["Sequelize"].TEXT,\n      allowNull: false\n    },\n    qr_image_url: {\n      type: sequelize__WEBPACK_IMPORTED_MODULE_1__["Sequelize"].TEXT,\n      allowNull: false\n    },\n    qr_link: {\n      type: sequelize__WEBPACK_IMPORTED_MODULE_1__["Sequelize"].STRING,\n      allowNull: false\n    },\n    name: {\n      type: sequelize__WEBPACK_IMPORTED_MODULE_1__["Sequelize"].STRING,\n      allowNull: false\n    },\n    thumbnail: {\n      type: sequelize__WEBPACK_IMPORTED_MODULE_1__["Sequelize"].STRING,\n      allowNull: true\n    },\n    platform: {\n      type: sequelize__WEBPACK_IMPORTED_MODULE_1__["Sequelize"].STRING,\n      allowNull: false\n    },\n    region: {\n      type: sequelize__WEBPACK_IMPORTED_MODULE_1__["Sequelize"].STRING,\n      allowNull: false\n    },\n    size: {\n      type: sequelize__WEBPACK_IMPORTED_MODULE_1__["Sequelize"].STRING,\n      allowNull: false\n    },\n    uploader_discord_id: {\n      type: sequelize__WEBPACK_IMPORTED_MODULE_1__["Sequelize"].STRING,\n      allowNull: false\n    },\n    uploader_name: {\n      type: sequelize__WEBPACK_IMPORTED_MODULE_1__["Sequelize"].STRING,\n      allowNull: false\n    }\n  },\n  {\n    sequelize,\n    modelName: "qre_items"\n    // options\n  }\n);\n\nsequelize.sync();\n\nasync function createQree(\n  {\n    qr_data,\n    qr_image_url,\n    qr_link,\n    name,\n    platform,\n    region,\n    size,\n    uploader_discord_id,\n    uploader_name\n  },\n  receivedMessage\n) {\n  try {\n    const item = await QreeItems.create({\n      qr_data,\n      qr_image_url,\n      qr_link,\n      name,\n      platform,\n      region,\n      size,\n      uploader_discord_id,\n      uploader_name\n    });\n    await receivedMessage.channel.send("Saving in database!");\n    console.log("DB -> save qr in DB");\n    return item.id;\n  } catch (e) {\n    await receivedMessage.channel.send(\n      "something went wrong, send it to developer: \\n" +\n        "```diff\\n- " +\n        e +\n        "```"\n    );\n    console.log(e);\n  }\n}\n\nasync function editQree(\n  id,\n  {\n    qr_data,\n    qr_image_url,\n    qr_link,\n    name,\n    platform,\n    region,\n    uploader_discord_id,\n    uploader_name\n  },\n  newSize,\n  receivedMessage\n) {\n  try {\n    await QreeItems.update(\n      {\n        qr_data,\n        qr_image_url,\n        qr_link,\n        name,\n        platform,\n        region,\n        newSize,\n        uploader_discord_id,\n        uploader_name\n      },\n      { where: { id } }\n    );\n    await receivedMessage.channel.send("Edited!");\n    console.log("DB -> save qr in DB");\n  } catch (e) {\n    await receivedMessage.channel.send(\n      "something went wrong, send it to developer: \\n" +\n        "```diff\\n- " +\n        e +\n        "```"\n    );\n    console.log(e);\n  }\n}\n\nasync function findGame(name) {\n  let filter = [];\n  let words = name.split(" ");\n  words.forEach(word => {\n    filter.push({\n      name: {\n        [Op.iLike]: `%${word}%`\n      }\n    });\n  });\n\n  try {\n    const res = await QreeItems.findAll({\n      where: {\n        [Op.and]: filter\n      }\n    });\n    return res;\n  } catch (e) {\n    console.log(e);\n  }\n}\n\nasync function findGameToEdit(id) {\n  try {\n    const res = await QreeItems.findAll({\n      where: {\n        id\n      },\n      limit: 1\n    });\n    return res;\n  } catch (e) {\n    console.log(e);\n  }\n}\n\nasync function approxQrCount() {\n  try {\n    return await QreeItems.findAndCountAll();\n  } catch (e) {\n    console.log(e);\n  }\n}\n\nasync function getWholeDB() {\n  try {\n    return await QreeItems.findAll();\n  } catch (e) {\n    console.log(e);\n  }\n}\n\nasync function updateQrImageUrl(id, qr_image_url) {\n  try {\n    await QreeItems.update(\n      {\n        qr_image_url\n      },\n      { where: { id } }\n    );\n    console.log("DB -> updating qr url image");\n  } catch (e) {\n    console.log(e);\n  }\n}\n\nasync function updateSizeArgument(id, size) {\n  try {\n    const res = await QreeItems.update(\n      {\n        size\n      },\n      { where: { id } }\n    );\n\n    console.log("DB -> updating size for id: " + id);\n    return res;\n  } catch (e) {\n    console.log(e);\n  }\n}\n\nasync function updateThumbnail(id, thumbnail) {\n  try {\n    const res = await QreeItems.update(\n      {\n        thumbnail\n      },\n      { where: { id } }\n    );\n\n    console.log("DB -> updating thumbnail for id: " + id);\n    return res;\n  } catch (e) {\n    console.log(e);\n  }\n}\n\nasync function updateRegionArgument(id, region) {\n  try {\n    const res = await QreeItems.update(\n      {\n        region\n      },\n      { where: { id } }\n    );\n\n    console.log("DB -> updating region for id: " + id);\n    return res;\n  } catch (e) {\n    console.log(e);\n  }\n}\n\n\n//# sourceURL=webpack:///./src/db/db_qree.js?'
+        );
+
+        /***/
+      },
+
+    /***/ "./src/helpers/helpers.js":
+      /*!********************************!*\
+  !*** ./src/helpers/helpers.js ***!
+  \********************************/
+      /*! exports provided: parseDropboxLink, parseGDriveLink, parseURL, createASCIIQrCode, createDataURLQrCode, limitlessFetchMessages, createEmbeddedAnswer, sendToQrGames, checkIfDM, filteredRegexes, checkFileSize, getRandomMeme, validateGuilds, validatePermissions, validateAdmin, getGameCover, regexes */
+      /***/ function(module, __webpack_exports__, __webpack_require__) {
+        "use strict";
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseDropboxLink", function() { return parseDropboxLink; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseGDriveLink", function() { return parseGDriveLink; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseURL", function() { return parseURL; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createASCIIQrCode", function() { return createASCIIQrCode; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createDataURLQrCode", function() { return createDataURLQrCode; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "limitlessFetchMessages", function() { return limitlessFetchMessages; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createEmbeddedAnswer", function() { return createEmbeddedAnswer; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sendToQrGames", function() { return sendToQrGames; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checkIfDM", function() { return checkIfDM; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "filteredRegexes", function() { return filteredRegexes; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checkFileSize", function() { return checkFileSize; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRandomMeme", function() { return getRandomMeme; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateGuilds", function() { return validateGuilds; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validatePermissions", function() { return validatePermissions; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateAdmin", function() { return validateAdmin; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getGameCover", function() { return getGameCover; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "regexes", function() { return regexes; });\n/* harmony import */ var qrcode_generator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! qrcode-generator */ "qrcode-generator");\n/* harmony import */ var qrcode_generator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(qrcode_generator__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _db_db_qree__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../db/db_qree */ "./src/db/db_qree.js");\n/* harmony import */ var discord_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! discord.js */ "discord.js");\n/* harmony import */ var discord_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(discord_js__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var discord_paginationembed__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! discord-paginationembed */ "discord-paginationembed");\n/* harmony import */ var discord_paginationembed__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(discord_paginationembed__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "axios");\n/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var prettysize__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! prettysize */ "prettysize");\n/* harmony import */ var prettysize__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(prettysize__WEBPACK_IMPORTED_MODULE_5__);\n\n__webpack_require__(/*! dotenv */ "dotenv").config();\n\n\n\n\n\n\n\nfunction parseDropboxLink(link) {\n  let string = link;\n  string = string.split("/");\n  if (string[3] === "sh") {\n    return string.join("/");\n  } else {\n    string[5] = "?dl=1";\n    return string.join("/");\n  }\n}\n\nfunction parseGDriveLink(link) {\n  return link.replace(/\\/file\\/d\\/(.+)\\/(.+)/, "/uc?export=download&id=$1");\n}\n\nfunction parseURL(link) {\n  if (link && link.match(regexes.GDRIVE)) {\n    return (link = parseGDriveLink(link));\n  } else if (link && link.match(regexes.DROPBOX)) {\n    if (link.slice(-1) === "0" || link.slice(-1) === "1") {\n      link = parseDropboxLink(link);\n      link = link.match(/^(.*?)\\.?dl=1/gi);\n      return link[0];\n    }\n  } else {\n    return link;\n  }\n}\n\nfunction createASCIIQrCode(link) {\n  let qr = qrcode_generator__WEBPACK_IMPORTED_MODULE_0___default()(0, "L");\n  qr.addData(`${link}`);\n  qr.make();\n  return qr.createASCII(2, 1);\n}\n\nfunction createDataURLQrCode(link) {\n  let qr = qrcode_generator__WEBPACK_IMPORTED_MODULE_0___default()(0, "M");\n  qr.addData(`${link}`);\n  qr.make();\n  return qr.createDataURL(5, 5);\n}\n\nasync function limitlessFetchMessages(channel, limit = 9000) {\n  const sum_messages = [];\n  let last_id;\n\n  while (true) {\n    const options = { limit: 100 };\n    if (last_id) {\n      options.before = last_id;\n    }\n\n    const messages = await channel.messages.fetch(options);\n    sum_messages.push(...messages.array());\n    last_id = messages.last().id;\n\n    if (messages.size !== 100 || sum_messages >= limit) {\n      break;\n    }\n  }\n\n  return sum_messages;\n}\n\nasync function createEmbeddedAnswer(\n  args,\n  receivedMessage,\n  loadingMessageId,\n  destination\n) {\n  const embeds = [];\n  for (const {\n    id,\n    name,\n    platform,\n    region,\n    size,\n    uploader_name,\n    qr_image_url,\n    thumbnail\n  } of args) {\n    const gameThumbnail = thumbnail || (await getGameCover(name, id));\n    embeds.push(\n      new discord_js__WEBPACK_IMPORTED_MODULE_2__["RichEmbed"]()\n        .setImage(qr_image_url)\n        .addField("Name: ", name, true)\n        .addField("DB ID: ", id, true)\n        .addField("Platform: ", platform, true)\n        .addField("Region: ", region, true)\n        .addField("Size: ", size)\n        .addField("QR:", "===================", true)\n        .addField("Author: ", uploader_name, true)\n        .setThumbnail(gameThumbnail)\n    );\n  }\n  await receivedMessage.channel.messages.get(loadingMessageId).delete();\n  return (\n    new discord_paginationembed__WEBPACK_IMPORTED_MODULE_3__["Embeds"]()\n      .setArray(embeds)\n      .setAuthorizedUsers([receivedMessage.author.id])\n      .setChannel(\n        destination === "pm" ? receivedMessage.author : receivedMessage.channel\n      )\n      .setPageIndicator(true)\n      .setPage(1)\n      // Methods below are for customising all embeds\n      .setTitle("Qr Code 3DS games search collection")\n      .setFooter("Bot created by: ProPanek#0188")\n      .setColor(0x000000)\n      .setNavigationEmojis({\n        back: "◀",\n        jump: "↗",\n        forward: "▶",\n        delete: "🗑"\n      })\n      .setTimeout(600000)\n  );\n}\n\nfunction sendToQrGames(args, receivedMessage, client, gameThumbnail) {\n  const embeds = [];\n\n  embeds.push(\n    new discord_js__WEBPACK_IMPORTED_MODULE_2__["RichEmbed"]()\n      .setImage(args.qr_image_url)\n      .addField("Name: ", args.name, true)\n      // .addField("QR link: ", args.qr_link)\n      .addField("DB ID: ", args.id, true)\n      .addField("Platform: ", args.platform, true)\n      .addField("Region: ", args.region, true)\n      .addField("Size: ", args.size)\n      .addField("QR: ", "===================", true)\n      .addField("Author: ", args.uploader_name, true)\n      .setThumbnail(gameThumbnail || `https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png`)\n  );\n\n  return (\n    new discord_paginationembed__WEBPACK_IMPORTED_MODULE_3__["Embeds"]()\n      .setArray(embeds)\n      .setPageIndicator(false)\n      .setAuthorizedUsers([])\n      .setChannel(client.channels.get(process.env.BOT_SUBSCRIPTION_CHANNEL))\n      .setPage(1)\n      // Methods below are for customising all embeds\n      .setTitle("QR Code 3DS games")\n      .setFooter("Bot created by: ProPanek#0188")\n      .setColor(0x000000)\n      .setDisabledNavigationEmojis(["ALL"])\n      .setTimeout(600000)\n  );\n}\n\nfunction checkIfDM(receivedMessage) {\n  return receivedMessage.channel.type === "dm";\n}\n\nfunction filteredRegexes(array) {\n  return Object.keys(regexes)\n    .filter(key => array.includes(key))\n    .reduce((obj, key) => {\n      obj[key] = regexes[key];\n      return obj;\n    }, {});\n}\n\nasync function checkFileSize(url) {\n  const urlMetadata = await axios__WEBPACK_IMPORTED_MODULE_4___default.a.head(url, { timeout: 15000 });\n  if (urlMetadata && urlMetadata.status !== 404) {\n    if (urlMetadata.headers["content-length"]) {\n      return prettysize__WEBPACK_IMPORTED_MODULE_5___default()(urlMetadata.headers["content-length"], true);\n    }\n  }\n}\n\nasync function getRandomMeme(searchPhrase) {\n  const tenor = {\n    baseURL: "https://api.tenor.com/v1/random",\n    apiKey: "T64EWZS77O3H",\n    tag: searchPhrase,\n    rating: "medium"\n  };\n\n  let tenorURL = encodeURI(\n    `${tenor.baseURL}?key=${tenor.apiKey}&q=${tenor.tag}&contentfilter=${tenor.rating}&media_filter=minimal&limit=1`\n  );\n  const tenorResponse = await axios__WEBPACK_IMPORTED_MODULE_4___default.a.get(tenorURL);\n  return tenorResponse.data.results[0].media[0].gif.url;\n}\n\nfunction validateGuilds(receivedMessage) {\n  if (!checkIfDM(receivedMessage)) {\n    return !!process.env.BOT_PERMISSIONS_GUILD.includes(\n      receivedMessage.guild.id\n    );\n  }\n}\n\nfunction validatePermissions(receivedMessage) {\n  if (!checkIfDM(receivedMessage)) {\n    return !!receivedMessage.member.roles.some(r =>\n      process.env.BOT_PERMISSIONS_ROLES.includes(r.name)\n    );\n  }\n}\n\nfunction validateAdmin(receivedMessage) {\n  if (!checkIfDM(receivedMessage)) {\n    return !!receivedMessage.member.roles.some(r =>\n      process.env.BOT_PERMISSIONS_ADMIN.includes(r.name)\n    );\n  }\n}\n\nasync function getGameCover(name, id) {\n  let config = {\n    headers: {\n      "user-key": process.env.IGDB_TOKEN,\n      Accepts: "application/json"\n    }\n  };\n  try {\n    const title = name.replace(/[^a-zA-Z0-9 ]/gm, "");\n    const game = await axios__WEBPACK_IMPORTED_MODULE_4___default.a.get(\n      `https://api-v3.igdb.com/games/?search=${title}}&fields=id,name,cover`,\n      config\n    );\n    console.log(game.data[0].cover);\n    if (game.data.length) {\n      const cover = await axios__WEBPACK_IMPORTED_MODULE_4___default.a.get(\n        `https://api-v3.igdb.com/covers/${game.data[0].cover}/?fields=url`,\n        config\n      );\n      console.log(cover.data[0].url);\n      if (id) {\n        await Object(_db_db_qree__WEBPACK_IMPORTED_MODULE_1__["updateThumbnail"])(id, `https:${cover.data[0].url}`);\n      }\n      return `https:${cover.data[0].url}`;\n    } else {\n      if (id) {\n        await Object(_db_db_qree__WEBPACK_IMPORTED_MODULE_1__["updateThumbnail"])(\n          id,\n          `https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png`\n        );\n      }\n    }\n  } catch (error) {\n    // console.log(error);\n  }\n}\n\nconst regexes = {\n  DROPBOX: /\\b(\\w*dropbox\\w*)\\b/g,\n  CIA: /\\b(\\w*cia\\w*)\\b/g,\n  GDRIVE: /\\b(\\w*drive.google.com\\w*)\\b/g,\n  URL: /(http|ftp|https):\\/\\/([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?/g,\n  ARGUMENTS: /\\b(\\w*GBA|GBC|GAMEBOY|NES|SNES|MEGA DRIVE|PCE|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS|VIRTUAL CONSOLE|MAME|TURBOGRAFX\\w*)\\b|(\\d+\\.?\\d+)\\s*(KB|MB|GB|Bytes|Kilobytes|Megabytes)|(http|ftp|https):\\/\\/([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?|\\w+|"(?:\\\\"|[^"])+"|\\\'(?:\\\\\'|[^\'])+\'|\\“(?:\\\\“|[^“])+/gi,\n  TITLE: /"(?:\\\\"|[^"])+"|\\\'(?:\\\\\'|[^\'])+\'|\\“(?:\\\\“|[^“])+“/g,\n  REGIONS: /\\b\\w*USA|JPN|EUR|GLOBAL|HACK\\w*\\b/gi,\n  PLATFORMS: /\\b\\w*GBA|GBC|GAMEBOY|NES|SNES|MEGA DRIVE|PCE|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS|VIRTUAL CONSOLE|MAME|TURBOGRAFX\\w*\\b/g,\n  SIZE: /(\\d*\\.?\\d+)\\s*(KB|MB|GB|Bytes|Kilobytes|Megabytes)/gi,\n  SCRAPER: /\\b([^\\(]+)|\\((.*?)\\)|(\\w*GBA|GBC|GAMEBOY|NES|SNES|MEGA DRIVE|PCE|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS|VIRTUAL CONSOLE|MAME|TURBOGRAFX\\w*)\\b|(http|ftp|https):\\/\\/([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?|\\w+|"(?:\\\\"|[^"])+"|\\\'(?:\\\\\'|[^\'])+\'|\\S+/gi\n};\n\n//(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-\\/]))?\\w+|"(?:\\\\"|[^"])+"|\'(?:\\\\\'|[^"])+\'|\\w+\n\n\n//# sourceURL=webpack:///./src/helpers/helpers.js?'
+        );
+
+        /***/
+      },
+
+    /***/ axios:
+      /*!************************!*\
+  !*** external "axios" ***!
+  \************************/
+      /*! no static exports found */
+      /***/ function(module, exports) {
+        eval(
+          'module.exports = require("axios");\n\n//# sourceURL=webpack:///external_%22axios%22?'
+        );
+
+        /***/
+      },
+
+    /***/ "discord-paginationembed":
+      /*!******************************************!*\
+  !*** external "discord-paginationembed" ***!
+  \******************************************/
+      /*! no static exports found */
+      /***/ function(module, exports) {
+        eval(
+          'module.exports = require("discord-paginationembed");\n\n//# sourceURL=webpack:///external_%22discord-paginationembed%22?'
+        );
+
+        /***/
+      },
+
+    /***/ "discord.js":
+      /*!*****************************!*\
+  !*** external "discord.js" ***!
+  \*****************************/
+      /*! no static exports found */
+      /***/ function(module, exports) {
+        eval(
+          'module.exports = require("discord.js");\n\n//# sourceURL=webpack:///external_%22discord.js%22?'
+        );
+
+        /***/
+      },
+
+    /***/ dotenv:
+      /*!*************************!*\
+  !*** external "dotenv" ***!
+  \*************************/
+      /*! no static exports found */
+      /***/ function(module, exports) {
+        eval(
+          'module.exports = require("dotenv");\n\n//# sourceURL=webpack:///external_%22dotenv%22?'
+        );
+
+        /***/
+      },
+
+    /***/ fs:
+      /*!*********************!*\
+  !*** external "fs" ***!
+  \*********************/
+      /*! no static exports found */
+      /***/ function(module, exports) {
+        eval(
+          'module.exports = require("fs");\n\n//# sourceURL=webpack:///external_%22fs%22?'
+        );
+
+        /***/
+      },
+
+    /***/ "image-data-uri":
+      /*!*********************************!*\
+  !*** external "image-data-uri" ***!
+  \*********************************/
+      /*! no static exports found */
+      /***/ function(module, exports) {
+        eval(
+          'module.exports = require("image-data-uri");\n\n//# sourceURL=webpack:///external_%22image-data-uri%22?'
+        );
+
+        /***/
+      },
+
+    /***/ jimp:
+      /*!***********************!*\
+  !*** external "jimp" ***!
+  \***********************/
+      /*! no static exports found */
+      /***/ function(module, exports) {
+        eval(
+          'module.exports = require("jimp");\n\n//# sourceURL=webpack:///external_%22jimp%22?'
+        );
+
+        /***/
+      },
+
+    /***/ "node-fetch":
+      /*!*****************************!*\
+  !*** external "node-fetch" ***!
+  \*****************************/
+      /*! no static exports found */
+      /***/ function(module, exports) {
+        eval(
+          'module.exports = require("node-fetch");\n\n//# sourceURL=webpack:///external_%22node-fetch%22?'
+        );
+
+        /***/
+      },
+
+    /***/ prettysize:
+      /*!*****************************!*\
+  !*** external "prettysize" ***!
+  \*****************************/
+      /*! no static exports found */
+      /***/ function(module, exports) {
+        eval(
+          'module.exports = require("prettysize");\n\n//# sourceURL=webpack:///external_%22prettysize%22?'
+        );
+
+        /***/
+      },
+
+    /***/ "qrcode-generator":
+      /*!***********************************!*\
+  !*** external "qrcode-generator" ***!
+  \***********************************/
+      /*! no static exports found */
+      /***/ function(module, exports) {
+        eval(
+          'module.exports = require("qrcode-generator");\n\n//# sourceURL=webpack:///external_%22qrcode-generator%22?'
+        );
+
+        /***/
+      },
+
+    /***/ "qrcode-reader":
+      /*!********************************!*\
+  !*** external "qrcode-reader" ***!
+  \********************************/
+      /*! no static exports found */
+      /***/ function(module, exports) {
+        eval(
+          'module.exports = require("qrcode-reader");\n\n//# sourceURL=webpack:///external_%22qrcode-reader%22?'
+        );
+
+        /***/
+      },
+
+    /***/ sequelize:
+      /*!****************************!*\
+  !*** external "sequelize" ***!
+  \****************************/
+      /*! no static exports found */
+      /***/ function(module, exports) {
+        eval(
+          'module.exports = require("sequelize");\n\n//# sourceURL=webpack:///external_%22sequelize%22?'
+        );
+
+        /***/
       }
-      return e.channel.send(
-        'You need to specify which command you want to use type "!qre help" to display available commands'
-      );
-    }
-    !(async function() {
-      try {
-        await K.login(process.env.BOT_TOKEN);
-      } catch (e) {
-        console.log(e);
-      }
-    })(),
-      K.on("ready", async () => {
-        console.log("On Discord!"),
-          console.log("Connected as " + K.user.tag),
-          console.log("Servers:"),
-          K.guilds.forEach(e => {
-            X.set(e.id, W),
-              console.log(" - " + e.id),
-              e.channels.forEach(e => {
-                console.log(` -- ${e.name} (${e.type}) - ${e.id}`);
-              }),
-              console.log(X);
-          }),
-          setInterval(async () => {
-            const e = await (async function() {
-              try {
-                return await d.findAndCountAll();
-              } catch (e) {
-                console.log(e);
-              }
-            })();
-            await K.user.setActivity(`QR Codes count: ${e.count}`, {
-              type: "PLAYING"
-            });
-          }, 6e4),
-          setInterval(async () => {
-            await H(K);
-          }, 864e5);
-      }),
-      K.on("message", e => {
-        if (e.author !== K.user)
-          if ("dm" === e.channel.type) {
-            if (!e.content.startsWith(`${W}`))
-              return e.channel.send(
-                'You need to specify which command you want to use type "!qre help" to display available commands'
-              );
-            Q(e);
-          } else e.content.startsWith(`${X.get(e.guild.id)}`) && Q(e);
-      });
+
+    /******/
   }
-]);
+);

@@ -4,7 +4,7 @@ const NodemonPlugin = require("nodemon-webpack-plugin"); // Ding
 
 module.exports = {
   target: "node",
-  mode: "production",
+  mode: "development",
   entry: "./server.js",
   output: {
     path: path.resolve(__dirname),

@@ -1,7 +1,6 @@
-import { updateThumbnail } from "../db/db_qree";
-
 require("dotenv").config();
 import qrCode from "qrcode-generator";
+import { updateThumbnail } from "../db/db_qree";
 import { RichEmbed } from "discord.js";
 import { Embeds } from "discord-paginationembed";
 import axios from "axios";
@@ -127,11 +126,9 @@ export async function createEmbeddedAnswer(
   );
 }
 
-export async function sendToQrGames(args, receivedMessage, client) {
+export function sendToQrGames(args, receivedMessage, client, gameThumbnail) {
   const embeds = [];
 
-  console.log(args);
-  const gameThumbnail = await getGameCover(args.id, args.name);
   embeds.push(
     new RichEmbed()
       .setImage(args.qr_image_url)
@@ -145,7 +142,7 @@ export async function sendToQrGames(args, receivedMessage, client) {
       .addField("Author: ", args.uploader_name, true)
       .setThumbnail(
         gameThumbnail ||
-          "https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png"
+          `https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png`
       )
   );
 
