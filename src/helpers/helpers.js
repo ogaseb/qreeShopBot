@@ -249,10 +249,12 @@ export async function getGameCover(name, id) {
       return `https:${cover.data[0].url}`;
     } else {
       if (id) {
+        console.log("setting default cover");
         await updateThumbnail(
           id,
           `https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png`
         );
+        return `https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png`;
       }
     }
   } catch (error) {
