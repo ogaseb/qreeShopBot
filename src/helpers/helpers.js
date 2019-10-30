@@ -115,9 +115,6 @@ export async function createEmbeddedAnswer(
       .setPage(1)
       // Methods below are for customising all embeds
       .setTitle("Qr Code 3DS games search collection")
-      .setDescription(
-        "=========================================================="
-      )
       .setFooter("Bot created by: ProPanek#0188")
       .setColor(0x000000)
       .setNavigationEmojis({
@@ -133,17 +130,23 @@ export async function createEmbeddedAnswer(
 export async function sendToQrGames(args, receivedMessage, client) {
   const embeds = [];
 
+  console.log(args);
+  const gameThumbnail = await getGameCover(args.id, args.name);
   embeds.push(
     new RichEmbed()
       .setImage(args.qr_image_url)
       .addField("Name: ", args.name, true)
-      .addField("QR link: ", args.qr_link)
+      // .addField("QR link: ", args.qr_link)
       .addField("DB ID: ", args.id, true)
       .addField("Platform: ", args.platform, true)
       .addField("Region: ", args.region, true)
       .addField("Size: ", args.size)
       .addField("QR: ", "===================", true)
       .addField("Author: ", args.uploader_name, true)
+      .setThumbnail(
+        gameThumbnail ||
+          "https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png"
+      )
   );
 
   return (
@@ -154,7 +157,7 @@ export async function sendToQrGames(args, receivedMessage, client) {
       .setChannel(client.channels.get(process.env.BOT_SUBSCRIPTION_CHANNEL))
       .setPage(1)
       // Methods below are for customising all embeds
-      .setTitle("QR Code 3DS games subscription module")
+      .setTitle("QR Code 3DS games")
       .setFooter("Bot created by: ProPanek#0188")
       .setColor(0x000000)
       .setDisabledNavigationEmojis(["ALL"])
