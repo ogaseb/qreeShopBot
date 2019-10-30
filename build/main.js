@@ -92,22 +92,144 @@
     "use strict";
     t.r(n);
     var a = t(0),
-      o = t(7),
+      o = t(6),
       i = t.n(o),
-      s = t(4),
-      r = t(2),
-      l = t.n(r),
-      d = t(5),
-      c = t.n(d);
-    function u(e) {
-      return e && e.match(S.GDRIVE)
+      s = t(1);
+    i.a.config();
+    const l = s.Sequelize.Op,
+      r = new s.Sequelize(process.env.DATABASE_URL, {
+        define: { timestamps: !1 }
+      });
+    r.authenticate()
+      .then(() => {
+        console.log(
+          "sequelize -> Connection has been established successfully."
+        );
+      })
+      .catch(e => {
+        console.error("sequelize -> Unable to connect to the database:", e);
+      });
+    class d extends s.Sequelize.Model {}
+    async function c(
+      {
+        qr_data: e,
+        qr_image_url: n,
+        qr_link: t,
+        name: a,
+        platform: o,
+        region: i,
+        size: s,
+        uploader_discord_id: l,
+        uploader_name: r
+      },
+      c
+    ) {
+      try {
+        const u = await d.create({
+          qr_data: e,
+          qr_image_url: n,
+          qr_link: t,
+          name: a,
+          platform: o,
+          region: i,
+          size: s,
+          uploader_discord_id: l,
+          uploader_name: r
+        });
+        return (
+          await c.channel.send("Saving in database!"),
+          console.log("DB -> save qr in DB"),
+          u.id
+        );
+      } catch (e) {
+        await c.channel.send(
+          "something went wrong, send it to developer: \n```diff\n- " +
+            e +
+            "```"
+        ),
+          console.log(e);
+      }
+    }
+    async function u(e) {
+      let n = [];
+      e.split(" ").forEach(e => {
+        n.push({ name: { [l.iLike]: `%${e}%` } });
+      });
+      try {
+        return await d.findAll({ where: { [l.and]: n } });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    async function m() {
+      try {
+        return await d.findAll();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    async function g(e, n) {
+      try {
+        await d.update({ qr_image_url: n }, { where: { id: e } }),
+          console.log("DB -> updating qr url image");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    async function h(e, n) {
+      try {
+        const t = await d.update({ size: n }, { where: { id: e } });
+        return console.log("DB -> updating size for id: " + e), t;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    async function p(e, n) {
+      try {
+        const t = await d.update({ region: n }, { where: { id: e } });
+        return console.log("DB -> updating region for id: " + e), t;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    d.init(
+      {
+        id: {
+          type: s.Sequelize.INTEGER,
+          autoIncrement: !0,
+          allowNull: !1,
+          primaryKey: !0
+        },
+        qr_data: { type: s.Sequelize.TEXT, allowNull: !1 },
+        qr_image_url: { type: s.Sequelize.TEXT, allowNull: !1 },
+        qr_link: { type: s.Sequelize.STRING, allowNull: !1 },
+        name: { type: s.Sequelize.STRING, allowNull: !1 },
+        thumbnail: { type: s.Sequelize.STRING, allowNull: !0 },
+        platform: { type: s.Sequelize.STRING, allowNull: !1 },
+        region: { type: s.Sequelize.STRING, allowNull: !1 },
+        size: { type: s.Sequelize.STRING, allowNull: !1 },
+        uploader_discord_id: { type: s.Sequelize.STRING, allowNull: !1 },
+        uploader_name: { type: s.Sequelize.STRING, allowNull: !1 }
+      },
+      { sequelize: r, modelName: "qre_items" }
+    ),
+      r.sync();
+    var f = t(7),
+      w = t.n(f),
+      y = t(4),
+      E = t(2),
+      S = t.n(E),
+      _ = t(5),
+      b = t.n(_);
+    function R(e) {
+      return e && e.match(L.GDRIVE)
         ? (function(e) {
             return e.replace(
               /\/file\/d\/(.+)\/(.+)/,
               "/uc?export=download&id=$1"
             );
           })(e)
-        : e && e.match(S.DROPBOX)
+        : e && e.match(L.DROPBOX)
         ? "0" === e.slice(-1) || "1" === e.slice(-1)
           ? (e = (e = (function(e) {
               let n = e;
@@ -118,47 +240,46 @@
           : void 0
         : e;
     }
-    function m(e) {
-      let n = i()(0, "L");
+    function I(e) {
+      let n = w()(0, "L");
       return n.addData(`${e}`), n.make(), n.createASCII(2, 1);
     }
-    function g(e) {
-      let n = i()(0, "M");
+    function v(e) {
+      let n = w()(0, "M");
       return n.addData(`${e}`), n.make(), n.createDataURL(5, 5);
     }
-    async function h(e, n, t) {
-      const o = [];
+    async function A(e, n, t, o) {
+      const i = [];
+      for (const {
+        id: n,
+        name: t,
+        platform: o,
+        region: s,
+        size: l,
+        uploader_name: r,
+        qr_image_url: d,
+        thumbnail: c
+      } of e) {
+        const e = c || (await G(t, n));
+        i.push(
+          new a.RichEmbed()
+            .setImage(d)
+            .addField("Name: ", t, !0)
+            .addField("DB ID: ", n, !0)
+            .addField("Platform: ", o, !0)
+            .addField("Region: ", s, !0)
+            .addField("Size: ", l)
+            .addField("QR:", "===================", !0)
+            .addField("Author: ", r, !0)
+            .setThumbnail(e)
+        );
+      }
       return (
-        e.map(
-          async ({
-            id: e,
-            qr_link: n,
-            name: t,
-            platform: i,
-            region: s,
-            size: r,
-            uploader_name: l,
-            qr_image_url: d
-          }) => {
-            console.log(d),
-              o.push(
-                new a.RichEmbed()
-                  .setImage(d)
-                  .addField("Name: ", t, !0)
-                  .addField("QR link: ", n)
-                  .addField("DB ID: ", e, !0)
-                  .addField("Platform: ", i, !0)
-                  .addField("Region: ", s, !0)
-                  .addField("Size: ", r)
-                  .addField("QR:", "===================", !0)
-                  .addField("Author: ", l, !0)
-              );
-          }
-        ),
-        new s.Embeds()
-          .setArray(o)
+        await n.channel.messages.get(t).delete(),
+        new y.Embeds()
+          .setArray(i)
           .setAuthorizedUsers([n.author.id])
-          .setChannel("pm" === t ? n.author : n.channel)
+          .setChannel("pm" === o ? n.author : n.channel)
           .setPageIndicator(!0)
           .setPage(1)
           .setTitle("Qr Code 3DS games search collection")
@@ -176,227 +297,141 @@
           .setTimeout(6e5)
       );
     }
-    function p(e) {
+    function N(e) {
       return "dm" === e.channel.type;
     }
-    function f(e) {
-      return Object.keys(S)
+    function q(e) {
+      return Object.keys(L)
         .filter(n => e.includes(n))
-        .reduce((e, n) => ((e[n] = S[n]), e), {});
+        .reduce((e, n) => ((e[n] = L[n]), e), {});
     }
-    async function w(e) {
-      const n = await l.a.head(e, { timeout: 15e3 });
+    async function O(e) {
+      const n = await S.a.head(e, { timeout: 15e3 });
       if (n && 404 !== n.status && n.headers["content-length"])
-        return c()(n.headers["content-length"], !0);
+        return b()(n.headers["content-length"], !0);
     }
-    async function y(e) {
+    async function T(e) {
       let n = encodeURI(
         `${"https://api.tenor.com/v1/random"}?key=${"T64EWZS77O3H"}&q=${e}&contentfilter=${"medium"}&media_filter=minimal&limit=1`
       );
-      return (await l.a.get(n)).data.results[0].media[0].gif.url;
+      return (await S.a.get(n)).data.results[0].media[0].gif.url;
     }
-    function E(e) {
-      if (!p(e))
+    function D(e) {
+      if (!N(e))
         return !!process.env.BOT_PERMISSIONS_GUILD.includes(e.guild.id);
     }
+    async function G(e, n) {
+      let t = {
+        headers: {
+          "user-key": process.env.IGDB_TOKEN,
+          Accepts: "application/json"
+        }
+      };
+      try {
+        const a = await S.a.get(
+          `https://api-v3.igdb.com/games/?search=${e}}&fields=id,name,cover`,
+          t
+        );
+        if ((console.log(a.data[0].cover), a.data.length)) {
+          const e = await S.a.get(
+            `https://api-v3.igdb.com/covers/${a.data[0].cover}/?fields=url`,
+            t
+          );
+          return (
+            console.log(e.data[0].url),
+            await (async function(e, n) {
+              try {
+                const t = await d.update(
+                  { thumbnail: n },
+                  { where: { id: e } }
+                );
+                return console.log("DB -> updating thumbnail for id: " + e), t;
+              } catch (e) {
+                console.log(e);
+              }
+            })(n, `https:${e.data[0].url}`),
+            `https:${e.data[0].url}`
+          );
+        }
+      } catch (e) {}
+    }
     t(6).config();
-    const S = {
+    const L = {
       DROPBOX: /\b(\w*dropbox\w*)\b/g,
       CIA: /\b(\w*cia\w*)\b/g,
       GDRIVE: /\b(\w*drive.google.com\w*)\b/g,
-      URL: /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g,
-      ARGUMENTS: /\b(\w*GBA|GBC|GAMEBOY|NES|SNES|MEGA DRIVE|PCE|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS|VIRTUAL CONSOLE|MAME|TURBOGRAFX\w*)\b|(\d+\.?\d+)\s*(KB|MB|GB|Bytes|Kilobytes|Megabytes)|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+/gi,
+      URL: /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?/g,
+      ARGUMENTS: /\b(\w*GBA|GBC|GAMEBOY|NES|SNES|MEGA DRIVE|PCE|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS|VIRTUAL CONSOLE|MAME|TURBOGRAFX\w*)\b|(\d+\.?\d+)\s*(KB|MB|GB|Bytes|Kilobytes|Megabytes)|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+/gi,
       TITLE: /"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“/g,
       REGIONS: /\b\w*USA|JPN|EUR|GLOBAL|HACK\w*\b/gi,
       PLATFORMS: /\b\w*GBA|GBC|GAMEBOY|NES|SNES|MEGA DRIVE|PCE|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS|VIRTUAL CONSOLE|MAME|TURBOGRAFX\w*\b/g,
       SIZE: /(\d*\.?\d+)\s*(KB|MB|GB|Bytes|Kilobytes|Megabytes)/gi,
-      SCRAPER: /\b([^\(]+)|\((.*?)\)|(\w*GBA|GBC|GAMEBOY|NES|SNES|MEGA DRIVE|PCE|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS|VIRTUAL CONSOLE|MAME|TURBOGRAFX\w*)\b|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\S+/gi
+      SCRAPER: /\b([^\(]+)|\((.*?)\)|(\w*GBA|GBC|GAMEBOY|NES|SNES|MEGA DRIVE|PCE|3DS|NEW3DS|DSI|ESHOP|NEW 3DS|NEO GEO|SEGA GENESIS|VIRTUAL CONSOLE|MAME|TURBOGRAFX\w*)\b|(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?|\w+|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\S+/gi
     };
-    var _ = t(9),
-      R = t.n(_),
-      b = t(10),
-      A = t.n(b),
-      I = t(11),
-      N = t.n(I),
-      q = t(6),
-      v = t.n(q),
-      O = t(1);
-    v.a.config();
-    const D = O.Sequelize.Op,
-      T = new O.Sequelize(process.env.DATABASE_URL, {
-        define: { timestamps: !1 }
-      });
-    T.authenticate()
-      .then(() => {
-        console.log(
-          "sequelize -> Connection has been established successfully."
-        );
-      })
-      .catch(e => {
-        console.error("sequelize -> Unable to connect to the database:", e);
-      });
-    class G extends O.Sequelize.Model {}
-    async function L(
-      {
-        qr_data: e,
-        qr_image_url: n,
-        qr_link: t,
-        name: a,
-        platform: o,
-        region: i,
-        size: s,
-        uploader_discord_id: r,
-        uploader_name: l
-      },
-      d
-    ) {
-      try {
-        const c = await G.create({
-          qr_data: e,
-          qr_image_url: n,
-          qr_link: t,
-          name: a,
-          platform: o,
-          region: i,
-          size: s,
-          uploader_discord_id: r,
-          uploader_name: l
-        });
-        return (
-          await d.channel.send("Saving in database!"),
-          console.log("DB -> save qr in DB"),
-          c.id
-        );
-      } catch (e) {
-        await d.channel.send(
-          "something went wrong, send it to developer: \n```diff\n- " +
-            e +
-            "```"
-        ),
-          console.log(e);
-      }
-    }
-    async function M(e) {
-      let n = [];
-      e.split(" ").forEach(e => {
-        n.push({ name: { [D.iLike]: `%${e}%` } });
-      });
-      try {
-        return await G.findAll({ where: { [D.and]: n } });
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    async function F() {
-      try {
-        return await G.findAll();
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    async function B(e, n) {
-      try {
-        await G.update({ qr_image_url: n }, { where: { id: e } }),
-          console.log("DB -> updating qr url image");
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    async function C(e, n) {
-      try {
-        const t = await G.update({ size: n }, { where: { id: e } });
-        return console.log("DB -> updating size for id: " + e), t;
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    async function k(e, n) {
-      try {
-        const t = await G.update({ region: n }, { where: { id: e } });
-        return console.log("DB -> updating region for id: " + e), t;
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    G.init(
-      {
-        id: {
-          type: O.Sequelize.INTEGER,
-          autoIncrement: !0,
-          allowNull: !1,
-          primaryKey: !0
-        },
-        qr_data: { type: O.Sequelize.TEXT, allowNull: !1 },
-        qr_image_url: { type: O.Sequelize.TEXT, allowNull: !1 },
-        qr_link: { type: O.Sequelize.STRING, allowNull: !1 },
-        name: { type: O.Sequelize.STRING, allowNull: !1 },
-        platform: { type: O.Sequelize.STRING, allowNull: !1 },
-        region: { type: O.Sequelize.STRING, allowNull: !1 },
-        size: { type: O.Sequelize.STRING, allowNull: !1 },
-        uploader_discord_id: { type: O.Sequelize.STRING, allowNull: !1 },
-        uploader_name: { type: O.Sequelize.STRING, allowNull: !1 }
-      },
-      { sequelize: T, modelName: "qre_items" }
-    ),
-      T.sync();
-    var $ = t(3),
-      U = t.n($);
-    async function P(e, n, t) {
+    var M = t(9),
+      B = t.n(M),
+      C = t(10),
+      F = t.n(C),
+      $ = t(11),
+      k = t.n($);
+    var U = t(3),
+      P = t.n(U);
+    async function z(e, n, t) {
       try {
         if (5 !== e.length)
           return n.channel.send("invalid arguments count for upload command");
-        const o = await y("head-pat-anime"),
+        const o = await T("head-pat-anime"),
           i = (await n.channel.send("wait a moment...", { files: [o] })).id,
-          r = f(["URL", "TITLE", "REGIONS", "PLATFORMS"]);
+          s = q(["URL", "TITLE", "REGIONS", "PLATFORMS"]);
         let l = {};
-        for (const t in r) {
-          const a = await e.findIndex(e => r[t].test(e));
+        for (const t in s) {
+          const a = await e.findIndex(e => s[t].test(e));
           if (-1 === a)
             return await n.channel.send(
               `invalid arguments \`${t}\` for upload command`
             );
           (l[t] = e[a]), e.splice(a, 1);
         }
-        const d = {
+        const r = {
           name: l.TITLE.replace(/['"]+/g, ""),
-          qr_link: u(l.URL),
-          qr_data: m(u(l.URL)),
-          qr_image_url: g(u(l.URL)),
+          qr_link: R(l.URL),
+          qr_data: I(R(l.URL)),
+          qr_image_url: v(R(l.URL)),
           platform: l.PLATFORMS,
           region: l.REGIONS,
-          size: await w(u(l.URL)),
+          size: await O(R(l.URL)),
           uploader_discord_id: n.author.id,
           uploader_name: n.author.username
         };
-        let c = d.name + d.platform + d.region + d.uploader_discord_id;
-        (c = c.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "")),
-          await U.a.outputFile(d.qr_image_url, "./img/" + c + ".jpg");
-        const p = await M(d.name),
-          E =
-            0 === p.length
+        let d = r.name + r.platform + r.region + r.uploader_discord_id;
+        (d = d.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "")),
+          await P.a.outputFile(r.qr_image_url, "./img/" + d + ".jpg");
+        const m = await u(r.name),
+          g =
+            0 === m.length
               ? "```diff\n+ This is how it will look, save in database? Type 'yes'/'no'\n```"
               : "```diff\n- I FOUND THE GAMES WITH SIMILAR NAME, CHECK THEM BEFORE SAYING 'yes' BY TYPING 'search'\"\n``````diff\n+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)\"\n```";
         setTimeout(async () => {
           n.channel.messages.get(i).delete(),
             await n.channel
-              .send("", { files: ["./img/" + c + ".jpg"] })
+              .send("", { files: ["./img/" + d + ".jpg"] })
               .then(e => {
-                d.qr_image_url = e.attachments.values().next().value.proxyURL;
+                r.qr_image_url = e.attachments.values().next().value.proxyURL;
               }),
             await n.channel.send(
-              `\`\`\`\nLink: ${d.qr_link}\n\nName: ${d.name}\nPlatform: ${d.platform}\nRegion: ${d.region}\nSize: ${d.size}\nUploader: ${d.uploader_name}\`\`\`${E}`
+              `\`\`\`\nLink: ${r.qr_link}\n\nName: ${r.name}\nPlatform: ${r.platform}\nRegion: ${r.region}\nSize: ${r.size}\nUploader: ${r.uploader_name}\`\`\`${g}`
             );
         }, 3e3);
-        const S = new a.MessageCollector(
+        const h = new a.MessageCollector(
           n.channel,
           e => e.author.id === n.author.id,
           { time: 6e4 }
         );
-        S.on("collect", async e => {
+        h.on("collect", async e => {
           if ("yes" === e.content.toLowerCase()) {
-            S.stop();
+            h.stop();
             try {
-              d.id = await L(d, n);
+              r.id = await c(r, n);
               const e = (function(e, n, t) {
                 const o = [];
                 return (
@@ -413,7 +448,7 @@
                       .addField("QR: ", "===================", !0)
                       .addField("Author: ", e.uploader_name, !0)
                   ),
-                  new s.Embeds()
+                  new y.Embeds()
                     .setArray(o)
                     .setPageIndicator(!1)
                     .setAuthorizedUsers([])
@@ -430,7 +465,7 @@
                     .setDisabledNavigationEmojis(["ALL"])
                     .setTimeout(6e5)
                 );
-              })(d, 0, t);
+              })(r, 0, t);
               await e.build();
             } catch (e) {
               console.log(e),
@@ -439,7 +474,7 @@
                 );
             }
           } else if ("no" === e.content.toLowerCase()) {
-            S.stop();
+            h.stop();
             try {
               await n.channel.send("Ok try again later :P");
             } catch (e) {
@@ -453,7 +488,7 @@
               await n.channel.send(
                 "```Ok, displaying games that I have found you can type 'yes'/'no' still````"
               );
-              const e = await h(p, n);
+              const e = await A(m, n);
               await e.build();
             } catch (e) {
               console.log(e),
@@ -462,7 +497,7 @@
                 );
             }
         }),
-          S.on("end", async () => {
+          h.on("end", async () => {
             await n.channel.send("upload session ended");
           });
       } catch (e) {
@@ -472,12 +507,12 @@
           );
       }
     }
-    async function z(e, n) {
+    async function x(e, n) {
       try {
         const t = parseInt(e[1]),
           o = await (async function(e) {
             try {
-              return await G.findAll({ where: { id: e }, limit: 1 });
+              return await d.findAll({ where: { id: e }, limit: 1 });
             } catch (e) {
               console.log(e);
             }
@@ -485,17 +520,17 @@
           {
             qr_data: i,
             qr_image_url: s,
-            qr_link: r,
-            name: l,
-            platform: d,
-            region: c,
-            size: u,
-            uploader_discord_id: h,
-            uploader_name: p
+            qr_link: l,
+            name: r,
+            platform: c,
+            region: u,
+            size: m,
+            uploader_discord_id: g,
+            uploader_name: h
           } = o[0];
         if (o.length) {
           await n.channel.send(
-            `\`\`\`\nLink: ${r}\n\nName: ${l}\nPlatform: ${d}\nRegion: ${c}\nSize: ${u}\nUploader: ${p}\`\`\` \n        \`\`\`Is this the game you wish to edit? type 'yes'/'no'\`\`\``,
+            `\`\`\`\nLink: ${l}\n\nName: ${r}\nPlatform: ${c}\nRegion: ${u}\nSize: ${m}\nUploader: ${h}\`\`\` \n        \`\`\`Is this the game you wish to edit? type 'yes'/'no'\`\`\``,
             { files: [s] }
           );
           const e = new a.MessageCollector(
@@ -526,47 +561,47 @@
                     ["end", "yes", "no"]
                   )
                   .join(" ")
-                  .match(S.ARGUMENTS),
-                y = f(["URL", "TITLE", "REGIONS", "PLATFORMS", "SIZE"]);
-              let E = {};
-              for (const e in y) {
-                console.log(y[e]);
-                const t = o.findIndex(n => y[e].test(n));
+                  .match(L.ARGUMENTS),
+                p = q(["URL", "TITLE", "REGIONS", "PLATFORMS", "SIZE"]);
+              let f = {};
+              for (const e in p) {
+                console.log(p[e]);
+                const t = o.findIndex(n => p[e].test(n));
                 -1 === t
                   ? await n.channel.send(
                       `argument \`${e}\` is missing continue...`
                     )
-                  : ((E[e] = o[t]),
+                  : ((f[e] = o[t]),
                     o.splice(t, 1),
                     await n.channel.send(
-                      `argument \`${e}\` is present! : \`${E[e]}\``
+                      `argument \`${e}\` is present! : \`${f[e]}\``
                     ));
               }
-              console.log(E);
-              const _ = {
-                name: E.TITLE ? E.TITLE : l,
-                qr_link: E.URL ? E.URL : r,
-                qr_data: E.URL ? m(E.URL) : i,
-                qr_image_url: E.URL ? g(E.URL) : s,
-                platform: E.PLATFORMS ? E.PLATFORMS : d,
-                region: E.REGIONS ? E.REGIONS : c,
-                size: E.SIZE ? E.SIZE : u,
-                uploader_discord_id: h,
-                uploader_name: p
+              console.log(f);
+              const w = {
+                name: f.TITLE ? f.TITLE : r,
+                qr_link: f.URL ? f.URL : l,
+                qr_data: f.URL ? I(f.URL) : i,
+                qr_image_url: f.URL ? v(f.URL) : s,
+                platform: f.PLATFORMS ? f.PLATFORMS : c,
+                region: f.REGIONS ? f.REGIONS : u,
+                size: f.SIZE ? f.SIZE : m,
+                uploader_discord_id: g,
+                uploader_name: h
               };
-              let R = "";
-              if (E.URL) {
-                let e = _.name + _.platform + _.region + _.uploader_discord_id;
+              let y = "";
+              if (f.URL) {
+                let e = w.name + w.platform + w.region + w.uploader_discord_id;
                 (e = e.replace(/[^a-z0-9]/gim, "")),
-                  await U.a.outputFile(_.qr_image_url, "./img/" + e + ".jpg"),
+                  await P.a.outputFile(w.qr_image_url, "./img/" + e + ".jpg"),
                   await n.channel
                     .send("", { files: ["./img/" + e + ".jpg"] })
                     .then(e => {
-                      _.qr_image_url = e.attachments
+                      w.qr_image_url = e.attachments
                         .values()
                         .next().value.proxyURL;
                     }),
-                  (R = await w(E.URL));
+                  (y = await O(f.URL));
               }
               await (async function(
                 e,
@@ -577,14 +612,14 @@
                   name: o,
                   platform: i,
                   region: s,
-                  uploader_discord_id: r,
-                  uploader_name: l
+                  uploader_discord_id: l,
+                  uploader_name: r
                 },
-                d,
-                c
+                c,
+                u
               ) {
                 try {
-                  await G.update(
+                  await d.update(
                     {
                       qr_data: n,
                       qr_image_url: t,
@@ -592,23 +627,23 @@
                       name: o,
                       platform: i,
                       region: s,
-                      newSize: d,
-                      uploader_discord_id: r,
-                      uploader_name: l
+                      newSize: c,
+                      uploader_discord_id: l,
+                      uploader_name: r
                     },
                     { where: { id: e } }
                   ),
-                    await c.channel.send("Edited!"),
+                    await u.channel.send("Edited!"),
                     console.log("DB -> save qr in DB");
                 } catch (e) {
-                  await c.channel.send(
+                  await u.channel.send(
                     "something went wrong, send it to developer: \n```diff\n- " +
                       e +
                       "```"
                   ),
                     console.log(e);
                 }
-              })(t, _, R || _.size, n);
+              })(t, w, y || w.size, n);
             });
         } else await n.channel.send("cant find it in database");
       } catch (e) {
@@ -620,17 +655,17 @@
           );
       }
     }
-    var x = t(8),
-      j = t.n(x);
-    async function V(e) {
+    var j = t(8),
+      V = t.n(j);
+    async function Y(e) {
       await e.channels
         .get("604692367018033152")
         .send("Checking urls started... I will do it every 24 hours");
-      const n = await F();
+      const n = await m();
       for (const { id: t, qr_link: a, name: o, uploader_discord_id: i } of n)
         try {
           console.time(`scanningTime - ${o}`),
-            await l.a.head(a, { timeout: 3e4 }),
+            await S.a.head(a, { timeout: 3e4 }),
             console.timeEnd(`scanningTime - ${o}`);
         } catch (n) {
           n.response
@@ -656,24 +691,24 @@
           console.log(`Rejected Promise: ${n}`),
           console.log(`Rejection: ${e}`);
       });
-    const Y = new a.Client();
-    let H = process.env.BOT_DEFAULT_INVOKE,
-      K = new Map();
-    function W(e) {
+    const H = new a.Client();
+    let K = process.env.BOT_DEFAULT_INVOKE,
+      W = new Map();
+    function X(e) {
       let n, t;
-      const o = (n = p(e)
-        ? e.content.substr(H.length + 1)
-        : e.content.substr(K.get(e.guild.id).length + 1)).match(S.ARGUMENTS);
+      const o = (n = N(e)
+        ? e.content.substr(K.length + 1)
+        : e.content.substr(W.get(e.guild.id).length + 1)).match(L.ARGUMENTS);
       if (
         (null !== o && o.length && (t = o[0]),
         console.log(t),
         t ||
-          (p(e)
+          (N(e)
             ? e.channel.send(
                 'You need to specify which command you want to use type "!qre help" to display available commands'
               )
             : e.channel.send(
-                `You need to specify which command you want to use type "${K.get(
+                `You need to specify which command you want to use type "${W.get(
                   e.guild.id
                 )} help" to display available commands`
               )),
@@ -682,7 +717,7 @@
         return (function(e, n, t) {
           const o = [];
           return (
-            p(n)
+            N(n)
               ? o.push(
                   new a.RichEmbed()
                     .addField("**COMMAND**: ", "```search```")
@@ -774,7 +809,7 @@
                       "```" + e.get(n.guild.id) + "invoke %qre```"
                     )
                 )),
-            new s.Embeds()
+            new y.Embeds()
               .setArray(o)
               .setAuthorizedUsers([n.author.id])
               .setChannel("pm" === t ? n.author : n.channel)
@@ -798,16 +833,16 @@
               })
               .setTimeout(6e5)
           );
-        })(K, e).build();
+        })(W, e).build();
       if ("search" === t)
         return (async function(e, n) {
           try {
             let t = e.split(" ");
             t.splice(0, 1);
             let a = t.join(" ");
-            const o = await M(a);
+            const o = await u(a);
             if (0 === o.length)
-              return p(n)
+              return N(n)
                 ? await n.channel.send(
                     `I didn't find anything called \`${a}\` in my database. If you want to request games join https://discord.gg/tXJfdNp`
                   )
@@ -815,8 +850,11 @@
                     `I didn't find anything called \`${a}\` in my database. You can request game on <#582262747937505290> channel`
                   );
             {
-              const e = await h(o, n);
-              await e.build();
+              const e = await T("anime"),
+                t = (await n.channel.send("wait a moment...", { files: [e] }))
+                  .id,
+                a = await A(o, n, t);
+              await a.build();
             }
           } catch (e) {
             console.log(e),
@@ -827,12 +865,12 @@
         })(n, e);
       if (
         ("headpat" === t &&
-          E(e) &&
+          D(e) &&
           (async function(e, n) {
             if (2 !== e.length)
               return n.channel.send("hey, specify who you want to headpat!");
             n.channel.messages.get(n.id).delete();
-            const t = await y("head-pat-anime"),
+            const t = await T("head-pat-anime"),
               o = new a.RichEmbed()
                 .setColor(
                   `${"#" + Math.floor(16777215 * Math.random()).toString(16)}`
@@ -843,19 +881,19 @@
           })(o, e),
         "upload" === t)
       )
-        return E(e) &&
+        return D(e) &&
           (function(e) {
-            if (!p(e))
+            if (!N(e))
               return !!e.member.roles.some(e =>
                 process.env.BOT_PERMISSIONS_ROLES.includes(e.name)
               );
           })(e)
-          ? P(o, e, Y)
+          ? z(o, e, H)
           : e.channel.send("You need to have permissions to use this command");
       if (
-        E(e) &&
+        D(e) &&
         (function(e) {
-          if (!p(e))
+          if (!N(e))
             return !!e.member.roles.some(e =>
               process.env.BOT_PERMISSIONS_ADMIN.includes(e.name)
             );
@@ -871,7 +909,7 @@
               ? (t.set(n.guild.id, e[1]),
                 n.channel.send("Successfully changed your invoke command"))
               : void 0;
-          })(o, e, K);
+          })(o, e, W);
         if ("scrap" === t)
           return (async function(e, n) {
             if ("dm" === n.channel.type)
@@ -898,7 +936,7 @@
                 })(n.channel).then(async e => {
                   for (const t of e)
                     if (t.attachments.size) {
-                      let e = t.content.match(S.SCRAPER);
+                      let e = t.content.match(L.SCRAPER);
                       if (!e) continue;
                       let a = (e = e
                         .map(Function.prototype.call, String.prototype.trim)
@@ -908,58 +946,58 @@
                       a &&
                         (a = a.replace(/^"(.*)"$/, "$1").replace(/'/g, "''")),
                         e.shift();
-                      const { rows: o } = await M(a);
+                      const { rows: o } = await u(a);
                       if (o.length) {
                         console.log(
                           "Game is already in DB " + a + " Skipping..."
                         );
                         continue;
                       }
-                      const i = e.findIndex(e => S.REGIONS.test(e)),
-                        s = e.findIndex(e => S.PLATFORMS.test(e)),
-                        r = e.findIndex(e => S.SIZE.test(e)),
-                        l = await R()(
+                      const i = e.findIndex(e => L.REGIONS.test(e)),
+                        s = e.findIndex(e => L.PLATFORMS.test(e)),
+                        l = e.findIndex(e => L.SIZE.test(e)),
+                        r = await B()(
                           `${t.attachments.values().next().value.proxyURL}`
                         ),
-                        d = await l.buffer(),
-                        c = await A.a.read(d).catch(e => {
+                        d = await r.buffer(),
+                        m = await F.a.read(d).catch(e => {
                           console.log(e);
                         });
-                      if (!c) continue;
-                      const u = await new N.a(),
-                        g = await new Promise((e, n) => {
-                          (u.callback = (t, a) => {
+                      if (!m) continue;
+                      const g = await new k.a(),
+                        h = await new Promise((e, n) => {
+                          (g.callback = (t, a) => {
                             null != t ? n(t) : e(a);
                           }),
-                            u.decode(c.bitmap);
+                            g.decode(m.bitmap);
                         }).catch(e => {
                           console.log(e);
                         }),
-                        h = {
+                        p = {
                           name: a,
-                          qr_link: g.result,
-                          qr_data: await m(g.result),
+                          qr_link: h.result,
+                          qr_data: await I(h.result),
                           qr_image_url: null,
                           platform: e[s] || "3DS",
                           region: e[i] || "N/A",
-                          size: e[r] || "N/A",
+                          size: e[l] || "N/A",
                           uploader_discord_id: t.author.id,
                           uploader_name: t.author.username
                         };
                       if (!o.length)
                         try {
-                          await L(
-                            h.qr_data,
-                            h.qr_image_url,
-                            h.qr_link,
-                            h.name,
-                            h.platform,
-                            h.region,
-                            h.size,
-                            h.uploader_discord_id,
-                            h.uploader_name
+                          await c(
+                            p.qr_data,
+                            p.qr_image_url,
+                            p.qr_link,
+                            p.name,
+                            p.platform,
+                            p.region,
+                            p.size,
+                            p.uploader_discord_id,
+                            p.uploader_name
                           ),
-                            console.log("Saving in database! " + h.name);
+                            console.log("Saving in database! " + p.name);
                         } catch (e) {
                           console.log(e),
                             await n.author.send(
@@ -977,22 +1015,22 @@
         if ("images" === t)
           return (async function(e, n) {
             try {
-              const e = await F();
+              const e = await m();
               for (const {
                 id: t,
                 qr_image_url: a,
                 qr_link: o,
                 name: i,
                 platform: s,
-                region: r,
-                uploader_discord_id: l
+                region: l,
+                uploader_discord_id: r
               } of e) {
-                const e = { qr_image: g(o), uploader_discord_id: l, id: t };
+                const e = { qr_image: v(o), uploader_discord_id: r, id: t };
                 if ("null" === a) {
-                  let t = i + s + r + l;
+                  let t = i + s + l + r;
                   (t = t.replace(/[^a-z0-9]/gim, "")),
-                    await U.a.outputFile(e.qr_image, "./img/" + t + ".jpg"),
-                    j.a.access("./img/" + t + ".jpg", j.a.F_OK, async a => {
+                    await P.a.outputFile(e.qr_image, "./img/" + t + ".jpg"),
+                    V.a.access("./img/" + t + ".jpg", V.a.F_OK, async a => {
                       if (a) return void console.error(a);
                       const o = await n.channel.send("", {
                         files: ["./img/" + t + ".jpg"]
@@ -1001,7 +1039,7 @@
                         (e.qr_image = o.attachments
                           .values()
                           .next().value.proxyURL),
-                        await B(e.id, e.qr_image);
+                        await g(e.id, e.qr_image);
                     });
                 }
               }
@@ -1009,15 +1047,15 @@
               console.log(e);
             }
           })(0, e);
-        if ("edit" === t) return z(o, e);
-        if ("checkurls" === t) return V(Y);
+        if ("edit" === t) return x(o, e);
+        if ("checkurls" === t) return Y(H);
         if ("updatesize" === t)
           return (async function() {
-            const e = await F();
+            const e = await m();
             for (const { id: n, qr_link: t, name: a, region: o } of e)
               try {
                 console.log(`starting scanning ${a}`);
-                const e = await l.a.head(t, { timeout: 15e3 });
+                const e = await S.a.head(t, { timeout: 15e3 });
                 if (e && 404 !== e.status) {
                   let t;
                   e.headers["content-disposition"] &&
@@ -1025,9 +1063,9 @@
                       /\b\w*USA|JPN|EUR|GLOBAL|HACK|RF\w*\b/i
                     )),
                     e.headers["content-length"] &&
-                      (await C(n, c()(e.headers["content-length"], !0)),
-                      console.log(c()(e.headers["content-length"], !0), a, n)),
-                    t && "N/A" === o && (console.log(t[0]), await k(n, t[0]));
+                      (await h(n, b()(e.headers["content-length"], !0)),
+                      console.log(b()(e.headers["content-length"], !0), a, n)),
+                    t && "N/A" === o && (console.log(t[0]), await p(n, t[0]));
                 }
               } catch (e) {
                 e.response ? console.log(e.response.status) : console.log(e);
@@ -1040,48 +1078,48 @@
     }
     !(async function() {
       try {
-        await Y.login(process.env.BOT_TOKEN);
+        await H.login(process.env.BOT_TOKEN);
       } catch (e) {
         console.log(e);
       }
     })(),
-      Y.on("ready", async () => {
+      H.on("ready", async () => {
         console.log("On Discord!"),
-          console.log("Connected as " + Y.user.tag),
+          console.log("Connected as " + H.user.tag),
           console.log("Servers:"),
-          Y.guilds.forEach(e => {
-            K.set(e.id, H),
+          H.guilds.forEach(e => {
+            W.set(e.id, K),
               console.log(" - " + e.id),
               e.channels.forEach(e => {
                 console.log(` -- ${e.name} (${e.type}) - ${e.id}`);
               }),
-              console.log(K);
+              console.log(W);
           }),
           setInterval(async () => {
             const e = await (async function() {
               try {
-                return await G.findAndCountAll();
+                return await d.findAndCountAll();
               } catch (e) {
                 console.log(e);
               }
             })();
-            await Y.user.setActivity(`QR Codes count: ${e.count}`, {
+            await H.user.setActivity(`QR Codes count: ${e.count}`, {
               type: "PLAYING"
             });
           }, 6e4),
           setInterval(async () => {
-            await V(Y);
+            await Y(H);
           }, 864e5);
       }),
-      Y.on("message", e => {
-        if (e.author !== Y.user)
+      H.on("message", e => {
+        if (e.author !== H.user)
           if ("dm" === e.channel.type) {
-            if (!e.content.startsWith(`${H}`))
+            if (!e.content.startsWith(`${K}`))
               return e.channel.send(
                 'You need to specify which command you want to use type "!qre help" to display available commands'
               );
-            W(e);
-          } else e.content.startsWith(`${K.get(e.guild.id)}`) && W(e);
+            X(e);
+          } else e.content.startsWith(`${W.get(e.guild.id)}`) && X(e);
       });
   }
 ]);

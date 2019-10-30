@@ -1,3 +1,5 @@
+import { updateThumbnail } from "../db/db_qree";
+
 require("dotenv").config();
 import qrCode from "qrcode-generator";
 import { RichEmbed } from "discord.js";
@@ -70,33 +72,38 @@ export async function limitlessFetchMessages(channel, limit = 9000) {
   return sum_messages;
 }
 
-export async function createEmbeddedAnswer(args, receivedMessage, destination) {
+export async function createEmbeddedAnswer(
+  args,
+  receivedMessage,
+  loadingMessageId,
+  destination
+) {
   const embeds = [];
-  args.map(
-    async ({
-      id,
-      name,
-      platform,
-      region,
-      size,
-      uploader_name,
-      qr_image_url
-    }) => {
-      console.log(qr_image_url);
-      embeds.push(
-        new RichEmbed()
-          .setImage(qr_image_url)
-          .addField("Name: ", name, true)
-          .addField("DB ID: ", id, true)
-          .addField("Platform: ", platform, true)
-          .addField("Region: ", region, true)
-          .addField("Size: ", size)
-          .addField("QR:", "===================", true)
-          .addField("Author: ", uploader_name, true)
-      );
-    }
-  );
-
+  for (const {
+    id,
+    name,
+    platform,
+    region,
+    size,
+    uploader_name,
+    qr_image_url,
+    thumbnail
+  } of args) {
+    const gameThumbnail = thumbnail || (await getGameCover(name, id));
+    embeds.push(
+      new RichEmbed()
+        .setImage(qr_image_url)
+        .addField("Name: ", name, true)
+        .addField("DB ID: ", id, true)
+        .addField("Platform: ", platform, true)
+        .addField("Region: ", region, true)
+        .addField("Size: ", size)
+        .addField("QR:", "===================", true)
+        .addField("Author: ", uploader_name, true)
+        .setThumbnail(gameThumbnail)
+    );
+  }
+  await receivedMessage.channel.messages.get(loadingMessageId).delete();
   return (
     new Embeds()
       .setArray(embeds)
@@ -217,6 +224,33 @@ export function validateAdmin(receivedMessage) {
     return !!receivedMessage.member.roles.some(r =>
       process.env.BOT_PERMISSIONS_ADMIN.includes(r.name)
     );
+  }
+}
+
+export async function getGameCover(name, id) {
+  let config = {
+    headers: {
+      "user-key": process.env.IGDB_TOKEN,
+      Accepts: "application/json"
+    }
+  };
+  try {
+    const game = await axios.get(
+      `https://api-v3.igdb.com/games/?search=${name}}&fields=id,name,cover`,
+      config
+    );
+    console.log(game.data[0].cover);
+    if (game.data.length) {
+      const cover = await axios.get(
+        `https://api-v3.igdb.com/covers/${game.data[0].cover}/?fields=url`,
+        config
+      );
+      console.log(cover.data[0].url);
+      await updateThumbnail(id, `https:${cover.data[0].url}`);
+      return `https:${cover.data[0].url}`;
+    }
+  } catch (error) {
+    // console.log(error);
   }
 }
 

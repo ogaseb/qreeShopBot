@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "webpack --watch --config webpack.server.config.js",
+    "dev": "webpack --watch --config webpack.server.config.js",
     "webpack": "webpack --config webpack.server.config.js",
     "start": "webpack --config webpack.server.config.js && pm2-runtime build/main.js -i 1",
     "babel": "babel-node server.js"
@@ -36,6 +36,7 @@
     "discord-paginationembed": "^1.0.2",
     "discord.js": "^11.5.1",
     "dotenv": "^8.0.0",
+    "global": "^4.4.0",
     "image-data-uri": "^2.0.0",
     "jimp": "^0.6.4",
     "lodash": "^4.17.15",
@@ -46,6 +47,7 @@
     "qrcode-reader": "^1.0.4",
     "request": "^2.88.0",
     "sequelize": "^5.15.2",
+    "sequelize-cli": "^5.5.1",
     "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {

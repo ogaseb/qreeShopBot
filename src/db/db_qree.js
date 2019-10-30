@@ -41,6 +41,10 @@ QreeItems.init(
       type: Sequelize.STRING,
       allowNull: false
     },
+    thumbnail: {
+      type: Sequelize.STRING,
+      allowNull: true
+    },
     platform: {
       type: Sequelize.STRING,
       allowNull: false
@@ -231,6 +235,22 @@ export async function updateSizeArgument(id, size) {
     );
 
     console.log("DB -> updating size for id: " + id);
+    return res;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export async function updateThumbnail(id, thumbnail) {
+  try {
+    const res = await QreeItems.update(
+      {
+        thumbnail
+      },
+      { where: { id } }
+    );
+
+    console.log("DB -> updating thumbnail for id: " + id);
     return res;
   } catch (e) {
     console.log(e);

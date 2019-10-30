@@ -1,5 +1,9 @@
 import { findGame } from "../../db/db_qree";
-import { checkIfDM, createEmbeddedAnswer } from "../../helpers/helpers";
+import {
+  checkIfDM,
+  createEmbeddedAnswer,
+  getRandomMeme
+} from "../../helpers/helpers";
 
 export async function searchGame(messageArguments, receivedMessage) {
   try {
@@ -19,9 +23,16 @@ export async function searchGame(messageArguments, receivedMessage) {
         );
       }
     } else {
+      const meme = await getRandomMeme("anime");
+      const response = await receivedMessage.channel.send(`wait a moment...`, {
+        files: [meme]
+      });
+      const loadingMessageId = response.id;
+
       const QrCodesSearchResults = await createEmbeddedAnswer(
         rows,
-        receivedMessage
+        receivedMessage,
+        loadingMessageId
       );
       await QrCodesSearchResults.build();
     }
