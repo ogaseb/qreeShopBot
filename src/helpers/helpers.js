@@ -249,7 +249,7 @@ export async function getGameCover(name, id) {
       return `https:${cover.data[0].url}`;
     } else {
       if (id) {
-        await updateThumbnail(
+        return await updateThumbnail(
           id,
           `https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png`
         );
