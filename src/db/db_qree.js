@@ -1,79 +1,84 @@
 import dotEnv from "dotenv";
-import { Sequelize } from "sequelize";
 dotEnv.config();
-const Op = Sequelize.Op;
+// import { Sequelize } from "sequelize";
+// import db from "../../models"
+const QreItems = require("../../models/qreitems");
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  define: { timestamps: false }
-});
+// const Op = Sequelize.Op;
+// db.sequelize.sync()
+//   .then(() => console.log('Database connected & synched.'))
+//   .catch(err => console.error('Unable to connect to the database:', err));
+// const sequelize = new Sequelize(process.env.DATABASE_URL);
+// console.log(QreItems(sequelize))
+//
+// sequelize
+//   .authenticate()
+//   .then(() => {
+//     console.log("sequelize -> Connection has been established successfully.");
+//   })
+//   .catch(err => {
+//     console.error("sequelize -> Unable to connect to the database:", err);
+//   });
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("sequelize -> Connection has been established successfully.");
-  })
-  .catch(err => {
-    console.error("sequelize -> Unable to connect to the database:", err);
-  });
+// class QreItems extends Sequelize.Model {}
+// QreItems.init(
+//   {
+//     id: {
+//       type: Sequelize.INTEGER,
+//       autoIncrement: true,
+//       allowNull: false,
+//       primaryKey: true
+//     },
+//     qr_data: {
+//       type: Sequelize.TEXT,
+//       allowNull: false
+//     },
+//     qr_image_url: {
+//       type: Sequelize.TEXT,
+//       allowNull: false
+//     },
+//     qr_link: {
+//       type: Sequelize.STRING,
+//       allowNull: false
+//     },
+//     name: {
+//       type: Sequelize.STRING,
+//       allowNull: false
+//     },
+//     thumbnail: {
+//       type: Sequelize.STRING,
+//       allowNull: true
+//     },
+//     platform: {
+//       type: Sequelize.STRING,
+//       allowNull: false
+//     },
+//     region: {
+//       type: Sequelize.STRING,
+//       allowNull: false
+//     },
+//     size: {
+//       type: Sequelize.STRING,
+//       allowNull: false
+//     },
+//     uploader_discord_id: {
+//       type: Sequelize.STRING,
+//       allowNull: false
+//     },
+//     uploader_name: {
+//       type: Sequelize.STRING,
+//       allowNull: false
+//     }
+//   },
+//   {
+//     sequelize,
+//     modelName: "qre_items"
+//     // options
+//   }
+// );
+// sequelize.sync();
 
-class QreeItems extends Sequelize.Model {}
-QreeItems.init(
-  {
-    id: {
-      type: Sequelize.INTEGER,
-      autoIncrement: true,
-      allowNull: false,
-      primaryKey: true
-    },
-    qr_data: {
-      type: Sequelize.TEXT,
-      allowNull: false
-    },
-    qr_image_url: {
-      type: Sequelize.TEXT,
-      allowNull: false
-    },
-    qr_link: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-    name: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-    thumbnail: {
-      type: Sequelize.STRING,
-      allowNull: true
-    },
-    platform: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-    region: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-    size: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-    uploader_discord_id: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-    uploader_name: {
-      type: Sequelize.STRING,
-      allowNull: false
-    }
-  },
-  {
-    sequelize,
-    modelName: "qre_items"
-    // options
-  }
-);
-
-sequelize.sync();
+// console.log(db.sequelize.models)
 
 export async function createQree(
   {
@@ -90,7 +95,7 @@ export async function createQree(
   receivedMessage
 ) {
   try {
-    const item = await QreeItems.create({
+    const item = await QreItems.create({
       qr_data,
       qr_image_url,
       qr_link,
@@ -131,7 +136,7 @@ export async function editQree(
   receivedMessage
 ) {
   try {
-    await QreeItems.update(
+    await QreItems.update(
       {
         qr_data,
         qr_image_url,
@@ -170,7 +175,7 @@ export async function findGame(name) {
   });
 
   try {
-    const res = await QreeItems.findAll({
+    const res = await QreItems.findAll({
       where: {
         [Op.and]: filter
       }
@@ -183,7 +188,7 @@ export async function findGame(name) {
 
 export async function findGameToEdit(id) {
   try {
-    const res = await QreeItems.findAll({
+    const res = await QreItems.findAll({
       where: {
         id
       },
@@ -197,7 +202,7 @@ export async function findGameToEdit(id) {
 
 export async function approxQrCount() {
   try {
-    return await QreeItems.findAndCountAll();
+    return await QreItems.findAndCountAll();
   } catch (e) {
     console.log(e);
   }
@@ -205,7 +210,7 @@ export async function approxQrCount() {
 
 export async function getWholeDB() {
   try {
-    return await QreeItems.findAll();
+    return await QreItems.findAll();
   } catch (e) {
     console.log(e);
   }
@@ -213,7 +218,7 @@ export async function getWholeDB() {
 
 export async function updateQrImageUrl(id, qr_image_url) {
   try {
-    await QreeItems.update(
+    await QreItems.update(
       {
         qr_image_url
       },
@@ -227,7 +232,7 @@ export async function updateQrImageUrl(id, qr_image_url) {
 
 export async function updateSizeArgument(id, size) {
   try {
-    const res = await QreeItems.update(
+    const res = await QreItems.update(
       {
         size
       },
@@ -243,7 +248,7 @@ export async function updateSizeArgument(id, size) {
 
 export async function updateThumbnail(id, thumbnail) {
   try {
-    const res = await QreeItems.update(
+    const res = await QreItems.update(
       {
         thumbnail
       },
@@ -259,7 +264,7 @@ export async function updateThumbnail(id, thumbnail) {
 
 export async function updateRegionArgument(id, region) {
   try {
-    const res = await QreeItems.update(
+    const res = await QreItems.update(
       {
         region
       },
