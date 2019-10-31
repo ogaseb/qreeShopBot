@@ -8,6 +8,7 @@ import { makeQrImagesfromDB } from "./images/images";
 import { urlStatus } from "./checkurls/checkurls";
 import { updateSize } from "./updatesize/updatesize";
 import { headPat } from "./headpat/headpat";
+import { findCovers } from "./findcovers/findcovers";
 
 export {
   scrapChannelForQrCodes,
@@ -19,5 +20,6 @@ export {
   makeQrImagesfromDB,
   urlStatus,
   updateSize,
-  headPat
+  headPat,
+  findCovers
 };

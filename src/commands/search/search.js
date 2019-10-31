@@ -23,10 +23,7 @@ export async function searchGame(messageArguments, receivedMessage) {
         );
       }
     } else {
-      const meme = await getRandomMeme("anime");
-      const response = await receivedMessage.channel.send(`wait a moment...`, {
-        files: [meme]
-      });
+      const response = await receivedMessage.channel.send(`wait a moment...`);
       const loadingMessageId = response.id;
 
       const QrCodesSearchResults = await createEmbeddedAnswer(

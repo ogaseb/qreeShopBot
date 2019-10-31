@@ -10,7 +10,8 @@ import {
   makeQrImagesfromDB,
   urlStatus,
   updateSize,
-  headPat
+  headPat,
+  findCovers
 } from "./src/commands/index";
 import {
   regexes,
@@ -172,6 +173,10 @@ function processCommand(receivedMessage) {
 
     if (primaryCommand === "updatesize") {
       return updateSize(client);
+    }
+
+    if (primaryCommand === "findcovers") {
+      return findCovers(client);
     }
   }
 

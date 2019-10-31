@@ -89,6 +89,7 @@ export async function createEmbeddedAnswer(
     thumbnail
   } of args) {
     const gameThumbnail = thumbnail || (await getGameCover(name, id));
+    console.log(gameThumbnail);
     embeds.push(
       new RichEmbed()
         .setImage(qr_image_url)
@@ -236,27 +237,21 @@ export async function getGameCover(name, id) {
       `https://api-v3.igdb.com/games/?search=${title}}&fields=id,name,cover`,
       config
     );
-    console.log(game.data[0].cover);
-    if (game.data.length) {
+    if (!!game.data.length && typeof game.data[0].cover !== undefined) {
       const cover = await axios.get(
         `https://api-v3.igdb.com/covers/${game.data[0].cover}/?fields=url`,
         config
       );
-      console.log(cover.data[0].url);
       if (id) {
         await updateThumbnail(id, `https:${cover.data[0].url}`);
       }
       return `https:${cover.data[0].url}`;
     } else {
-      if (id) {
-        return await updateThumbnail(
-          id,
-          `https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png`
-        );
-      }
+      console.log("setting default cover");
+      return `https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png`;
     }
   } catch (error) {
-    // console.log(error);
+    console.log(error.description);
   }
 }
 
