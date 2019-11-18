@@ -84,21 +84,21 @@ async function createEmbeddedAnswer(
     platform,
     region,
     size,
-    uploader_name,
-    qr_image_url,
+    uploaderName,
+    qrImageUrl,
     thumbnail
   } of args) {
     const gameThumbnail = thumbnail || (await getGameCover(name, id));
     embeds.push(
       new RichEmbed()
-        .setImage(qr_image_url)
+        .setImage(qrImageUrl)
         .addField("Name: ", name, true)
         .addField("DB ID: ", id, true)
         .addField("Platform: ", platform, true)
         .addField("Region: ", region, true)
         .addField("Size: ", size)
         .addField("QR:", "===================", true)
-        .addField("Author: ", uploader_name, true)
+        .addField("Author: ", uploaderName, true)
         .setThumbnail(gameThumbnail)
     );
   }

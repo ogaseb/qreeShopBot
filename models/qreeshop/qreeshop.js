@@ -13,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       qrImageUrl: { type: DataTypes.TEXT, field: "qr_image_url" },
       qrLink: { type: DataTypes.STRING, field: "qr_link" },
       name: DataTypes.STRING,
-      thumbnail: DataTypes.STRING,
+        region: DataTypes.STRING,
+        thumbnail: DataTypes.STRING,
       platform: DataTypes.STRING,
       size: DataTypes.STRING,
       uploaderDiscordId: {
