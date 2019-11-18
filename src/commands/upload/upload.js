@@ -42,18 +42,15 @@ module.exports.handleGameUpload = async function(
       const itemIndex = await messageArguments.findIndex(value =>
         regexesObj[regex].test(value)
       );
-      console.log(itemIndex);
-      // if (itemIndex === -1) {
-      //   return await receivedMessage.channel.send(
-      //     `invalid arguments \`${regex}\` for upload command`
-      //   );
-      // } else {
-      //   foundArgsObj[regex] = messageArguments[itemIndex];
-      //   messageArguments.splice(itemIndex, 1);
-      // }
+      if (itemIndex === -1) {
+        return await receivedMessage.channel.send(
+          `invalid arguments \`${regex}\` for upload command`
+        );
+      } else {
+        foundArgsObj[regex] = messageArguments[itemIndex];
+        messageArguments.splice(itemIndex, 1);
+      }
     }
-
-    return;
 
     const obj = {
       name: foundArgsObj.TITLE.replace(/['"]+/g, ""),
