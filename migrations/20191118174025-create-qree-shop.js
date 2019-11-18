@@ -26,6 +26,9 @@ module.exports = {
       platform: {
         type: Sequelize.STRING
       },
+      region: {
+        type: Sequelize.STRING
+      },
       size: {
         type: Sequelize.STRING
       },
