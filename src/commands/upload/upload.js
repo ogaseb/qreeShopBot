@@ -82,11 +82,11 @@ module.exports.handleGameUpload = async function(
           files: ["./img/" + string + ".jpg"]
         })
         .then(msg => {
-          obj.qr_image_url = msg.attachments.values().next().value.proxyURL;
+          obj.qrImageUrl = msg.attachments.values().next().value.proxyURL;
         });
 
       await receivedMessage.channel.send(
-        `\`\`\`\nLink: ${obj.qr_link}\n\nName: ${obj.name}\nPlatform: ${obj.platform}\nRegion: ${obj.region}\nSize: ${obj.size}\nUploader: ${obj.uploaderName}\`\`\`${text}`
+        `\`\`\`\nLink: ${obj.qrLink}\n\nName: ${obj.name}\nPlatform: ${obj.platform}\nRegion: ${obj.region}\nSize: ${obj.size}\nUploader: ${obj.uploaderName}\`\`\`${text}`
       );
     }, 3000);
 
@@ -102,7 +102,7 @@ module.exports.handleGameUpload = async function(
         try {
           obj.id = await createQree(obj, receivedMessage);
           const gameThumbnail = await getGameCover(obj.id, obj.name);
-          const qrCodesSubscription = sendToQrGames(
+          const qrCodesSubscription = await sendToQrGames(
             obj,
             receivedMessage,
             client,

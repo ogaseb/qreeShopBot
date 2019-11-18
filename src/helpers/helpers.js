@@ -2,7 +2,7 @@ require("dotenv").config();
 const qrCode = require("qrcode-generator");
 const { updateThumbnail } = require("../../controllers/qre_items");
 const { RichEmbed } = require("discord.js");
-const { Embeds } = require("discord-paginationembed");
+const Pagination = require("discord-paginationembed");
 const axios = require("axios");
 const pretty = require("prettysize");
 
@@ -15,11 +15,11 @@ function parseDropboxLink(link) {
     string[5] = "?dl=1";
     return string.join("/");
   }
-};
+}
 
 function parseGDriveLink(link) {
   return link.replace(/\/file\/d\/(.+)\/(.+)/, "/uc?export=download&id=$1");
-};
+}
 
 function parseURL(link) {
   if (link && link.match(regexes.GDRIVE)) {
@@ -33,21 +33,21 @@ function parseURL(link) {
   } else {
     return link;
   }
-};
+}
 
 function createASCIIQrCode(link) {
   let qr = qrCode(0, "L");
   qr.addData(`${link}`);
   qr.make();
   return qr.createASCII(2, 1);
-};
+}
 
 function createDataURLQrCode(link) {
   let qr = qrCode(0, "M");
   qr.addData(`${link}`);
   qr.make();
   return qr.createDataURL(5, 5);
-};
+}
 
 async function limitlessFetchMessages(channel, limit = 9000) {
   const sum_messages = [];
@@ -69,7 +69,7 @@ async function limitlessFetchMessages(channel, limit = 9000) {
   }
 
   return sum_messages;
-};
+}
 
 async function createEmbeddedAnswer(
   args,
@@ -92,19 +92,21 @@ async function createEmbeddedAnswer(
     embeds.push(
       new RichEmbed()
         .setImage(qrImageUrl)
-        .addField("Name: ", name )
+        .addField("Name: ", name)
         .addField("DB ID: ", id, true)
         .addField("Platform: ", platform, true)
         .addField("Region: ", region, true)
         .addField("Size: ", size, true)
-        .addField("QR:", "===================" )
+        .addField("QR:", "===================")
         .addField("Author: ", uploaderName, true)
         .setThumbnail(gameThumbnail)
     );
   }
-  loadingMessageId ? await receivedMessage.channel.messages.get(loadingMessageId).delete() : null
+  loadingMessageId
+    ? await receivedMessage.channel.messages.get(loadingMessageId).delete()
+    : null;
   return (
-    new Embeds()
+    new Pagination.Embeds()
       .setArray(embeds)
       .setAuthorizedUsers([receivedMessage.author.id])
       .setChannel(
@@ -124,19 +126,14 @@ async function createEmbeddedAnswer(
       })
       .setTimeout(600000)
   );
-};
+}
 
-async function sendToQrGames(
-  args,
-  receivedMessage,
-  client,
-  gameThumbnail
-) {
+async function sendToQrGames(args, receivedMessage, client, gameThumbnail) {
   const embeds = [];
 
   embeds.push(
     new RichEmbed()
-      .setImage(args.qr_image_url)
+      .setImage(args.qrImageUrl)
       .addField("Name: ", args.name, true)
       // .addField("QR link: ", args.qr_link)
       .addField("DB ID: ", args.id, true)
@@ -144,19 +141,19 @@ async function sendToQrGames(
       .addField("Region: ", args.region, true)
       .addField("Size: ", args.size)
       .addField("QR: ", "===================", true)
-      .addField("Author: ", args.uploader_name, true)
+      .addField("Author: ", args.uploaderName, true)
       .setThumbnail(
         gameThumbnail ||
           `https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png`
       )
   );
-
+  console.log(client.channels);
   return (
-    new Embeds()
+    new Pagination.Embeds()
       .setArray(embeds)
       .setPageIndicator(false)
       .setAuthorizedUsers([])
-      .setChannel(client.channels.get(process.env.BOT_SUBSCRIPTION_CHANNEL))
+      .setChannel(client.channels.get(process.env.BOT_SUBCRIPTION_CHANNEL))
       .setPage(1)
       // Methods below are for customising all embeds
       .setTitle("QR Code 3DS games")
@@ -165,11 +162,11 @@ async function sendToQrGames(
       .setDisabledNavigationEmojis(["ALL"])
       .setTimeout(600000)
   );
-};
+}
 
 function checkIfDM(receivedMessage) {
   return receivedMessage.channel.type === "dm";
-};
+}
 
 function filteredRegexes(array) {
   return Object.keys(regexes)
@@ -178,7 +175,7 @@ function filteredRegexes(array) {
       obj[key] = regexes[key];
       return obj;
     }, {});
-};
+}
 
 async function checkFileSize(url) {
   const urlMetadata = await axios.head(url, { timeout: 15000 });
@@ -187,7 +184,7 @@ async function checkFileSize(url) {
       return pretty(urlMetadata.headers["content-length"], true);
     }
   }
-};
+}
 
 async function getRandomMeme(searchPhrase) {
   const tenor = {
@@ -202,7 +199,7 @@ async function getRandomMeme(searchPhrase) {
   );
   const tenorResponse = await axios.get(tenorURL);
   return tenorResponse.data.results[0].media[0].gif.url;
-};
+}
 
 function validateGuilds(receivedMessage) {
   if (!checkIfDM(receivedMessage)) {
@@ -210,7 +207,7 @@ function validateGuilds(receivedMessage) {
       receivedMessage.guild.id
     );
   }
-};
+}
 
 function validatePermissions(receivedMessage) {
   if (!checkIfDM(receivedMessage)) {
@@ -218,7 +215,7 @@ function validatePermissions(receivedMessage) {
       process.env.BOT_PERMISSIONS_ROLES.includes(r.name)
     );
   }
-};
+}
 
 function validateAdmin(receivedMessage) {
   if (!checkIfDM(receivedMessage)) {
@@ -226,7 +223,7 @@ function validateAdmin(receivedMessage) {
       process.env.BOT_PERMISSIONS_ADMIN.includes(r.name)
     );
   }
-};
+}
 
 async function getGameCover(name, id) {
   let config = {
@@ -288,8 +285,6 @@ module.exports = {
   createEmbeddedAnswer,
   checkIfDM,
   regexes
-}
-
-
+};
 
 //(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?\w+|"(?:\\"|[^"])+"|'(?:\\'|[^"])+'|\w+
