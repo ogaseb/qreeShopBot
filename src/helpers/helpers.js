@@ -6,7 +6,7 @@ const { Embeds } = require("discord-paginationembed");
 const axios = require("axios");
 const pretty = require("prettysize");
 
-module.exports.parseDropboxLink = function(link) {
+function parseDropboxLink(link) {
   let string = link;
   string = string.split("/");
   if (string[3] === "sh") {
@@ -17,11 +17,11 @@ module.exports.parseDropboxLink = function(link) {
   }
 };
 
-module.exports.parseGDriveLink = function(link) {
+function parseGDriveLink(link) {
   return link.replace(/\/file\/d\/(.+)\/(.+)/, "/uc?export=download&id=$1");
 };
 
-module.exports.parseURL = function(link) {
+function parseURL(link) {
   if (link && link.match(regexes.GDRIVE)) {
     return (link = parseGDriveLink(link));
   } else if (link && link.match(regexes.DROPBOX)) {
@@ -35,21 +35,21 @@ module.exports.parseURL = function(link) {
   }
 };
 
-module.exports.createASCIIQrCode = function(link) {
+function createASCIIQrCode(link) {
   let qr = qrCode(0, "L");
   qr.addData(`${link}`);
   qr.make();
   return qr.createASCII(2, 1);
 };
 
-module.exports.createDataURLQrCode = function(link) {
+function createDataURLQrCode(link) {
   let qr = qrCode(0, "M");
   qr.addData(`${link}`);
   qr.make();
   return qr.createDataURL(5, 5);
 };
 
-module.exports.limitlessFetchMessages = async function(channel, limit = 9000) {
+async function limitlessFetchMessages(channel, limit = 9000) {
   const sum_messages = [];
   let last_id;
 
@@ -71,7 +71,7 @@ module.exports.limitlessFetchMessages = async function(channel, limit = 9000) {
   return sum_messages;
 };
 
-module.exports.createEmbeddedAnswer = async function(
+async function createEmbeddedAnswer(
   args,
   receivedMessage,
   loadingMessageId,
@@ -127,7 +127,7 @@ module.exports.createEmbeddedAnswer = async function(
   );
 };
 
-module.exports.sendToQrGames = async function(
+async function sendToQrGames(
   args,
   receivedMessage,
   client,
@@ -168,11 +168,11 @@ module.exports.sendToQrGames = async function(
   );
 };
 
-module.exports.checkIfDM = function(receivedMessage) {
+function checkIfDM(receivedMessage) {
   return receivedMessage.channel.type === "dm";
 };
 
-module.exports.filteredRegexes = function(array) {
+function filteredRegexes(array) {
   return Object.keys(regexes)
     .filter(key => array.includes(key))
     .reduce((obj, key) => {
@@ -181,7 +181,7 @@ module.exports.filteredRegexes = function(array) {
     }, {});
 };
 
-module.exports.checkFileSize = async function(url) {
+async function checkFileSize(url) {
   const urlMetadata = await axios.head(url, { timeout: 15000 });
   if (urlMetadata && urlMetadata.status !== 404) {
     if (urlMetadata.headers["content-length"]) {
@@ -190,7 +190,7 @@ module.exports.checkFileSize = async function(url) {
   }
 };
 
-module.exports.getRandomMeme = async function(searchPhrase) {
+async function getRandomMeme(searchPhrase) {
   const tenor = {
     baseURL: "https://api.tenor.com/v1/random",
     apiKey: "T64EWZS77O3H",
@@ -205,7 +205,7 @@ module.exports.getRandomMeme = async function(searchPhrase) {
   return tenorResponse.data.results[0].media[0].gif.url;
 };
 
-module.exports.validateGuilds = function(receivedMessage) {
+function validateGuilds(receivedMessage) {
   if (!checkIfDM(receivedMessage)) {
     return !!process.env.BOT_PERMISSIONS_GUILD.includes(
       receivedMessage.guild.id
@@ -213,7 +213,7 @@ module.exports.validateGuilds = function(receivedMessage) {
   }
 };
 
-module.exports.validatePermissions = function(receivedMessage) {
+function validatePermissions(receivedMessage) {
   if (!checkIfDM(receivedMessage)) {
     return !!receivedMessage.member.roles.some(r =>
       process.env.BOT_PERMISSIONS_ROLES.includes(r.name)
@@ -221,7 +221,7 @@ module.exports.validatePermissions = function(receivedMessage) {
   }
 };
 
-module.exports.validateAdmin = function(receivedMessage) {
+function validateAdmin(receivedMessage) {
   if (!checkIfDM(receivedMessage)) {
     return !!receivedMessage.member.roles.some(r =>
       process.env.BOT_PERMISSIONS_ADMIN.includes(r.name)
@@ -260,10 +260,22 @@ async function getGameCover(name, id) {
   }
 }
 module.exports = {
-  getGameCover
+  getGameCover,
+  parseURL,
+  validateAdmin,
+  validatePermissions,
+  validateGuilds,
+  getRandomMeme,
+  checkFileSize,
+  filteredRegexes,
+  sendToQrGames,
+  createDataURLQrCode,
+  createASCIIQrCode,
+  limitlessFetchMessages,
+  createEmbeddedAnswer
 }
 
-    module.exports.regexes = {
+module.exports.regexes = {
   DROPBOX: /\b(\w*dropbox\w*)\b/g,
   CIA: /\b(\w*cia\w*)\b/g,
   GDRIVE: /\b(\w*drive.google.com\w*)\b/g,
