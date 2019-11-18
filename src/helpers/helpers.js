@@ -229,7 +229,7 @@ module.exports.validateAdmin = function(receivedMessage) {
   }
 };
 
-module.exports.getGameCover = async function(name, id) {
+async function getGameCover(name, id) {
   let config = {
     headers: {
       "user-key": process.env.IGDB_TOKEN,
@@ -258,9 +258,12 @@ module.exports.getGameCover = async function(name, id) {
   } catch (error) {
     console.log(error.description);
   }
-};
+}
+module.exports = {
+  getGameCover
+}
 
-module.exports.regexes = {
+    module.exports.regexes = {
   DROPBOX: /\b(\w*dropbox\w*)\b/g,
   CIA: /\b(\w*cia\w*)\b/g,
   GDRIVE: /\b(\w*drive.google.com\w*)\b/g,
