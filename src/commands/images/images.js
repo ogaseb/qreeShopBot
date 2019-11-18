@@ -40,7 +40,6 @@ module.exports.makeQrImagesfromDB = async function(
             files: ["./img/" + string + ".jpg"]
           });
           // file exists
-          console.log(msg.attachments.values().next().value.proxyURL);
           obj.qr_image = msg.attachments.values().next().value.proxyURL;
           await updateQrImageUrl(obj.id, obj.qr_image);
         });

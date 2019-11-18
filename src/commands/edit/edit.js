@@ -86,7 +86,6 @@ module.exports.handleGameEdit = async function(
         ]);
         let foundArgsObj = {};
         for (const regex in regexesObj) {
-          console.log(regexesObj[regex]);
           const itemIndex = args.findIndex(value =>
             regexesObj[regex].test(value)
           );
@@ -102,8 +101,6 @@ module.exports.handleGameEdit = async function(
             );
           }
         }
-
-        console.log(foundArgsObj);
 
         const obj = {
           name: foundArgsObj.TITLE

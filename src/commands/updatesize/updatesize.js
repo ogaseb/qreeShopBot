@@ -33,7 +33,6 @@ module.exports.updateSize = async function() {
         }
 
         if (found_region && region === "N/A") {
-          console.log(found_region[0]);
           await updateRegionArgument(id, found_region[0]);
         }
       }

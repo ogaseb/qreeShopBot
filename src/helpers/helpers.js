@@ -213,7 +213,6 @@ function validateGuilds(receivedMessage) {
 };
 
 function validatePermissions(receivedMessage) {
-  console.log(receivedMessage.member.roles)
   if (!checkIfDM(receivedMessage)) {
     return !!receivedMessage.member.roles.some(r =>
       process.env.BOT_PERMISSIONS_ROLES.includes(r.name)
@@ -222,7 +221,6 @@ function validatePermissions(receivedMessage) {
 };
 
 function validateAdmin(receivedMessage) {
-  console.log(receivedMessage.member.roles)
   if (!checkIfDM(receivedMessage)) {
     return !!receivedMessage.member.roles.some(r =>
       process.env.BOT_PERMISSIONS_ADMIN.includes(r.name)
