@@ -6,29 +6,29 @@ const QreeItems = models.QreeItems;
 
 module.exports.createQree = async function(
   {
-    qr_data,
-    qr_image_url,
-    qr_link,
+    qrData,
+    qrImageUrl,
+    qrLink,
     name,
     platform,
     region,
     size,
-    uploader_discord_id,
-    uploader_name
+    uploaderDiscordId,
+    uploaderName
   },
   receivedMessage
 ) {
   try {
     const item = await QreeItems.create({
-      qr_data,
-      qr_image_url,
-      qr_link,
+      qrData,
+      qrImageUrl,
+      qrLink,
       name,
       platform,
       region,
       size,
-      uploader_discord_id,
-      uploader_name
+      uploaderDiscordId,
+      uploaderName
     });
     await receivedMessage.channel.send("Saving in database!");
     console.log("DB -> save qr in DB");
@@ -46,14 +46,14 @@ module.exports.createQree = async function(
 module.exports.editQree = async function(
   id,
   {
-    qr_data,
-    qr_image_url,
-    qr_link,
+    qrData,
+    qrImageUrl,
+    qrLink,
     name,
     platform,
     region,
-    uploader_discord_id,
-    uploader_name
+    uploaderDiscordId,
+    uploaderName
   },
   newSize,
   receivedMessage
@@ -61,15 +61,15 @@ module.exports.editQree = async function(
   try {
     await QreeItems.update(
       {
-        qr_data,
-        qr_image_url,
-        qr_link,
+        qrData,
+        qrImageUrl,
+        qrLink,
         name,
         platform,
         region,
         newSize,
-        uploader_discord_id,
-        uploader_name
+        uploaderDiscordId,
+        uploaderName
       },
       { where: { id } }
     );
@@ -137,11 +137,11 @@ module.exports.getWholeDB = async function() {
   }
 };
 
-module.exports.updateQrImageUrl = async function(id, qr_image_url) {
+module.exports.updateQrImageUrl = async function(id, qrImageUrl) {
   try {
     await QreeItems.update(
       {
-        qr_image_url
+        qrImageUrl
       },
       { where: { id } }
     );
