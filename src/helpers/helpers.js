@@ -272,7 +272,8 @@ module.exports = {
   createDataURLQrCode,
   createASCIIQrCode,
   limitlessFetchMessages,
-  createEmbeddedAnswer
+  createEmbeddedAnswer,
+  checkIfDM
 }
 
 module.exports.regexes = {
