@@ -92,12 +92,12 @@ async function createEmbeddedAnswer(
     embeds.push(
       new RichEmbed()
         .setImage(qrImageUrl)
-        .addField("Name: ", name, )
+        .addField("Name: ", name )
         .addField("DB ID: ", id, true)
         .addField("Platform: ", platform, true)
         .addField("Region: ", region, true)
         .addField("Size: ", size, true)
-        .addField("QR:", "===================", true)
+        .addField("QR:", "===================" )
         .addField("Author: ", uploaderName, true)
         .setThumbnail(gameThumbnail)
     );
