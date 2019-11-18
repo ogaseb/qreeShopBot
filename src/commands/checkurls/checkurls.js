@@ -6,10 +6,10 @@ module.exports.urlStatus = async function(client) {
     .get("604692367018033152")
     .send(`Checking urls started... I will do it every 24 hours`);
   const rows = await getWholeDB();
-  for (const { id, qr_link, name, uploader_discord_id } of rows) {
+  for (const { id, qrLink, name, uploaderDiscordId } of rows) {
     try {
       console.time(`scanningTime - ${name}`);
-      await axios.head(qr_link, { timeout: 30000 });
+      await axios.head(qrLink, { timeout: 30000 });
       console.timeEnd(`scanningTime - ${name}`);
     } catch (e) {
       if (e.response) {
@@ -17,14 +17,14 @@ module.exports.urlStatus = async function(client) {
           await client.channels
             .get("604692367018033152")
             .send(
-              `${qr_link} sends ${e.response.status} respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} . <@${uploader_discord_id}>`
+              `${qrLink} sends ${e.response.status} respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} . <@${uploaderDiscordId}>`
             );
         }
       } else {
         await client.channels
           .get("604692367018033152")
           .send(
-            `${qr_link} sends error, but link probably works, check by clicking on it: ${name}. DB ID for updating: ${id} . <@${uploader_discord_id}>`
+            `${qrLink} sends error, but link probably works, check by clicking on it: ${name}. DB ID for updating: ${id} . <@${uploaderDiscordId}>`
           );
       }
     }

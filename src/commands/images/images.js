@@ -14,21 +14,21 @@ module.exports.makeQrImagesfromDB = async function(
     const rows = await getWholeDB();
     for (const {
       id,
-      qr_image_url,
-      qr_link,
+      qrImageUrl,
+      qrLink,
       name,
       platform,
       region,
-      uploader_discord_id
+      uploaderDiscordId
     } of rows) {
       const obj = {
-        qr_image: createDataURLQrCode(qr_link),
-        uploader_discord_id,
+        qr_image: createDataURLQrCode(qrLink),
+        uploaderDiscordId,
         id
       };
 
-      if (qr_image_url === "null") {
-        let string = name + platform + region + uploader_discord_id;
+      if (qrImageUrl === "null") {
+        let string = name + platform + region + uploaderDiscordId;
         string = string.replace(/[^a-z0-9]/gim, "");
         await imageDataURI.outputFile(obj.qr_image, "./img/" + string + ".jpg");
         fs.access("./img/" + string + ".jpg", fs.F_OK, async err => {

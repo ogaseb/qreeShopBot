@@ -17,22 +17,22 @@ module.exports.handleGameEdit = async function(
     const id = parseInt(messageArguments[1]);
     const rows = await findGameToEdit(id);
     const {
-      qr_data,
-      qr_image_url,
-      qr_link,
+      qrData,
+      qrImageUrl,
+      qrLink,
       name,
       platform,
       region,
       size,
-      uploader_discord_id,
-      uploader_name
+      uploaderDiscordId,
+      uploaderName
     } = rows[0];
     if (rows.length) {
       await receivedMessage.channel.send(
-        `\`\`\`\nLink: ${qr_link}\n\nName: ${name}\nPlatform: ${platform}\nRegion: ${region}\nSize: ${size}\nUploader: ${uploader_name}\`\`\` 
+        `\`\`\`\nLink: ${qrLink}\n\nName: ${name}\nPlatform: ${platform}\nRegion: ${region}\nSize: ${size}\nUploader: ${uploaderName}\`\`\` 
         \`\`\`Is this the game you wish to edit? type 'yes'/'no'\`\`\``,
         {
-          files: [qr_image_url]
+          files: [qrImageUrl]
         }
       );
 
@@ -106,27 +106,27 @@ module.exports.handleGameEdit = async function(
           name: foundArgsObj.TITLE
             ? foundArgsObj.TITLE.replace(/['"]+/g, "")
             : name,
-          qr_link: foundArgsObj.URL ? foundArgsObj.URL : qr_link,
-          qr_data: foundArgsObj.URL
+          qrLink: foundArgsObj.URL ? foundArgsObj.URL : qrLink,
+          qrData: foundArgsObj.URL
             ? createASCIIQrCode(foundArgsObj.URL)
-            : qr_data,
-          qr_image_url: foundArgsObj.URL
+            : qrData,
+          qrImageUrl: foundArgsObj.URL
             ? createDataURLQrCode(foundArgsObj.URL)
-            : qr_image_url,
+            : qrImageUrl,
           platform: foundArgsObj.PLATFORMS ? foundArgsObj.PLATFORMS : platform,
           region: foundArgsObj.REGIONS ? foundArgsObj.REGIONS : region,
           size: foundArgsObj.SIZE ? foundArgsObj.SIZE : size,
-          uploader_discord_id: uploader_discord_id,
-          uploader_name: uploader_name
+          uploaderDiscordId: uploaderDiscordId,
+          uploaderName: uploaderName
         };
 
         let newSize = "";
         if (foundArgsObj.URL) {
           let string =
-            obj.name + obj.platform + obj.region + obj.uploader_discord_id;
+            obj.name + obj.platform + obj.region + obj.uploaderDiscordId;
           string = string.replace(/[^a-z0-9]/gim, "");
           await imageDataURI.outputFile(
-            obj.qr_image_url,
+            obj.qrImageUrl,
             "./img/" + string + ".jpg"
           );
 

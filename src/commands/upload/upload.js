@@ -54,19 +54,19 @@ module.exports.handleGameUpload = async function(
 
     const obj = {
       name: foundArgsObj.TITLE.replace(/['"]+/g, ""),
-      qr_link: parseURL(foundArgsObj.URL),
-      qr_data: createASCIIQrCode(parseURL(foundArgsObj.URL)),
-      qr_image_url: createDataURLQrCode(parseURL(foundArgsObj.URL)),
+      qrLink: parseURL(foundArgsObj.URL),
+      qrData: createASCIIQrCode(parseURL(foundArgsObj.URL)),
+      qrImageUrl: createDataURLQrCode(parseURL(foundArgsObj.URL)),
       platform: foundArgsObj.PLATFORMS,
       region: foundArgsObj.REGIONS,
       size: await checkFileSize(parseURL(foundArgsObj.URL)),
-      uploader_discord_id: receivedMessage.author.id,
-      uploader_name: receivedMessage.author.username
+      uploaderDiscordId: receivedMessage.author.id,
+      uploaderName: receivedMessage.author.username
     };
 
-    let string = obj.name + obj.platform + obj.region + obj.uploader_discord_id;
+    let string = obj.name + obj.platform + obj.region + obj.uploaderDiscordId;
     string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
-    await imageDataURI.outputFile(obj.qr_image_url, "./img/" + string + ".jpg");
+    await imageDataURI.outputFile(obj.qrImageUrl, "./img/" + string + ".jpg");
 
     const rows = await findGame(obj.name);
     const text =
@@ -86,7 +86,7 @@ module.exports.handleGameUpload = async function(
         });
 
       await receivedMessage.channel.send(
-        `\`\`\`\nLink: ${obj.qr_link}\n\nName: ${obj.name}\nPlatform: ${obj.platform}\nRegion: ${obj.region}\nSize: ${obj.size}\nUploader: ${obj.uploader_name}\`\`\`${text}`
+        `\`\`\`\nLink: ${obj.qr_link}\n\nName: ${obj.name}\nPlatform: ${obj.platform}\nRegion: ${obj.region}\nSize: ${obj.size}\nUploader: ${obj.uploaderName}\`\`\`${text}`
       );
     }, 3000);
 
