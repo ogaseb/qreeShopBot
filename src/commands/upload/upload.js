@@ -24,11 +24,11 @@ module.exports.handleGameUpload = async function(
         `invalid arguments count for upload command`
       );
     }
-    // const meme = await getRandomMeme("head-pat-anime");
-    // const response = await receivedMessage.channel.send(`wait a moment...`, {
-    //   files: [meme]
-    // });
-    // const loadingMessageId = response.id;
+    const meme = await getRandomMeme("head-pat-anime");
+    const response = await receivedMessage.channel.send(`wait a moment...`, {
+      files: [meme]
+    });
+    const loadingMessageId = response.id;
 
     const regexesObj = filteredRegexes([
       "URL",
@@ -129,7 +129,7 @@ module.exports.handleGameUpload = async function(
       } else if (message.content.toLowerCase() === "search") {
         try {
           await receivedMessage.channel.send(
-            `\`\`\`Ok, displaying games that I have found you can type 'yes'/'no' still\`\`\`\``
+            `\`\`\`Ok, displaying games that I have found you can type 'yes'/'no' still\`\`\``
           );
 
           const QrCodesSearchResults = await createEmbeddedAnswer(

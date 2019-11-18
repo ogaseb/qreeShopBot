@@ -89,7 +89,6 @@ async function createEmbeddedAnswer(
     thumbnail
   } of args) {
     const gameThumbnail = thumbnail || (await getGameCover(name, id));
-    console.log(gameThumbnail);
     embeds.push(
       new RichEmbed()
         .setImage(qr_image_url)
@@ -103,7 +102,7 @@ async function createEmbeddedAnswer(
         .setThumbnail(gameThumbnail)
     );
   }
-  await receivedMessage.channel.messages.get(loadingMessageId).delete();
+  loadingMessageId ? await receivedMessage.channel.messages.get(loadingMessageId).delete() : null
   return (
     new Embeds()
       .setArray(embeds)
@@ -287,7 +286,7 @@ module.exports = {
   createASCIIQrCode,
   limitlessFetchMessages,
   createEmbeddedAnswer,
-  checkIfDM, 
+  checkIfDM,
   regexes
 }
 
