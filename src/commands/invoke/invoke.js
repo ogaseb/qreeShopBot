@@ -1,4 +1,4 @@
-export function changeInvokeCommand(
+module.exports.changeInvokeCommand = function(
   messageArguments,
   receivedMessage,
   serverInvokers
@@ -21,4 +21,12 @@ export function changeInvokeCommand(
       `Successfully changed your invoke command`
     );
   }
-}
+};
+
+// export function changeInvokeCommand(
+//   messageArguments,
+//   receivedMessage,
+//   serverInvokers
+// ) {
+//
+// }

@@ -1,4 +1,4 @@
-import {
+const {
   checkFileSize,
   createASCIIQrCode,
   createDataURLQrCode,
@@ -8,12 +8,12 @@ import {
   getRandomMeme,
   parseURL,
   sendToQrGames
-} from "../../helpers/helpers";
-import { createQree, findGame } from "../../db/db_qree";
-import { MessageCollector } from "discord.js";
-import imageDataURI from "image-data-uri";
+} = require("../../helpers/helpers");
+const { createQree, findGame } = require("../../../controllers/qre_items");
+const { MessageCollector } = require("discord.js");
+const imageDataURI = require("image-data-uri");
 
-export async function handleGameUpload(
+module.exports.handleGameUpload = async function(
   messageArguments,
   receivedMessage,
   client
@@ -24,11 +24,11 @@ export async function handleGameUpload(
         `invalid arguments count for upload command`
       );
     }
-    const meme = await getRandomMeme("head-pat-anime");
-    const response = await receivedMessage.channel.send(`wait a moment...`, {
-      files: [meme]
-    });
-    const loadingMessageId = response.id;
+    // const meme = await getRandomMeme("head-pat-anime");
+    // const response = await receivedMessage.channel.send(`wait a moment...`, {
+    //   files: [meme]
+    // });
+    // const loadingMessageId = response.id;
 
     const regexesObj = filteredRegexes([
       "URL",
@@ -42,15 +42,18 @@ export async function handleGameUpload(
       const itemIndex = await messageArguments.findIndex(value =>
         regexesObj[regex].test(value)
       );
-      if (itemIndex === -1) {
-        return await receivedMessage.channel.send(
-          `invalid arguments \`${regex}\` for upload command`
-        );
-      } else {
-        foundArgsObj[regex] = messageArguments[itemIndex];
-        messageArguments.splice(itemIndex, 1);
-      }
+      console.log(itemIndex);
+      // if (itemIndex === -1) {
+      //   return await receivedMessage.channel.send(
+      //     `invalid arguments \`${regex}\` for upload command`
+      //   );
+      // } else {
+      //   foundArgsObj[regex] = messageArguments[itemIndex];
+      //   messageArguments.splice(itemIndex, 1);
+      // }
     }
+
+    return;
 
     const obj = {
       name: foundArgsObj.TITLE.replace(/['"]+/g, ""),
@@ -155,4 +158,4 @@ export async function handleGameUpload(
       `something went wrong, send it to developer: \n\`\`\`diff\n- ${e}\`\`\``
     );
   }
-}
+};

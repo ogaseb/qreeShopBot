@@ -1,8 +1,8 @@
-import { RichEmbed } from "discord.js";
-import { Embeds } from "discord-paginationembed";
-import { checkIfDM } from "../../helpers/helpers";
+const { RichEmbed } = require("discord.js");
+const { Embeds } = require("discord-paginationembed");
+const { checkIfDM } = require("../../helpers/helpers");
 
-export function createEmbeddedHelper(
+module.exports.createEmbeddedHelper = function(
   serverInvokers,
   receivedMessage,
   destination
@@ -155,4 +155,10 @@ export function createEmbeddedHelper(
       })
       .setTimeout(600000)
   );
-}
+};
+
+// export function createEmbeddedHelper(
+//   serverInvokers,
+//   receivedMessage,
+//   destination
+// ) {}

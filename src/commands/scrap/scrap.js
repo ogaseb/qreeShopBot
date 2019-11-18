@@ -1,14 +1,14 @@
-import {
+const {
   createASCIIQrCode,
   limitlessFetchMessages,
   regexes
-} from "../../helpers/helpers";
-import fetch from "node-fetch";
-import jimp from "jimp";
-import QRReader from "qrcode-reader";
-import { createQree, findGame } from "../../db/db_qree";
+} = require("../../helpers/helpers");
+const fetch = require("node-fetch");
+const jimp = require("jimp");
+const QRReader = require("qrcode-reader");
+const { createQree, findGame } = require("../../../controllers/qre_items");
 
-export async function scrapChannelForQrCodes(
+module.exports.scrapChannelForQrCodes = async function(
   messageArguments,
   receivedMessage
 ) {
@@ -120,4 +120,9 @@ export async function scrapChannelForQrCodes(
   } catch (e) {
     console.log(e);
   }
-}
+};
+
+// export async function scrapChannelForQrCodes(
+//   messageArguments,
+//   receivedMessage
+// ) {}

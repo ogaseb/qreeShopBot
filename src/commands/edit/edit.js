@@ -1,15 +1,18 @@
-import { editQree, findGameToEdit } from "../../db/db_qree";
-import { MessageCollector } from "discord.js";
-import {
+const { editQree, findGameToEdit } = require("../../../controllers/qre_items");
+const { MessageCollector } = require("discord.js");
+const {
   checkFileSize,
   createASCIIQrCode,
   createDataURLQrCode,
   filteredRegexes,
   regexes
-} from "../../helpers/helpers";
-import imageDataURI from "image-data-uri";
+} = require("../../helpers/helpers");
+const imageDataURI = require("image-data-uri");
 
-export async function handleGameEdit(messageArguments, receivedMessage) {
+module.exports.handleGameEdit = async function(
+  messageArguments,
+  receivedMessage
+) {
   try {
     const id = parseInt(messageArguments[1]);
     const rows = await findGameToEdit(id);
@@ -155,4 +158,8 @@ export async function handleGameEdit(messageArguments, receivedMessage) {
         "```"
     );
   }
-}
+};
+
+// export async function handleGameEdit(messageArguments, receivedMessage) {
+//
+// }

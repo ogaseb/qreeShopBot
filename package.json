@@ -5,10 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack --watch --config webpack.server.config.js",
-    "webpack": "webpack --config webpack.server.config.js",
-    "start": "webpack --config webpack.server.config.js && pm2-runtime build/main.js -i 1",
-    "babel": "babel-node server.js"
+    "dev": "nodemon server.js",
+    "start": "pm2-runtime start ecosystem.config.js --env production"
   },
   "husky": {
     "hooks": {
@@ -41,29 +39,20 @@
     "jimp": "^0.6.4",
     "lodash": "^4.17.15",
     "node-fetch": "^2.6.0",
+    "nodemon": "^1.19.4",
     "pg": "^7.12.1",
     "prettysize": "^2.0.0",
     "qrcode-generator": "^1.4.3",
     "qrcode-reader": "^1.0.4",
     "request": "^2.88.0",
     "sequelize": "^5.15.2",
-    "sequelize-cli": "^5.5.1",
-    "webpack-node-externals": "^1.7.2"
+    "sequelize-cli": "^5.5.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.6.2",
-    "@babel/preset-env": "^7.6.2",
-    "@babel/register": "^7.6.2",
-    "babel": "^6.23.0",
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-stage-2": "^6.24.1",
+    "pm2": "^4.1.2",
     "eslint": "^6.5.0",
     "husky": "^3.0.7",
-    "nodemon-webpack-plugin": "^4.0.8",
     "prettier": "^1.18.2",
-    "pretty-quick": "^1.11.1",
-    "webpack": "^4.41.0",
-    "webpack-cli": "^3.3.6"
+    "pretty-quick": "^1.11.1"
   }
 }

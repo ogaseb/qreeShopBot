@@ -1,12 +1,12 @@
-import {
+const {
   getWholeDB,
   updateRegionArgument,
   updateSizeArgument
-} from "../../db/db_qree";
-import axios from "axios";
-import pretty from "prettysize";
+} = require("../../../controllers/qre_items");
+const axios = require("axios");
+const pretty = require("prettysize");
 
-export async function updateSize() {
+module.exports.updateSize = async function() {
   const rows = await getWholeDB();
   for (const { id, qr_link, name, region } of rows) {
     try {
@@ -45,4 +45,8 @@ export async function updateSize() {
       }
     }
   }
-}
+};
+
+// export async function updateSize() {
+//
+// }

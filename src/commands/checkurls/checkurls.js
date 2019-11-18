@@ -1,7 +1,7 @@
-import { getWholeDB } from "../../db/db_qree";
-import axios from "axios";
+const { getWholeDB } = require("../../../controllers/qre_items");
+const axios = require("axios");
 
-export async function urlStatus(client) {
+module.exports.urlStatus = async function(client) {
   await client.channels
     .get("604692367018033152")
     .send(`Checking urls started... I will do it every 24 hours`);
@@ -32,4 +32,8 @@ export async function urlStatus(client) {
   await client.channels
     .get("604692367018033152")
     .send(`All games have been scanned!`);
-}
+};
+
+// export async function urlStatus(client) {
+//
+// }

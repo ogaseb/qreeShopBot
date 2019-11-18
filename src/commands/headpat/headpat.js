@@ -1,7 +1,7 @@
-import { getRandomMeme } from "../../helpers/helpers";
-import { RichEmbed } from "discord.js";
+const { getRandomMeme } = require("../../helpers/helpers");
+const { RichEmbed } = require("discord.js");
 
-export async function headPat(messageArgument, receivedMessage) {
+module.exports.headPat = async function(messageArgument, receivedMessage) {
   if (messageArgument.length !== 2) {
     return receivedMessage.channel.send(
       `hey, specify who you want to headpat!`
@@ -16,4 +16,8 @@ export async function headPat(messageArgument, receivedMessage) {
     )
     .setImage(meme);
   receivedMessage.channel.send(embedHeadpat);
-}
+};
+
+// export async function headPat(messageArgument, receivedMessage) {
+//
+// }

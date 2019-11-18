@@ -4,3 +4,4 @@
 *.min.js
 /img
 /build/main.js
+/config/config.json

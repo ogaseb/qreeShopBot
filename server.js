@@ -1,6 +1,6 @@
 require("dotenv").config();
-import { Client } from "discord.js";
-import {
+const { Client } = require("discord.js");
+const {
   scrapChannelForQrCodes,
   changeInvokeCommand,
   handleGameUpload,
@@ -12,15 +12,16 @@ import {
   updateSize,
   headPat,
   findCovers
-} from "./src/commands/index";
-import {
+} = require("./src/commands/index");
+
+const {
   regexes,
   checkIfDM,
   validateGuilds,
   validatePermissions,
   validateAdmin
-} from "./src/helpers/helpers";
-import { approxQrCount } from "./src/db/db_qree";
+} = require("./src/helpers/helpers");
+const { approxQrCount } = require("./controllers/qre_items");
 
 process.on("unhandledRejection", (err, p) => {
   console.log("An unhandledRejection occurred");
@@ -56,10 +57,11 @@ client.on("ready", async () => {
 
   setInterval(async () => {
     const qrCount = await approxQrCount();
+    console.log(qrCount)
     await client.user.setActivity(`QR Codes count: ${qrCount.count}`, {
-      type: "PLAYING"
+      type: "WATCHING"
     });
-  }, 60000);
+  }, 30000);
 
   setInterval(async () => {
     await urlStatus(client);

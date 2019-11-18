@@ -1,8 +1,7 @@
-import { getWholeDB } from "../../db/db_qree";
-import axios from "axios";
-import { getGameCover } from "../../helpers/helpers";
+const { getWholeDB } = require("../../../controllers/qre_items");
+const { getGameCover } = require("../../helpers/helpers");
 
-export async function findCovers(client) {
+module.exports.findCovers = async function(client) {
   await client.channels
     .get("605181514321494036")
     .send(`searching for covers...`);
@@ -19,4 +18,4 @@ export async function findCovers(client) {
   await client.channels
     .get("605181514321494036")
     .send(`All games have been scanned!`);
-}
+};

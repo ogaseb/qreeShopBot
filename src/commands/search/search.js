@@ -1,11 +1,7 @@
-import { findGame } from "../../db/db_qree";
-import {
-  checkIfDM,
-  createEmbeddedAnswer,
-  getRandomMeme
-} from "../../helpers/helpers";
+const { findGame } = require("../../../controllers/qre_items");
+const { checkIfDM, createEmbeddedAnswer } = require("../../helpers/helpers");
 
-export async function searchGame(messageArguments, receivedMessage) {
+module.exports.searchGame = async function(messageArguments, receivedMessage) {
   try {
     // remove "search" from first element of array
     let args = messageArguments.split(" ");
@@ -39,4 +35,8 @@ export async function searchGame(messageArguments, receivedMessage) {
       `something went wrong, send it to developer: \n\`\`\`diff\n- ${e}\`\`\``
     );
   }
-}
+};
+//
+// export async function searchGame(messageArguments, receivedMessage) {
+//
+// }

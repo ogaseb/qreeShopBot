@@ -1,16 +1,16 @@
-import { scrapChannelForQrCodes } from "./scrap/scrap.js";
-import { changeInvokeCommand } from "./invoke/invoke.js";
-import { handleGameUpload } from "./upload/upload.js";
-import { searchGame } from "./search/search.js";
-import { handleGameEdit } from "./edit/edit.js";
-import { createEmbeddedHelper } from "./help/help.js";
-import { makeQrImagesfromDB } from "./images/images";
-import { urlStatus } from "./checkurls/checkurls";
-import { updateSize } from "./updatesize/updatesize";
-import { headPat } from "./headpat/headpat";
-import { findCovers } from "./findcovers/findcovers";
+const { scrapChannelForQrCodes } = require("./scrap/scrap.js");
+const { changeInvokeCommand } = require("./invoke/invoke.js");
+const { handleGameUpload } = require("./upload/upload.js");
+const { searchGame } = require("./search/search.js");
+const { handleGameEdit } = require("./edit/edit.js");
+const { createEmbeddedHelper } = require("./help/help.js");
+const { makeQrImagesfromDB } = require("./images/images");
+const { urlStatus } = require("./checkurls/checkurls");
+const { updateSize } = require("./updatesize/updatesize");
+const { headPat } = require("./headpat/headpat");
+const { findCovers } = require("./findcovers/findcovers");
 
-export {
+module.exports = {
   scrapChannelForQrCodes,
   changeInvokeCommand,
   handleGameUpload,

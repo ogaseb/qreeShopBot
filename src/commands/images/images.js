@@ -1,9 +1,15 @@
-import { createDataURLQrCode } from "../../helpers/helpers";
-import { getWholeDB, updateQrImageUrl } from "../../db/db_qree";
-import imageDataURI from "image-data-uri";
-import fs from "fs";
+const { createDataURLQrCode } = require("../../helpers/helpers");
+const {
+  getWholeDB,
+  updateQrImageUrl
+} = require("../../../controllers/qre_items");
+const imageDataURI = require("image-data-uri");
+const fs = require("fs");
 
-export async function makeQrImagesfromDB(messageArguments, receivedMessage) {
+module.exports.makeQrImagesfromDB = async function(
+  messageArguments,
+  receivedMessage
+) {
   try {
     const rows = await getWholeDB();
     for (const {
@@ -43,4 +49,8 @@ export async function makeQrImagesfromDB(messageArguments, receivedMessage) {
   } catch (e) {
     console.log(e);
   }
-}
+};
+
+// export async function makeQrImagesfromDB(messageArguments, receivedMessage) {
+//
+// }
