@@ -100,6 +100,8 @@ module.exports.handleGameUpload = async function(
       if (message.content.toLowerCase() === "yes") {
         collector.stop();
         try {
+          console.log(obj);
+
           obj.id = await createQree(obj, receivedMessage);
           const gameThumbnail = await getGameCover(obj.id, obj.name);
           const qrCodesSubscription = await sendToQrGames(
