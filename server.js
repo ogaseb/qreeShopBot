@@ -1,4 +1,6 @@
 require("dotenv").config();
+const Sentry = require("@sentry/node");
+Sentry.init({ dsn: process.env.SENTRY_URL });
 const { Client } = require("discord.js");
 const {
   scrapChannelForQrCodes,
@@ -22,12 +24,6 @@ const {
   validateAdmin
 } = require("./src/helpers/helpers");
 const { approxQrCount } = require("./controllers/qre_items");
-
-process.on("unhandledRejection", (err, p) => {
-  console.log("An unhandledRejection occurred");
-  console.log(`Rejected Promise: ${p}`);
-  console.log(`Rejection: ${err}`);
-});
 
 const client = new Client();
 let botInvoker = process.env.BOT_DEFAULT_INVOKE;
@@ -57,7 +53,6 @@ client.on("ready", async () => {
 
   setInterval(async () => {
     const qrCount = await approxQrCount();
-    console.log(qrCount)
     await client.user.setActivity(`QR Codes count: ${qrCount.count}`, {
       type: "WATCHING"
     });
@@ -106,8 +101,6 @@ function processCommand(receivedMessage) {
   if (messageArguments !== null && messageArguments.length) {
     primaryCommand = messageArguments[0]; // The first word directly after the exclamation is the command
   }
-
-  console.log(primaryCommand);
 
   if (!primaryCommand) {
     checkIfDM(receivedMessage)

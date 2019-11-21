@@ -147,7 +147,6 @@ async function sendToQrGames(args, receivedMessage, client, gameThumbnail) {
           `https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png`
       )
   );
-  console.log(client.channels);
   return (
     new Pagination.Embeds()
       .setArray(embeds)

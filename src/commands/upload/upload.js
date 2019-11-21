@@ -77,13 +77,10 @@ module.exports.handleGameUpload = async function(
     setTimeout(async () => {
       receivedMessage.channel.messages.get(loadingMessageId).delete();
 
-      await receivedMessage.channel
-        .send("", {
-          files: ["./img/" + string + ".jpg"]
-        })
-        .then(msg => {
-          obj.qrImageUrl = msg.attachments.values().next().value.proxyURL;
-        });
+      const imageMsg = await receivedMessage.channel.send("", {
+        files: ["./img/" + string + ".jpg"]
+      });
+      obj.qrImageUrl = imageMsg.attachments.values().next().value.proxyURL;
 
       await receivedMessage.channel.send(
         `\`\`\`\nLink: ${obj.qrLink}\n\nName: ${obj.name}\nPlatform: ${obj.platform}\nRegion: ${obj.region}\nSize: ${obj.size}\nUploader: ${obj.uploaderName}\`\`\`${text}`
@@ -100,8 +97,6 @@ module.exports.handleGameUpload = async function(
       if (message.content.toLowerCase() === "yes") {
         collector.stop();
         try {
-          console.log(obj);
-
           obj.id = await createQree(obj, receivedMessage);
           const gameThumbnail = await getGameCover(obj.id, obj.name);
           const qrCodesSubscription = await sendToQrGames(

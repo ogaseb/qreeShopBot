@@ -133,13 +133,12 @@ module.exports.handleGameEdit = async function(
               "./img/" + string + ".jpg"
             );
 
-            await receivedMessage.channel
-              .send("", {
-                files: ["./img/" + string + ".jpg"]
-              })
-              .then(msg => {
-                obj.qrImageUrl = msg.attachments.values().next().value.proxyURL;
-              });
+            const imageMsg = await receivedMessage.channel.send("", {
+              files: ["./img/" + string + ".jpg"]
+            });
+            obj.qrImageUrl = imageMsg.attachments
+              .values()
+              .next().value.proxyURL;
 
             newSize = await checkFileSize(foundArgsObj.URL);
           }
