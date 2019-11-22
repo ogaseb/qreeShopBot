@@ -78,8 +78,12 @@ module.exports.handleGameEdit = async function(
             .join(" ")
             .match(regexes.ARGUMENTS);
 
+          console.log(args);
+
+          await receivedMessage.channel.send(`${args}`);
+
           if (args) {
-            const regexesObj = filteredRegexes([
+            const regexesObj = await filteredRegexes([
               "URL",
               "TITLE",
               "REGIONS",
