@@ -79,7 +79,6 @@ module.exports.handleGameEdit = async function(
             .match(regexes.ARGUMENTS);
 
           console.log(args);
-          await receivedMessage.channel.send(`${args}`);
 
           if (args) {
             const regexesObj = await filteredRegexes([
@@ -93,15 +92,20 @@ module.exports.handleGameEdit = async function(
             let foundArgsObj = {};
             for (const regex in regexesObj) {
               if (regexesObj.hasOwnProperty(regex)) {
+                console.log(regexesObj[regex], regex);
+
                 const itemIndex = args.findIndex(value =>
-                  regexesObj[regex].test(value)
+                  value.match(regexesObj[regex])
                 );
+                console.log(itemIndex);
+
                 if (itemIndex === -1) {
                   await receivedMessage.channel.send(
                     `argument \`${regex}\` is missing continue...`
                   );
                 } else {
                   foundArgsObj[regex] = args[itemIndex];
+                  console.log(itemIndex);
                   args.splice(itemIndex, 1);
                   await receivedMessage.channel.send(
                     `argument \`${regex}\` is present! : \`${foundArgsObj[regex]}\``
