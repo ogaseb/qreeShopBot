@@ -105,10 +105,12 @@ async function createEmbeddedAnswer(
   loadingMessageId
     ? await receivedMessage.channel.messages.get(loadingMessageId).delete()
     : null;
+
+  const author = receivedMessage.author.id || "";
   return (
     new Pagination.Embeds()
       .setArray(embeds)
-      .setAuthorizedUsers([receivedMessage.author.id])
+      .setAuthorizedUsers([author])
       .setChannel(
         destination === "pm" ? receivedMessage.author : receivedMessage.channel
       )

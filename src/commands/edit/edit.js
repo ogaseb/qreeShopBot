@@ -1,5 +1,4 @@
 require("dotenv").config();
-const { createEmbeddedAnswer } = require("../../helpers/helpers");
 const { editQree, findGameToEdit } = require("../../../controllers/qre_items");
 const { MessageCollector } = require("discord.js");
 const {
@@ -162,8 +161,14 @@ module.exports.handleGameEdit = async function(
               receivedMessage
             );
 
-            const check = await findGameToEdit(id, receivedMessage);
-            await createEmbeddedAnswer(check).build();
+            const check = await findGameToEdit(id);
+
+            await receivedMessage.channel.send(
+              `\`\`\`\nLink: ${check.qrLink}\n\nName: ${check.name}\nPlatform: ${check.platform}\nRegion: ${check.region}\nSize: ${check.size}\nUploader: ${check.uploaderName}\`\`\``,
+              {
+                files: [check.qrImageUrl]
+              }
+            );
           } else {
             await receivedMessage.channel.send(`Edit session ended`);
           }
