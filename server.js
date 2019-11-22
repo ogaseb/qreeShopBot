@@ -1,6 +1,5 @@
 require("dotenv").config();
-const Sentry = require("@sentry/node");
-Sentry.init({ dsn: process.env.SENTRY_URL });
+require("@sentry/node").init({ dsn: process.env.SENTRY_URL });
 const { Client } = require("discord.js");
 const {
   scrapChannelForQrCodes,

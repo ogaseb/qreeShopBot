@@ -110,10 +110,7 @@ module.exports.findGame = async function(name) {
 
 module.exports.findGameToEdit = async function(id) {
   try {
-    return await QreeItems.findAll({
-      where: {
-        id
-      },
+    return await QreeItems.findByPk(id, {
       limit: 1
     });
   } catch (e) {
