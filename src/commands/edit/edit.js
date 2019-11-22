@@ -1,5 +1,5 @@
 require("dotenv").config();
-import { createEmbeddedAnswer } from "../../helpers/helpers";
+const { createEmbeddedAnswer } = require("../../helpers/helpers");
 const { editQree, findGameToEdit } = require("../../../controllers/qre_items");
 const { MessageCollector } = require("discord.js");
 const {
