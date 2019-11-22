@@ -160,6 +160,15 @@ module.exports.handleGameEdit = async function(
               newSize ? newSize : obj.size,
               receivedMessage
             );
+
+            const check = await findGameToEdit(id);
+
+            await receivedMessage.channel.send(
+              `\`\`\`\nLink: ${check.qrLink}\n\nName: ${check.name}\nPlatform: ${check.platform}\nRegion: ${check.region}\nSize: ${check.size}\nUploader: ${check.uploaderName}\`\`\``,
+              {
+                files: [check.qrImageUrl]
+              }
+            );
           } else {
             await receivedMessage.channel.send(`Edit session ended`);
           }
