@@ -43,7 +43,7 @@ module.exports.handleGameEdit = async function(
         { time: 120000 }
       );
 
-      collector.on("collect", async message => {
+      await collector.on("collect", async message => {
         if (message.content.toLowerCase() === "yes") {
           await receivedMessage.channel.send(
             `\`\`\`please type all the information you want to edit, remember that title NEEDS to be in quotation marks. You can type all info you want to edit in one or more messages.\`\`\`\`\`\`type \`end\` if you want to finish\`\`\``
@@ -61,12 +61,12 @@ module.exports.handleGameEdit = async function(
         }
       });
 
-      collector.on("end", async collected => {
+      await collector.on("end", async collected => {
         try {
           let collectedArguments = [];
-          for (const item of collected) {
-            collectedArguments.push(item[1].content);
-          }
+          collected.forEach(item => {
+            collectedArguments.push(item.content);
+          });
 
           const args = await collectedArguments
             .filter(
@@ -79,7 +79,6 @@ module.exports.handleGameEdit = async function(
             .match(regexes.ARGUMENTS);
 
           console.log(args);
-
           await receivedMessage.channel.send(`${args}`);
 
           if (args) {
