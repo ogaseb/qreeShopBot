@@ -116,7 +116,7 @@ module.exports.handleGameEdit = async function(
 
             const obj = {
               name: foundArgsObj.TITLE
-                ? foundArgsObj.TITLE.replace(/['"]+/g, "")
+                ? foundArgsObj.TITLE.replace(/["]+/g, "")
                 : name,
               qrLink: foundArgsObj.URL ? foundArgsObj.URL : qrLink,
               qrData: foundArgsObj.URL
