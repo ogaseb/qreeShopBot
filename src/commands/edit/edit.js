@@ -6,7 +6,8 @@ const {
   createASCIIQrCode,
   createDataURLQrCode,
   filteredRegexes,
-  regexes
+  regexes,
+  parseURL
 } = require("../../helpers/helpers");
 const imageDataURI = require("image-data-uri");
 
@@ -113,12 +114,11 @@ module.exports.handleGameEdit = async function(
                 }
               }
             }
-
             const obj = {
               name: foundArgsObj.TITLE
                 ? foundArgsObj.TITLE.replace(/["]+/g, "")
                 : name,
-              qrLink: foundArgsObj.URL ? foundArgsObj.URL : qrLink,
+              qrLink: foundArgsObj.URL ? parseURL(foundArgsObj.URL) : qrLink,
               qrData: foundArgsObj.URL
                 ? createASCIIQrCode(foundArgsObj.URL)
                 : qrData,
