@@ -1,6 +1,6 @@
 require("dotenv").config();
 require("@sentry/node").init({ dsn: process.env.SENTRY_URL });
-const { getHours, getMinutes, getSeconds } = require("date-fns");
+const { getHours, getMinutes } = require("date-fns");
 const { Client } = require("discord.js");
 const {
   scrapChannelForQrCodes,
