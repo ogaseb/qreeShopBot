@@ -57,14 +57,10 @@ client.on("ready", async () => {
       type: "WATCHING"
     });
 
-    if (
-      getHours(new Date()) === 18 &&
-      getMinutes(new Date()) === 0 &&
-      getSeconds(new Date()) === 0
-    ) {
+    if (getHours(new Date()) === 18 && getMinutes(new Date()) === 0) {
       await urlStatus(client);
     }
-  }, 1000);
+  }, 1000 * 60);
 });
 
 client.on("message", receivedMessage => {
