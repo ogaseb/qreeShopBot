@@ -1,11 +1,14 @@
 require("dotenv").config();
 const qrCode = require("qrcode-generator");
 const { updateThumbnail } = require("../../controllers/qre_items");
-const { RichEmbed } = require("discord.js");
-const Pagination = require("discord-paginationembed");
 const axios = require("axios");
 const pretty = require("prettysize");
 
+/**
+ * parsing shared dropbox link to direct link
+ * @param link
+ * @returns {string}
+ */
 function parseDropboxLink(link) {
   let string = link;
   string = string.split("/");
@@ -17,10 +20,20 @@ function parseDropboxLink(link) {
   }
 }
 
+/**
+ * parsing shared google drive link to direct link
+ * @param link
+ * @returns {string|void|*}
+ */
 function parseGDriveLink(link) {
   return link.replace(/\/file\/d\/(.+)\/(.+)/, "/uc?export=download&id=$1");
 }
 
+/**
+ * parse url with one of matching patterns
+ * @param link
+ * @returns {string|void|*}
+ */
 function parseURL(link) {
   if (link && link.match(regexes.GDRIVE)) {
     return (link = parseGDriveLink(link));
@@ -35,6 +48,11 @@ function parseURL(link) {
   }
 }
 
+/**
+ * create ASCII qr code from url
+ * @param link
+ * @returns {string}
+ */
 function createASCIIQrCode(link) {
   let qr = qrCode(0, "L");
   qr.addData(`${link}`);
@@ -42,6 +60,11 @@ function createASCIIQrCode(link) {
   return qr.createASCII(2, 1);
 }
 
+/**
+ * create data url from link
+ * @param link
+ * @returns {string}
+ */
 function createDataURLQrCode(link) {
   let qr = qrCode(0, "M");
   qr.addData(`${link}`);
@@ -49,6 +72,12 @@ function createDataURLQrCode(link) {
   return qr.createDataURL(5, 5);
 }
 
+/**
+ * returns array of all messages from specific channel, it bypass the discord limitation of 100 messages
+ * @param channel
+ * @param limit
+ * @returns {Promise<[]>}
+ */
 async function limitlessFetchMessages(channel, limit = 9000) {
   const sum_messages = [];
   let last_id;
@@ -71,104 +100,20 @@ async function limitlessFetchMessages(channel, limit = 9000) {
   return sum_messages;
 }
 
-async function createEmbeddedAnswer(
-  args,
-  receivedMessage,
-  loadingMessageId,
-  destination
-) {
-  const embeds = [];
-  for (const {
-    id,
-    name,
-    platform,
-    region,
-    size,
-    uploaderName,
-    qrImageUrl,
-    thumbnail
-  } of args) {
-    const gameThumbnail = thumbnail || (await getGameCover(name, id));
-    embeds.push(
-      new RichEmbed()
-        .setImage(qrImageUrl)
-        .addField("Name: ", name)
-        .addField("DB ID: ", id, true)
-        .addField("Platform: ", platform, true)
-        .addField("Region: ", region, true)
-        .addField("Size: ", size, true)
-        .addField("QR:", "===================")
-        .addField("Author: ", uploaderName, true)
-        .setThumbnail(gameThumbnail)
-    );
-  }
-  loadingMessageId
-    ? await receivedMessage.channel.messages.get(loadingMessageId).delete()
-    : null;
-
-  const author = receivedMessage.author.id || "";
-  return (
-    new Pagination.Embeds()
-      .setArray(embeds)
-      .setAuthorizedUsers([author])
-      .setChannel(
-        destination === "pm" ? receivedMessage.author : receivedMessage.channel
-      )
-      .setPageIndicator(true)
-      .setPage(1)
-      // Methods below are for customising all embeds
-      .setTitle("Qr Code 3DS games search collection")
-      .setFooter("Bot created by: ProPanek#0188")
-      .setColor(0x000000)
-      .setNavigationEmojis({
-        back: "◀",
-        jump: "↗",
-        forward: "▶",
-        delete: "🗑"
-      })
-      .setTimeout(600000)
-  );
-}
-
-async function sendToQrGames(args, receivedMessage, client, gameThumbnail) {
-  const embeds = [];
-
-  embeds.push(
-    new RichEmbed()
-      .setImage(args.qrImageUrl)
-      .addField("Name: ", args.name, true)
-      // .addField("QR link: ", args.qr_link)
-      .addField("DB ID: ", args.id, true)
-      .addField("Platform: ", args.platform, true)
-      .addField("Region: ", args.region, true)
-      .addField("Size: ", args.size)
-      .addField("QR: ", "===================", true)
-      .addField("Author: ", args.uploaderName, true)
-      .setThumbnail(
-        gameThumbnail ||
-          `https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png`
-      )
-  );
-  return (
-    new Pagination.Embeds()
-      .setArray(embeds)
-      .setPageIndicator(false)
-      .setAuthorizedUsers([])
-      .setChannel(client.channels.get(process.env.BOT_SUBCRIPTION_CHANNEL))
-      .setPage(1)
-      // Methods below are for customising all embeds
-      .setTitle("QR Code 3DS games")
-      .setFooter("Bot created by: ProPanek#0188")
-      .setColor(0x000000)
-      .setDisabledNavigationEmojis(["ALL"])
-      .setTimeout(600000)
-  );
-}
-
+/**
+ * checks if incoming message is from direct message
+ * @param receivedMessage
+ * @returns {boolean}
+ */
 function checkIfDM(receivedMessage) {
   return receivedMessage.channel.type === "dm";
 }
 
+/**
+ * returns filtered object of regexes you want to use
+ * @param array
+ * @returns {{}}
+ */
 function filteredRegexes(array) {
   return Object.keys(regexes)
     .filter(key => array.includes(key))
@@ -178,6 +123,11 @@ function filteredRegexes(array) {
     }, {});
 }
 
+/**
+ * checks file size from direct link to file
+ * @param url
+ * @returns {Promise<void>}
+ */
 async function checkFileSize(url) {
   const urlMetadata = await axios.head(url, { timeout: 15000 });
   if (urlMetadata && urlMetadata.status !== 404) {
@@ -279,11 +229,9 @@ module.exports = {
   getRandomMeme,
   checkFileSize,
   filteredRegexes,
-  sendToQrGames,
   createDataURLQrCode,
   createASCIIQrCode,
   limitlessFetchMessages,
-  createEmbeddedAnswer,
   checkIfDM,
   regexes
 };

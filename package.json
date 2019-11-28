@@ -4,7 +4,7 @@
   "description": "qreeShopBot for discord",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "nodemon server.js",
     "start": "pm2-runtime start ecosystem.config.js --env production"
   },
@@ -32,6 +32,7 @@
   "dependencies": {
     "@sentry/node": "5.9.0",
     "axios": "^0.19.0",
+    "date-fns": "^2.8.1",
     "discord-paginationembed": "^1.0.2",
     "discord.js": "^11.5.1",
     "dotenv": "^8.0.0",
@@ -52,6 +53,7 @@
   "devDependencies": {
     "eslint": "^6.5.0",
     "husky": "^3.0.7",
+    "jest": "^24.9.0",
     "pm2": "^4.1.2",
     "prettier": "^1.19.1",
     "pretty-quick": "^1.11.1"

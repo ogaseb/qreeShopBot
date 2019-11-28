@@ -2,13 +2,14 @@ const {
   checkFileSize,
   createASCIIQrCode,
   createDataURLQrCode,
-  createEmbeddedAnswer,
   filteredRegexes,
-  getGameCover,
   getRandomMeme,
-  parseURL,
-  sendToQrGames
+  parseURL
 } = require("../../helpers/helpers");
+const {
+  sendToQrGames,
+  createEmbeddedAnswer
+} = require("../../helpers/embedded/embedded");
 const { createQree, findGame } = require("../../../controllers/qre_items");
 const { MessageCollector } = require("discord.js");
 const imageDataURI = require("image-data-uri");
@@ -98,12 +99,10 @@ module.exports.handleGameUpload = async function(
         collector.stop();
         try {
           obj.id = await createQree(obj, receivedMessage);
-          const gameThumbnail = await getGameCover(obj.id, obj.name);
           const qrCodesSubscription = await sendToQrGames(
             obj,
             receivedMessage,
-            client,
-            gameThumbnail
+            client
           );
           await qrCodesSubscription.build();
         } catch (e) {

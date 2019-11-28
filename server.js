@@ -1,5 +1,6 @@
 require("dotenv").config();
 require("@sentry/node").init({ dsn: process.env.SENTRY_URL });
+const { getHours, getMinutes } = require("date-fns");
 const { Client } = require("discord.js");
 const {
   scrapChannelForQrCodes,
@@ -55,11 +56,11 @@ client.on("ready", async () => {
     await client.user.setActivity(`QR Codes count: ${qrCount.count}`, {
       type: "WATCHING"
     });
-  }, 30000);
 
-  setInterval(async () => {
-    await urlStatus(client);
-  }, 1000 * 60 * 60 * 24);
+    if (getHours(new Date()) === 18 && getMinutes(new Date()) === 0) {
+      await urlStatus(client);
+    }
+  }, 1000);
 });
 
 client.on("message", receivedMessage => {
@@ -178,3 +179,5 @@ function processCommand(receivedMessage) {
     `You need to specify which command you want to use type "!qre help" to display available commands`
   );
 }
+
+module.exports.client = client;

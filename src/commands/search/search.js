@@ -1,5 +1,6 @@
 const { findGame } = require("../../../controllers/qre_items");
-const { checkIfDM, createEmbeddedAnswer } = require("../../helpers/helpers");
+const { checkIfDM } = require("../../helpers/helpers");
+const { createEmbeddedAnswer } = require("../../helpers/embedded/embedded");
 
 module.exports.searchGame = async function(messageArguments, receivedMessage) {
   try {
