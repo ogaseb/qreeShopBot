@@ -4,7 +4,7 @@ module.exports = {
       name: "qreeShopBot",
       script: "./server.js",
       instances: "1",
-      watch: true,
+      watch: false,
       env: {
         NODE_ENV: "development"
       },

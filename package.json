@@ -1,12 +1,12 @@
 {
   "name": "qreeshopbot",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "qreeShopBot for discord",
   "main": "server.js",
   "scripts": {
     "test": "jest",
     "dev": "nodemon server.js",
-    "start": "pm2-runtime start ecosystem.config.js --env production"
+    "start": "pm2 start ecosystem.config.js --env production"
   },
   "husky": {
     "hooks": {
