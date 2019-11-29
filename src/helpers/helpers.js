@@ -35,9 +35,9 @@ function parseGDriveLink(link) {
  * @returns {string|void|*}
  */
 function parseURL(link) {
-  if (link && link.match(regexes.GDRIVE)) {
-    return (link = parseGDriveLink(link));
-  } else if (link && link.match(regexes.DROPBOX)) {
+  if (link && regexes.GDRIVE.test(link)) {
+    return parseGDriveLink(link);
+  } else if (link && regexes.DROPBOX.test(link)) {
     if (link.slice(-1) === "0" || link.slice(-1) === "1") {
       link = parseDropboxLink(link);
       link = link.match(/^(.*?)\.?dl=1/gi);
@@ -87,7 +87,7 @@ async function limitlessFetchMessages(channel, limit = 9000) {
     if (last_id) {
       options.before = last_id;
     }
-
+    console.log(channel.messages);
     const messages = await channel.messages.fetch(options);
     sum_messages.push(...messages.array());
     last_id = messages.last().id;

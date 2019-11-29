@@ -179,5 +179,3 @@ function processCommand(receivedMessage) {
     `You need to specify which command you want to use type "!qre help" to display available commands`
   );
 }
-
-module.exports.client = client;

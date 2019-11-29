@@ -1,7 +1,9 @@
+`use strict`;
 require("dotenv").config();
 const { RichEmbed } = require("discord.js");
 const Pagination = require("discord-paginationembed");
 const { getGameCover } = require("../helpers");
+
 async function createArrayOfEmbeddedMessages(data) {
   const embeds = [];
   if (!Array.isArray(data)) {
@@ -110,5 +112,7 @@ async function sendToQrGames(data, receivedMessage, client) {
 
 module.exports = {
   createEmbeddedAnswer,
-  sendToQrGames
+  sendToQrGames,
+  createArrayOfEmbeddedMessages,
+  createPaginationFromEmbed
 };

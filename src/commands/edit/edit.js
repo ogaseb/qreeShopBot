@@ -94,7 +94,7 @@ module.exports.handleGameEdit = async function(
             for (const regex in regexesObj) {
               if (regexesObj.hasOwnProperty(regex)) {
                 const itemIndex = args.findIndex(value =>
-                  value.match(regexesObj[regex])
+                  regexesObj[regex].test(value)
                 );
                 if (itemIndex === -1) {
                   await receivedMessage.channel.send(
