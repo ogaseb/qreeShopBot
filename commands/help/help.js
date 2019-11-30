@@ -107,6 +107,23 @@ module.exports.createEmbeddedHelper = function(
 
     embeds.push(
       new RichEmbed()
+        .addField("**COMMAND**: ", "```random```")
+        .addField(
+          "Description",
+          "```random - returns you a random game from the database, there is a chance that you are going to get a DLC/update so just use this command again```"
+        )
+        .addField(
+          "Command: ",
+          "```" + serverInvokers.get(receivedMessage.guild.id) + "random```"
+        )
+        .addField(
+          "Example: ",
+          "```" + serverInvokers.get(receivedMessage.guild.id) + "random```"
+        )
+    );
+
+    embeds.push(
+      new RichEmbed()
         .addField("**COMMAND**: ", "```invoke```")
         .addField(
           "Description",
