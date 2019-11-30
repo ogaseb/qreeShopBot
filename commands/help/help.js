@@ -1,6 +1,8 @@
 const { RichEmbed } = require("discord.js");
 const { Embeds } = require("discord-paginationembed");
-const { checkIfDM } = require("../../helpers/other_helpers/other_helpers");
+const {
+  validation: { checkIfDM }
+} = require("../../helpers/index");
 
 module.exports.createEmbeddedHelper = function(
   serverInvokers,
@@ -110,15 +112,15 @@ module.exports.createEmbeddedHelper = function(
         .addField("**COMMAND**: ", "```random```")
         .addField(
           "Description",
-          "```random - returns you a random game from the database, there is a chance that you are going to get a DLC/update so just use this command again```"
+          "```random - returns you a random game from the database, there is a chance that you are going to get a DLC/update so just use this 🔄 reaction or type command again if reaction disappear```"
         )
         .addField(
           "Command: ",
-          "```" + serverInvokers.get(receivedMessage.guild.id) + "random```"
+          "```" + serverInvokers.get(receivedMessage.guild.id) + " random```"
         )
         .addField(
           "Example: ",
-          "```" + serverInvokers.get(receivedMessage.guild.id) + "random```"
+          "```" + serverInvokers.get(receivedMessage.guild.id) + " random```"
         )
     );
 
