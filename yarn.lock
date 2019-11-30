@@ -1863,10 +1863,10 @@ diff-sequences@^24.9.0:
   resolved "https://registry.yarnpkg.com/diff-sequences/-/diff-sequences-24.9.0.tgz#5715d6244e2aa65f48bba0bc972db0b0b11e95b5"
   integrity sha512-Dj6Wk3tWyTE+Fo1rW8v0Xhwk80um6yFYKbuAxc9c3EZxIHFDYwbi34Uk42u1CdnIiVorvt4RmlSDjIPyzGC2ew==
 
-discord-paginationembed@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/discord-paginationembed/-/discord-paginationembed-1.0.2.tgz#8c2bdde7e1155747c19a904be35bbeabbe4ae766"
-  integrity sha512-+crdRJ+RwLFU5qC1m4Pdqt8Q3vY/k8TnT3SmLvSPuNt7PbiNX8f4YL/MwLYypEhlZfmsOBALNNbSlu8M2IBrJA==
+discord-paginationembed@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/discord-paginationembed/-/discord-paginationembed-1.0.3.tgz#0d4abde7cc0514e59a8ed9592688415b30b07f8d"
+  integrity sha512-cCAmWBrJTTY1xf9saUfMOkLefw6+8zIsgwyQYitpiiHbWO8RqPi3rPFpb3VoDzsoOLWPJ/3TiPILnH5WgSWq8w==
 
 discord.js@^11.5.1:
   version "11.5.1"

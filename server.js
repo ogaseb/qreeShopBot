@@ -120,7 +120,7 @@ function processCommand(receivedMessage) {
   }
 
   if (primaryCommand === "random") {
-    return randomGame(fullCommand, receivedMessage);
+    return randomGame(receivedMessage);
   }
 
   if (primaryCommand === "headpat") {

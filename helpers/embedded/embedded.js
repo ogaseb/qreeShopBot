@@ -3,6 +3,7 @@ require("dotenv").config();
 const { RichEmbed } = require("discord.js");
 const Pagination = require("discord-paginationembed");
 const { getGameCover } = require("../../helpers/third_party/third_party");
+const { getWholeDB } = require("../../controllers/qre_items");
 
 async function createArrayOfEmbeddedMessages(data) {
   const embeds = [];
@@ -47,7 +48,8 @@ async function createPaginationFromEmbed(
   title,
   footer,
   showNavigation = true,
-  timeout
+  timeout,
+  isFromRandom
 ) {
   return new Pagination.Embeds()
     .setArray(embeds)
@@ -58,6 +60,33 @@ async function createPaginationFromEmbed(
     .setTitle(title)
     .setFooter(footer)
     .setColor(0x000000)
+    .setFunctionEmojis(
+      isFromRandom
+        ? {
+            "🔄": async (user, instance) => {
+              const games = await getWholeDB();
+              const chooseRandom =
+                games[Math.floor(Math.random() * games.length)];
+              const valuesArray = [
+                chooseRandom.dataValues.name,
+                chooseRandom.dataValues.id,
+                chooseRandom.dataValues.platform,
+                chooseRandom.dataValues.region,
+                chooseRandom.dataValues.size,
+                "===================",
+                chooseRandom.dataValues.uploaderName
+              ];
+              for (const embed of instance.array) {
+                embed.thumbnail.url = chooseRandom.dataValues.thumbnail;
+                embed.image.url = chooseRandom.dataValues.qrImageUrl;
+                valuesArray.forEach((value, index) => {
+                  embed.fields[index].value = value;
+                });
+              }
+            }
+          }
+        : {}
+    )
     .setDisabledNavigationEmojis(showNavigation ? [] : ["ALL"])
     .setNavigationEmojis({
       back: "◀",
@@ -65,7 +94,8 @@ async function createPaginationFromEmbed(
       forward: "▶",
       delete: "🗑"
     })
-    .setTimeout(timeout);
+    .setTimeout(timeout)
+    .on("error", console.error);
 }
 
 async function createEmbeddedAnswer(
@@ -91,7 +121,8 @@ async function createEmbeddedAnswer(
     "Qr Code 3DS games search collection",
     "Bot created by: ProPanek#0188",
     true,
-    600000
+    600000,
+    false
   );
 }
 
@@ -106,7 +137,35 @@ async function sendToQrGames(data, receivedMessage, client) {
     "QR Code 3DS games",
     "Bot created by: ProPanek#0188",
     false,
-    1000
+    1000,
+    false
+  );
+}
+
+async function createRandomEmbed(
+  data,
+  receivedMessage,
+  destination = "",
+  loadingMessageId
+) {
+  // console.log(data,receivedMessage,loadingMessageId)
+  const embeds = await createArrayOfEmbeddedMessages(data);
+  const author = [receivedMessage.author.id] || [""];
+  const channel =
+    destination === "pm" ? receivedMessage.author : receivedMessage.channel;
+  loadingMessageId
+    ? await receivedMessage.channel.messages.get(loadingMessageId).delete()
+    : null;
+  return await createPaginationFromEmbed(
+    embeds,
+    author,
+    false,
+    channel,
+    "Random qr game",
+    "Bot created by: ProPanek#0188",
+    false,
+    120000,
+    true
   );
 }
 
@@ -114,5 +173,6 @@ module.exports = {
   createEmbeddedAnswer,
   sendToQrGames,
   createArrayOfEmbeddedMessages,
-  createPaginationFromEmbed
+  createPaginationFromEmbed,
+  createRandomEmbed
 };

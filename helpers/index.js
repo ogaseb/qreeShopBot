@@ -1,4 +1,8 @@
-const { createEmbeddedAnswer, sendToQrGames } = require("./embedded/embedded");
+const {
+  createEmbeddedAnswer,
+  sendToQrGames,
+  createRandomEmbed
+} = require("./embedded/embedded");
 const {
   validateAdmin,
   validateGuilds,
@@ -26,7 +30,8 @@ module.exports.validation = {
 
 module.exports.embedded = {
   createEmbeddedAnswer,
-  sendToQrGames
+  sendToQrGames,
+  createRandomEmbed
 };
 
 module.exports.third_party = {
