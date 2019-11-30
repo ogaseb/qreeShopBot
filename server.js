@@ -13,16 +13,13 @@ const {
   urlStatus,
   updateSize,
   headPat,
-  findCovers
-} = require("./src/commands/index");
-
+  findCovers,
+  randomGame
+} = require("./commands/index");
 const {
-  regexes,
-  checkIfDM,
-  validateGuilds,
-  validatePermissions,
-  validateAdmin
-} = require("./src/helpers/helpers");
+  validation: { validatePermissions, validateGuilds, validateAdmin, checkIfDM },
+  other: { regexes }
+} = require("./helpers/index");
 const { approxQrCount } = require("./controllers/qre_items");
 
 const client = new Client();
@@ -120,6 +117,10 @@ function processCommand(receivedMessage) {
 
   if (primaryCommand === "search") {
     return searchGame(fullCommand, receivedMessage);
+  }
+
+  if (primaryCommand === "random") {
+    return randomGame(fullCommand, receivedMessage);
   }
 
   if (primaryCommand === "headpat") {
