@@ -1,12 +1,9 @@
 const {
   qr: { parseURL, createDataURLQrCode, createASCIIQrCode },
   third_party: { getRandomMeme },
-  other: { checkFileSize, filteredRegexes }
+  other: { checkFileSize, filteredRegexes },
+  embedded: { sendToQrGames, createEmbeddedAnswer }
 } = require("../../helpers/index");
-const {
-  sendToQrGames,
-  createEmbeddedAnswer
-} = require("../../helpers/embedded/embedded");
 const { createQree, findGame } = require("../../controllers/qre_items");
 const { MessageCollector } = require("discord.js");
 const imageDataURI = require("image-data-uri");
@@ -57,10 +54,11 @@ module.exports.handleGameUpload = async function(
       qrImageUrl: createDataURLQrCode(parseURL(foundArgsObj.URL)),
       platform: foundArgsObj.PLATFORMS,
       region: foundArgsObj.REGIONS,
-      size: await checkFileSize(parseURL(foundArgsObj.URL)),
+      size: "",
       uploaderDiscordId: receivedMessage.author.id,
       uploaderName: receivedMessage.author.username
     };
+    obj.size = await checkFileSize(obj.qrLink);
 
     let string = obj.name + obj.platform + obj.region + obj.uploaderDiscordId;
     string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
