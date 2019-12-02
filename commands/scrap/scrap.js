@@ -8,6 +8,7 @@ const jimp = require("jimp");
 const QRReader = require("qrcode-reader");
 const { createQree, findGame } = require("../../controllers/qre_items");
 
+//TODO rewrite the whole scrapper only if it will be needed sometime in the future
 module.exports.scrapChannelForQrCodes = async function(
   messageArguments,
   receivedMessage
@@ -121,8 +122,3 @@ module.exports.scrapChannelForQrCodes = async function(
     console.log(e);
   }
 };
-
-// export async function scrapChannelForQrCodes(
-//   messageArguments,
-//   receivedMessage
-// ) {}

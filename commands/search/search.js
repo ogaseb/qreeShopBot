@@ -6,7 +6,6 @@ const {
 
 module.exports.searchGame = async function(messageArguments, receivedMessage) {
   try {
-    // remove "search" from first element of array
     let args = messageArguments.split(" ");
     args.splice(0, 1);
     let finalArgs = args.join(" ");
@@ -39,7 +38,3 @@ module.exports.searchGame = async function(messageArguments, receivedMessage) {
     );
   }
 };
-//
-// export async function searchGame(messageArguments, receivedMessage) {
-//
-// }

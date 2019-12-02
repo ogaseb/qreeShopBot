@@ -3,7 +3,7 @@ const {
   third_party: { getGameCover }
 } = require("../../helpers/index");
 
-module.exports.findCovers = async function(client) {
+module.exports.findCoversForGames = async function(client) {
   await client.channels
     .get("604231930703118348")
     .send(`searching for covers...`);

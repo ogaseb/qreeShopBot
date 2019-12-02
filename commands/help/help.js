@@ -4,7 +4,7 @@ const {
   validation: { checkIfDM }
 } = require("../../helpers/index");
 
-module.exports.createEmbeddedHelper = function(
+module.exports.sendHelp = function(
   serverInvokers,
   receivedMessage,
   destination

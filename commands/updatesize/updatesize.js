@@ -6,11 +6,10 @@ const {
 const axios = require("axios");
 const pretty = require("prettysize");
 
-module.exports.updateSize = async function() {
+module.exports.updateSizeOfFile = async function() {
   const rows = await getWholeDB();
   for (const { id, qrLink, name, region } of rows) {
     try {
-      console.log(`starting scanning ${name}`);
       const response = await axios.head(qrLink, { timeout: 15000 });
       if (response && response.status !== 404) {
         let found_region;
@@ -24,11 +23,6 @@ module.exports.updateSize = async function() {
           await updateSizeArgument(
             id,
             pretty(response.headers["content-length"], true)
-          );
-          console.log(
-            pretty(response.headers["content-length"], true),
-            name,
-            id
           );
         }
 

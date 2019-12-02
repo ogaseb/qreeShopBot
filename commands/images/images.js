@@ -5,7 +5,7 @@ const { getWholeDB, updateQrImageUrl } = require("../../controllers/qre_items");
 const imageDataURI = require("image-data-uri");
 const fs = require("fs");
 
-module.exports.makeQrImagesfromDB = async function(
+module.exports.makeQrImagesFromDB = async function(
   messageArguments,
   receivedMessage
 ) {

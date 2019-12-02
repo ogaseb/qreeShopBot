@@ -3,7 +3,7 @@ const {
 } = require("../../helpers/index");
 const { RichEmbed } = require("discord.js");
 
-module.exports.headPat = async function(messageArgument, receivedMessage) {
+module.exports.sendHeadPat = async function(messageArgument, receivedMessage) {
   if (messageArgument.length !== 2) {
     return receivedMessage.channel.send(
       `hey, specify who you want to headpat!`

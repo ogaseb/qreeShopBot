@@ -3,18 +3,17 @@ require("@sentry/node").init({ dsn: process.env.SENTRY_URL });
 const { getHours, getMinutes } = require("date-fns");
 const { Client } = require("discord.js");
 const {
-  scrapChannelForQrCodes,
   changeInvokeCommand,
   handleGameUpload,
   searchGame,
-  handleGameEdit,
-  createEmbeddedHelper,
-  makeQrImagesfromDB,
-  urlStatus,
-  updateSize,
-  headPat,
-  findCovers,
-  randomGame
+  editQrData,
+  sendHelp,
+  makeQrImagesFromDB,
+  checkUrlsForStatus,
+  updateSizeOfFile,
+  sendHeadPat,
+  findCoversForGames,
+  getRandomGame
 } = require("./commands/index");
 const {
   validation: { validatePermissions, validateGuilds, validateAdmin, checkIfDM },
@@ -112,7 +111,7 @@ function processCommand(receivedMessage) {
   }
 
   if (primaryCommand === "help") {
-    return createEmbeddedHelper(serverInvokers, receivedMessage).build();
+    return sendHelp(serverInvokers, receivedMessage).build();
   }
 
   if (primaryCommand === "search") {
@@ -120,12 +119,12 @@ function processCommand(receivedMessage) {
   }
 
   if (primaryCommand === "random") {
-    return randomGame(receivedMessage);
+    return getRandomGame(receivedMessage);
   }
 
   if (primaryCommand === "headpat") {
     validateGuilds(receivedMessage)
-      ? headPat(messageArguments, receivedMessage)
+      ? sendHeadPat(messageArguments, receivedMessage)
       : null;
   }
 
@@ -151,28 +150,28 @@ function processCommand(receivedMessage) {
       );
     }
 
-    if (primaryCommand === "scrap") {
-      return scrapChannelForQrCodes(messageArguments, receivedMessage);
-    }
+    // if (primaryCommand === "scrap") {
+    //   return scrapChannelForQrCodes(messageArguments, receivedMessage);
+    // }
 
     if (primaryCommand === "images") {
-      return makeQrImagesfromDB(messageArguments, receivedMessage);
+      return makeQrImagesFromDB(messageArguments, receivedMessage);
     }
 
     if (primaryCommand === "edit") {
-      return handleGameEdit(messageArguments, receivedMessage);
+      return editQrData(messageArguments, receivedMessage);
     }
 
     if (primaryCommand === "checkurls") {
-      return urlStatus(client);
+      return checkUrlsForStatus(client);
     }
 
     if (primaryCommand === "updatesize") {
-      return updateSize(client);
+      return updateSizeOfFile(client);
     }
 
     if (primaryCommand === "findcovers") {
-      return findCovers(client);
+      return findCoversForGames(client);
     }
   }
 

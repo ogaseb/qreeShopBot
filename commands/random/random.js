@@ -3,7 +3,7 @@ const {
   embedded: { createRandomEmbed }
 } = require("../../helpers/index");
 
-module.exports.randomGame = async function(receivedMessage) {
+module.exports.getRandomGame = async function(receivedMessage) {
   try {
     const games = await getWholeDB();
     if (games.length !== 0) {

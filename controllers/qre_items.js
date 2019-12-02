@@ -30,7 +30,6 @@ module.exports.createQree = async function(
       uploaderDiscordId,
       uploaderName
     });
-    await receivedMessage.channel.send("Saving in database!");
     console.log("DB -> save qr in DB");
     return item.id;
   } catch (e) {
@@ -52,10 +51,10 @@ module.exports.editQree = async function(
     name,
     platform,
     region,
+    size,
     uploaderDiscordId,
     uploaderName
   },
-  newSize,
   receivedMessage
 ) {
   try {
@@ -67,7 +66,7 @@ module.exports.editQree = async function(
         name,
         platform,
         region,
-        newSize,
+        size,
         uploaderDiscordId,
         uploaderName
       },

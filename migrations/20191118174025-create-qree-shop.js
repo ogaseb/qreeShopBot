@@ -8,9 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      qr_data: {
-        type: Sequelize.TEXT
-      },
       qr_image_url: {
         type: Sequelize.TEXT
       },
