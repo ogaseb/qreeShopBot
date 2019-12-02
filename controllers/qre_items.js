@@ -6,7 +6,6 @@ const QreeItems = models.QreeItems;
 
 module.exports.createQree = async function(
   {
-    qrData,
     qrImageUrl,
     qrLink,
     name,
@@ -20,7 +19,6 @@ module.exports.createQree = async function(
 ) {
   try {
     const item = await QreeItems.create({
-      qrData,
       qrImageUrl,
       qrLink,
       name,
@@ -45,7 +43,6 @@ module.exports.createQree = async function(
 module.exports.editQree = async function(
   id,
   {
-    qrData,
     qrImageUrl,
     qrLink,
     name,
@@ -60,7 +57,6 @@ module.exports.editQree = async function(
   try {
     await QreeItems.update(
       {
-        qrData,
         qrImageUrl,
         qrLink,
         name,
