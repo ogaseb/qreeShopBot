@@ -22,9 +22,7 @@ function filteredRegexes(array) {
  * @returns {Promise<void>}
  */
 async function checkFileSize(url) {
-  console.log(url);
   const urlMetadata = await axios.head(url, { timeout: 15000 });
-  console.log(urlMetadata);
   if (urlMetadata && urlMetadata.status !== 404) {
     if (urlMetadata.headers["content-length"]) {
       return pretty(urlMetadata.headers["content-length"], true);

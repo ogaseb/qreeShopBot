@@ -1,5 +1,6 @@
 require("dotenv").config();
 const qrCode = require("qrcode-generator");
+const imageDataURI = require("image-data-uri");
 const { regexes } = require("../other_helpers/other_helpers");
 
 /**
@@ -70,8 +71,25 @@ function createDataURLQrCode(link) {
   return qr.createDataURL(5, 5);
 }
 
+async function createQrImageUrlFromLink(finalObject, receivedMessage, url) {
+  let string =
+    finalObject.name +
+    finalObject.platform +
+    finalObject.region +
+    finalObject.uploaderDiscordId;
+  string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
+  await imageDataURI.outputFile(
+    await createDataURLQrCode(url),
+    "./img/" + string + ".jpg"
+  );
+  const imageMsg = await receivedMessage.channel.send("", {
+    files: ["./img/" + string + ".jpg"]
+  });
+  return imageMsg.attachments.values().next().value.proxyURL;
+}
+
 module.exports = {
   parseURL,
-  createDataURLQrCode,
-  createASCIIQrCode
+  createASCIIQrCode,
+  createQrImageUrlFromLink
 };

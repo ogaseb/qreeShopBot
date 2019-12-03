@@ -18,7 +18,12 @@ const {
   getGameCover,
   getRandomMeme
 } = require("../helpers/third_party/third_party");
-const { createASCIIQrCode, createDataURLQrCode, parseURL } = require("./qr/qr");
+const {
+  createASCIIQrCode,
+  createDataURLQrCode,
+  parseURL,
+  createQrImageUrlFromLink
+} = require("./qr/qr");
 const { limitlessFetchMessages } = require("./discord/discord");
 
 module.exports.validation = {
@@ -42,7 +47,8 @@ module.exports.third_party = {
 module.exports.qr = {
   createASCIIQrCode,
   createDataURLQrCode,
-  parseURL
+  parseURL,
+  createQrImageUrlFromLink
 };
 
 module.exports.discord = {

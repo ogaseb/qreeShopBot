@@ -1,12 +1,10 @@
 const {
-  qr: { parseURL, createDataURLQrCode },
+  qr: { parseURL, createQrImageUrlFromLink },
   third_party: { getRandomMeme },
-  other: { checkFileSize, filteredRegexes },
-  embedded: { sendToQrGames, createEmbeddedAnswer }
+  other: { checkFileSize, filteredRegexes }
 } = require("../../helpers/index");
-const { createQree, findGame } = require("../../controllers/qre_items");
-const { MessageCollector } = require("discord.js");
-const imageDataURI = require("image-data-uri");
+const { findGame } = require("../../controllers/qre_items");
+const { QrCollector } = require("../../classess/collector/collector");
 
 const createInitialObject = async (messageArguments, receivedMessage) => {
   let finalObject = {
@@ -44,7 +42,7 @@ const createInitialObject = async (messageArguments, receivedMessage) => {
   finalObject.size = await checkFileSize(finalObject.qrLink);
   finalObject.uploaderDiscordId = receivedMessage.author.id;
   finalObject.uploaderName = receivedMessage.author.username;
-  finalObject.qrImageUrl = await createImageUrlFromFile(
+  finalObject.qrImageUrl = await createQrImageUrlFromLink(
     finalObject,
     receivedMessage,
     foundArgsObj.URL
@@ -59,23 +57,6 @@ const createInitialObject = async (messageArguments, receivedMessage) => {
   }
 };
 
-const createImageUrlFromFile = async (finalObject, receivedMessage, url) => {
-  let string =
-    finalObject.name +
-    finalObject.platform +
-    finalObject.region +
-    finalObject.uploaderDiscordId;
-  string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
-  await imageDataURI.outputFile(
-    await createDataURLQrCode(url),
-    "./img/" + string + ".jpg"
-  );
-  const imageMsg = await receivedMessage.channel.send("", {
-    files: ["./img/" + string + ".jpg"]
-  });
-  return imageMsg.attachments.values().next().value.proxyURL;
-};
-
 module.exports.handleGameUpload = async function(
   messageArguments,
   receivedMessage,
@@ -87,6 +68,7 @@ module.exports.handleGameUpload = async function(
         `invalid arguments count for upload command`
       );
     }
+
     const meme = await getRandomMeme("head-pat-anime");
     const waitingMessage = await receivedMessage.channel.send(
       `wait a moment...`,
@@ -99,9 +81,9 @@ module.exports.handleGameUpload = async function(
       messageArguments,
       receivedMessage
     );
-    const rows = await findGame(qrGameObject.name);
+    const searchResult = await findGame(qrGameObject.name);
     const text =
-      rows.length === 0
+      searchResult.length === 0
         ? `\`\`\`diff\n+ This is how it will look, save in database? Type 'yes'/'no'\n\`\`\``
         : `\`\`\`diff\n- I FOUND THE GAMES WITH SIMILAR NAME, CHECK THEM BEFORE SAYING 'yes' BY TYPING 'search'"\n\`\`\`\`\`\`diff\n+ This is how it will look, save in database? Type 'yes'/'no' or 'search' if you want to check about what games I was talking about :)"\n\`\`\``;
 
@@ -110,43 +92,11 @@ module.exports.handleGameUpload = async function(
       `\`\`\`\nLink: ${qrGameObject.qrLink}\n\nName: ${qrGameObject.name}\nPlatform: ${qrGameObject.platform}\nRegion: ${qrGameObject.region}\nSize: ${qrGameObject.size}\nUploader: ${qrGameObject.uploaderName}\`\`\`${text}`
     );
 
-    const collector = new MessageCollector(
-      receivedMessage.channel,
-      m => m.author.id === receivedMessage.author.id,
-      { time: 60000 }
-    );
-
-    collector.on("collect", async message => {
-      if (message.content.toLowerCase() === "yes") {
-        collector.stop();
-        qrGameObject.id = await createQree(qrGameObject, receivedMessage);
-        await receivedMessage.channel.send("Saving in database!");
-
-        const qrCodesSubscription = await sendToQrGames(
-          qrGameObject,
-          receivedMessage,
-          client
-        );
-        await qrCodesSubscription.build();
-      } else if (message.content.toLowerCase() === "no") {
-        collector.stop();
-        await receivedMessage.channel.send("Ok try again later :P");
-      } else if (message.content.toLowerCase() === "search") {
-        await receivedMessage.channel.send(
-          `\`\`\`Ok, displaying games that I have found you can type 'yes'/'no' still\`\`\``
-        );
-
-        const QrCodesSearchResults = await createEmbeddedAnswer(
-          rows,
-          receivedMessage
-        );
-        await QrCodesSearchResults.build();
-      }
-    });
-
-    collector.on("end", async () => {
-      await receivedMessage.channel.send("upload session ended");
-    });
+    return new QrCollector(receivedMessage, "upload", {
+      client: client,
+      qrGameObject: qrGameObject,
+      searchResult: searchResult
+    }).init();
   } catch (e) {
     console.log(e);
     await receivedMessage.channel.send(
