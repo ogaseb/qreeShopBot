@@ -2,7 +2,7 @@ const {
   getWholeDB,
   updateRegionArgument,
   updateSizeArgument
-} = require("../../controllers/qre_items");
+} = require("../../controllers/qree_items");
 const axios = require("axios");
 const pretty = require("prettysize");
 

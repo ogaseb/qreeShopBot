@@ -1,7 +1,10 @@
 const {
   qr: { createDataURLQrCode }
 } = require("../../helpers/index");
-const { getWholeDB, updateQrImageUrl } = require("../../controllers/qre_items");
+const {
+  getWholeDB,
+  updateQrImageUrl
+} = require("../../controllers/qree_items");
 const imageDataURI = require("image-data-uri");
 const fs = require("fs");
 

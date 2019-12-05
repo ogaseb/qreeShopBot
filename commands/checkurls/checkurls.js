@@ -1,4 +1,4 @@
-const { getWholeDB } = require("../../controllers/qre_items");
+const { getWholeDB } = require("../../controllers/qree_items");
 const axios = require("axios");
 
 module.exports.checkUrlsForStatus = async function(client) {

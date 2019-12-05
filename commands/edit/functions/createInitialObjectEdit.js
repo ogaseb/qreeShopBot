@@ -1,7 +1,7 @@
 const {
   other: { checkFileSize, filteredRegexes, regexes },
   qr: { createDataURLQrCode, parseURL, createQrImageUrlFromLink }
-} = require("../../helpers/index");
+} = require("../../../helpers");
 
 const createInitialObjectEdit = async (
   messageArguments,

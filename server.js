@@ -19,7 +19,7 @@ const {
   validation: { validatePermissions, validateGuilds, validateAdmin, checkIfDM },
   other: { regexes }
 } = require("./helpers/index");
-const { approxQrCount } = require("./controllers/qre_items");
+const { approxQrCount } = require("./controllers/qree_items");
 
 const client = new Client();
 let botInvoker = process.env.BOT_DEFAULT_INVOKE;

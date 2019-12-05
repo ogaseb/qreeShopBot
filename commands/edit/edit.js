@@ -1,7 +1,9 @@
 require("dotenv").config();
-const { editQree, findGameToEdit } = require("../../controllers/qre_items");
+const { editQree, findGameToEdit } = require("../../controllers/qree_items");
 const { QrCollector } = require("../../classess/collector/collector");
-const { createInitialObjectEdit } = require("./createInitialObjectEdit");
+const {
+  createInitialObjectEdit
+} = require("./functions/createInitialObjectEdit");
 
 module.exports.editQrData = async function(messageArguments, receivedMessage) {
   try {

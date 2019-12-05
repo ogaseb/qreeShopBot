@@ -1,4 +1,4 @@
-const { findGame } = require("../../controllers/qre_items");
+const { findGame } = require("../../controllers/qree_items");
 const {
   validation: { checkIfDM },
   embedded: { createEmbeddedAnswer }

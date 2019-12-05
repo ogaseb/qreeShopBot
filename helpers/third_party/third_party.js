@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { updateThumbnail } = require("../../controllers/qre_items");
+const { updateThumbnail } = require("../../controllers/qree_items");
 
 async function getRandomMeme(searchPhrase) {
   const tenor = {

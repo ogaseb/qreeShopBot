@@ -3,7 +3,7 @@ require("dotenv").config();
 const { RichEmbed } = require("discord.js");
 const Pagination = require("discord-paginationembed");
 const { getGameCover } = require("../../helpers/third_party/third_party");
-const { getWholeDB } = require("../../controllers/qre_items");
+const { getWholeDB } = require("../../controllers/qree_items");
 
 async function createArrayOfEmbeddedMessages(data) {
   const embeds = [];

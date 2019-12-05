@@ -1,4 +1,4 @@
-const { getWholeDB } = require("../../controllers/qre_items");
+const { getWholeDB } = require("../../controllers/qree_items");
 const {
   third_party: { getGameCover }
 } = require("../../helpers/index");

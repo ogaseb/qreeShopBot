@@ -34,16 +34,14 @@ function parseGDriveLink(link) {
  * @returns {string|void|*}
  */
 function parseURL(link) {
-  if (link && regexes.GDRIVE.test(link)) {
-    return parseGDriveLink(link);
-  } else if (link && regexes.DROPBOX.test(link)) {
+  if (link && regexes.DROPBOX.test(link)) {
     if (link.slice(-1) === "0" || link.slice(-1) === "1") {
       link = parseDropboxLink(link);
       link = link.match(/^(.*?)\.?dl=1/gi);
       return link[0];
     }
   } else {
-    return link;
+    throw "Something went wrong with parsing link";
   }
 }
 
