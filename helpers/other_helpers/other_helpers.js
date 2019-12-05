@@ -22,16 +22,21 @@ function filteredRegexes(array) {
  * @returns {Promise<void>}
  */
 async function checkFileSize(url) {
-  const urlMetadata = await axios.head(url, { timeout: 15000 });
-  if (urlMetadata && urlMetadata.status !== 404) {
-    if (urlMetadata.headers["content-length"]) {
-      return pretty(urlMetadata.headers["content-length"], true);
+  try {
+    const urlMetadata = await axios.head(url, { timeout: 30000 });
+    if (urlMetadata && urlMetadata.status !== 404) {
+      if (urlMetadata.headers["content-length"]) {
+        return pretty(urlMetadata.headers["content-length"], true);
+      }
     }
+  } catch (e) {
+    console.log(e);
   }
 }
 
 const regexes = {
   DROPBOX: /\b(\w*dropbox\w*)\b/g,
+  CATBOX: /\b(\w*catbox\w*)\b/g,
   CIA: /\b(\w*cia\w*)\b/g,
   GDRIVE: /\b(\w*drive.google.com\w*)\b/g,
   URL: /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g,

@@ -34,14 +34,18 @@ function parseGDriveLink(link) {
  * @returns {string|void|*}
  */
 function parseURL(link) {
-  if (link && regexes.DROPBOX.test(link)) {
+  if (link && regexes.GDRIVE.test(link)) {
+    return parseGDriveLink(link);
+  } else if (link && regexes.DROPBOX.test(link)) {
     if (link.slice(-1) === "0" || link.slice(-1) === "1") {
       link = parseDropboxLink(link);
       link = link.match(/^(.*?)\.?dl=1/gi);
       return link[0];
     }
+  } else if (link && regexes.CATBOX.test(link)) {
+    return link;
   } else {
-    throw "Something went wrong with parsing link";
+    throw `something went wrong with parsing url ${link}`;
   }
 }
 
@@ -83,7 +87,13 @@ async function createQrImageUrlFromLink(finalObject, receivedMessage, url) {
   const imageMsg = await receivedMessage.channel.send("", {
     files: ["./img/" + string + ".jpg"]
   });
-  return imageMsg.attachments.values().next().value.proxyURL;
+  if (
+    typeof imageMsg.attachments.values().next().value.proxyURL !== "undefined"
+  ) {
+    return imageMsg.attachments.values().next().value.proxyURL;
+  } else {
+    throw "cant get link for qr image";
+  }
 }
 
 module.exports = {

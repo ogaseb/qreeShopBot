@@ -35,7 +35,6 @@ module.exports.editQrData = async function(messageArguments, receivedMessage) {
             receivedMessage,
             game
           );
-          console.log(id);
           await editQree(id, editGameObject, receivedMessage);
           const check = await findGameToEdit(id);
           await receivedMessage.channel.send(
