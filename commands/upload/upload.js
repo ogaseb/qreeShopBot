@@ -19,13 +19,13 @@ module.exports.handleGameUpload = async function(
       );
     }
 
-    // const meme = await getRandomMeme("head-pat-anime");
-    // const waitingMessage = await receivedMessage.channel.send(
-    //   `wait a moment...`,
-    //   {
-    //     files: [meme]
-    //   }
-    // );
+    const meme = await getRandomMeme("head-pat-anime");
+    const waitingMessage = await receivedMessage.channel.send(
+      `wait a moment...`,
+      {
+        files: [meme]
+      }
+    );
 
     const qrGameObject = await createInitialObjectUpload(
       messageArguments,
