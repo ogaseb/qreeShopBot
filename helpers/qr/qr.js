@@ -78,6 +78,7 @@ async function createQrImageUrlFromLink(finalObject, receivedMessage, url) {
     finalObject.region +
     finalObject.uploaderDiscordId;
   string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
+  debugger;
   await imageDataURI.outputFile(
     await createDataURLQrCode(url),
     "./img/" + string + ".jpg"
