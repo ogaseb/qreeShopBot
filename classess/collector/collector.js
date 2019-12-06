@@ -45,6 +45,11 @@ const QrCollector = class QrCollector {
                 this.receivedMessage
               );
               await this.receivedMessage.channel.send("Saving in database!");
+              await this.client.channels
+                .get(process.env.BOT_FEED_CHANNEL)
+                .send(
+                  `@here added new game QR -- \nname: \`${this.qrGameObject.name}\`\nuploader: \`${this.qrGameObject.uploaderName}\``
+                );
 
               const qrCodesSubscription = await sendToQrGames(
                 this.qrGameObject,
