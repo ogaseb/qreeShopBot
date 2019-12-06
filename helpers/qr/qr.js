@@ -30,23 +30,21 @@ function parseGDriveLink(link) {
 
 /**
  * parse url with one of matching patterns
- * @param link
+ * @param link provide link for catbox or dropbox
  * @returns {string|void|*}
  */
-function parseURL(link) {
-  if (link && regexes.GDRIVE.test(link)) {
-    return parseGDriveLink(link);
-  } else if (link && regexes.DROPBOX.test(link)) {
+async function parseURL(link) {
+  if (!!link.match(regexes.DROPBOX)) {
     if (link.slice(-1) === "0" || link.slice(-1) === "1") {
       link = parseDropboxLink(link);
       link = link.match(/^(.*?)\.?dl=1/gi);
       return link[0];
     }
-  } else if (link && regexes.CATBOX.test(link)) {
-    return link;
-  } else {
-    throw `something went wrong with parsing url ${link}`;
   }
+  if (link.match(regexes.CATBOX)) {
+    return link;
+  }
+  throw "error with parsing link. you must provide dropbox or catbox url";
 }
 
 /**

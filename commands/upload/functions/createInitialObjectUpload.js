@@ -33,7 +33,7 @@ const createInitialObjectUpload = async (messageArguments, receivedMessage) => {
   }
 
   finalObject.name = foundArgsObj.TITLE.replace(/['"]+/g, "");
-  finalObject.qrLink = parseURL(foundArgsObj.URL);
+  finalObject.qrLink = await parseURL(foundArgsObj.URL);
   finalObject.platform = foundArgsObj.PLATFORMS;
   finalObject.region = foundArgsObj.REGIONS;
   finalObject.size = await checkFileSize(finalObject.qrLink);
