@@ -67,7 +67,7 @@ const createInitialObjectEdit = async (
     ? (finalObject.qrImageUrl = await createQrImageUrlFromLink(
         finalObject,
         receivedMessage,
-        foundArgsObj.URL
+        finalObject.qrLink
       ))
     : (finalObject.qrImageUrl = game.qrImageUrl);
 
