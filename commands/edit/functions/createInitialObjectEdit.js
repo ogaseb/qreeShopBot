@@ -26,11 +26,11 @@ const createInitialObjectEdit = async (
     "PLATFORMS",
     "SIZE"
   ]);
-
+  debugger;
   let foundArgsObj = {};
   for (const regex in regexesObj) {
-    const itemIndex = await messageArguments.findIndex(value =>
-      regexesObj[regex].test(value)
+    const itemIndex = messageArguments.findIndex(value =>
+      value.match(regexesObj[regex])
     );
     if (itemIndex === -1) {
       await receivedMessage.channel.send(

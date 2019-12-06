@@ -20,7 +20,7 @@ const createInitialObjectUpload = async (messageArguments, receivedMessage) => {
   let foundArgsObj = {};
   for (const regex in regexesObj) {
     const itemIndex = await messageArguments.findIndex(value =>
-      regexesObj[regex].test(value)
+      value.match(regexesObj[regex])
     );
     if (itemIndex === -1) {
       return receivedMessage.channel.send(
