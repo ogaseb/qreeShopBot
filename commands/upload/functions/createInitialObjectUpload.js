@@ -42,13 +42,12 @@ const createInitialObjectUpload = async (messageArguments, receivedMessage) => {
   finalObject.qrImageUrl = await createQrImageUrlFromLink(
     finalObject,
     receivedMessage,
-    foundArgsObj.URL
+    finalObject.qrLink
   );
   const isEmpty = Object.values(finalObject).every(x => x === null);
   if (isEmpty) {
-    await receivedMessage.channel.send(
-      `something went wrong with creating data for qr code`
-    );
+    throw `something went wrong with creating data for qr code`;
+
   } else {
     return finalObject;
   }

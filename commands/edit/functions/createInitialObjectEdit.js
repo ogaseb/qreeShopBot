@@ -26,10 +26,9 @@ const createInitialObjectEdit = async (
     "PLATFORMS",
     "SIZE"
   ]);
-  debugger;
   let foundArgsObj = {};
   for (const regex in regexesObj) {
-    const itemIndex = messageArguments.findIndex(value =>
+    const itemIndex = await messageArguments.findIndex(value =>
       value.match(regexesObj[regex])
     );
     if (itemIndex === -1) {
@@ -49,7 +48,7 @@ const createInitialObjectEdit = async (
     ? (finalObject.name = foundArgsObj.TITLE.replace(/['"]+/g, ""))
     : (finalObject.name = game.name);
   foundArgsObj.URL
-    ? (finalObject.qrLink = parseURL(foundArgsObj.URL))
+    ? (finalObject.qrLink = await parseURL(foundArgsObj.URL))
     : (finalObject.qrLink = game.qrLink);
   foundArgsObj.PLATFORMS
     ? (finalObject.platform = foundArgsObj.PLATFORMS)
@@ -67,7 +66,7 @@ const createInitialObjectEdit = async (
     ? (finalObject.qrImageUrl = await createQrImageUrlFromLink(
         finalObject,
         receivedMessage,
-        foundArgsObj.URL
+        finalObject.qrLink
       ))
     : (finalObject.qrImageUrl = game.qrImageUrl);
 

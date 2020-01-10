@@ -24,9 +24,8 @@ async function getGameCover(name, id) {
     }
   };
   try {
-    const title = name.replace(/[^a-zA-Z0-9 ]/gm, "");
     const game = await axios.get(
-      `https://api-v3.igdb.com/games/?search=${title}}&fields=id,name,cover`,
+      `https://api-v3.igdb.com/games/?search=${name}}&fields=id,name,cover`,
       config
     );
     if (!!game.data.length && typeof game.data[0].cover !== undefined) {
@@ -39,14 +38,26 @@ async function getGameCover(name, id) {
       }
       return `https:${cover.data[0].url}`;
     } else {
-      console.log("setting default cover");
-      if (id) {
-        await updateThumbnail(
-          id,
-          `https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png`
-        );
+      console.log(name.split(" "));
+      if (name.split(" ").length === 1) {
+        if (id) {
+          await updateThumbnail(
+            id,
+            `https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png`
+          );
+        }
+        return `https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png`;
+      } else {
+        console.log("splicing title and searching again");
+        debugger;
+        let nameArray = name.split(" ");
+        nameArray.splice(-1, 1);
+        const nameString = nameArray.join(" ");
+        // title.split(" ").pop().join(" ")
+        console.log(nameString);
+        return getGameCover(nameString, id);
       }
-      return `https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png`;
+
     }
   } catch (error) {
     console.log(error);

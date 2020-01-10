@@ -5,7 +5,7 @@ const {
 
 module.exports.findCoversForGames = async function(client) {
   await client.channels
-    .get("604231930703118348")
+    .get("605181514321494036")
     .send(`searching for covers...`);
   const rows = await getWholeDB();
   for (const { id, name } of rows) {
@@ -18,6 +18,6 @@ module.exports.findCoversForGames = async function(client) {
     }
   }
   await client.channels
-    .get("604231930703118348")
+    .get("605181514321494036")
     .send(`All games have been scanned!`);
 };
