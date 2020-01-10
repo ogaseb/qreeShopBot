@@ -24,7 +24,6 @@ async function getGameCover(name, id) {
     }
   };
   try {
-    console.log(name);
     const game = await axios.get(
       `https://api-v3.igdb.com/games/?search=${name}}&fields=id,name,cover`,
       config
@@ -58,6 +57,7 @@ async function getGameCover(name, id) {
         console.log(nameString);
         return getGameCover(nameString, id);
       }
+
     }
   } catch (error) {
     console.log(error);

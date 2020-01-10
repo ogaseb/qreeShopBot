@@ -47,6 +47,7 @@ const createInitialObjectUpload = async (messageArguments, receivedMessage) => {
   const isEmpty = Object.values(finalObject).every(x => x === null);
   if (isEmpty) {
     throw `something went wrong with creating data for qr code`;
+
   } else {
     return finalObject;
   }
