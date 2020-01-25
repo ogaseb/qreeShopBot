@@ -16,7 +16,8 @@ const createInitialObjectEdit = async (
     region: null,
     size: null,
     uploaderDiscordId: game.uploaderDiscordId,
-    uploaderName: game.uploaderName
+    uploaderName: game.uploaderName,
+    messagesIdArray: []
   };
 
   const regexesObj = await filteredRegexes([
@@ -31,19 +32,21 @@ const createInitialObjectEdit = async (
     const itemIndex = await messageArguments.findIndex(value =>
       value.match(regexesObj[regex])
     );
+    console.log(itemIndex);
     if (itemIndex === -1) {
-      await receivedMessage.channel.send(
+      const message = await receivedMessage.channel.send(
         `argument \`${regex}\` is missing continue...`
       );
+      await finalObject.messagesIdArray.push(message.id);
     } else {
+      const message = await receivedMessage.channel.send(
+        `argument \`${regex}\` is present! : ${messageArguments[itemIndex]}`
+      );
       foundArgsObj[regex] = messageArguments[itemIndex];
       messageArguments.splice(itemIndex, 1);
-      await receivedMessage.channel.send(
-        `argument \`${regex}\` is present! : \`${foundArgsObj[regex]}\``
-      );
+      await finalObject.messagesIdArray.push(message.id);
     }
   }
-
   foundArgsObj.TITLE
     ? (finalObject.name = foundArgsObj.TITLE.replace(/['"]+/g, ""))
     : (finalObject.name = game.name);
@@ -62,13 +65,19 @@ const createInitialObjectEdit = async (
   if (foundArgsObj.URL && !foundArgsObj.SIZE) {
     finalObject.size = await checkFileSize(foundArgsObj.URL);
   }
-  foundArgsObj.URL
-    ? (finalObject.qrImageUrl = await createQrImageUrlFromLink(
-        finalObject,
-        receivedMessage,
-        finalObject.qrLink
-      ))
-    : (finalObject.qrImageUrl = game.qrImageUrl);
+
+  if (foundArgsObj.URL) {
+    const qrImageUrl = await createQrImageUrlFromLink(
+      finalObject,
+      receivedMessage,
+      finalObject.qrLink
+    );
+    finalObject.qrImageUrl = qrImageUrl.proxyURL;
+    finalObject.messagesIdArray.push(qrImageUrl.id);
+  } else {
+    finalObject.qrImageUrl = game.qrImageUrl;
+  }
+  // finalObject.messagesIdArray = messagesIdArray
 
   const isEmpty = Object.values(finalObject).every(x => x === null);
 

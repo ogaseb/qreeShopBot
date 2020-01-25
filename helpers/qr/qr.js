@@ -78,7 +78,7 @@ async function createQrImageUrlFromLink(finalObject, receivedMessage, url) {
     finalObject.region +
     finalObject.uploaderDiscordId;
   string = string.replace(/[^a-z0-9]/gim, "").replace(/\s+/g, "");
-  
+
   await imageDataURI.outputFile(
     await createDataURLQrCode(url),
     "./img/" + string + ".jpg"
@@ -89,7 +89,10 @@ async function createQrImageUrlFromLink(finalObject, receivedMessage, url) {
   if (
     typeof imageMsg.attachments.values().next().value.proxyURL !== "undefined"
   ) {
-    return imageMsg.attachments.values().next().value.proxyURL;
+    return {
+      proxyURL: imageMsg.attachments.values().next().value.proxyURL,
+      id: imageMsg.id
+    };
   } else {
     throw "cant get link for qr image";
   }

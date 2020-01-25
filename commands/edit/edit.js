@@ -6,7 +6,9 @@ const {
 } = require("./functions/createInitialObjectEdit");
 
 module.exports.editQrData = async function(messageArguments, receivedMessage) {
+  let messagesIdArray = [];
   try {
+    messagesIdArray.push(receivedMessage.id);
     const id = parseInt(messageArguments[1]);
     const game = await findGameToEdit(id);
     const {
@@ -20,32 +22,22 @@ module.exports.editQrData = async function(messageArguments, receivedMessage) {
     } = game;
 
     if (typeof game.dataValues != "undefined") {
-      await receivedMessage.channel.send(
-        `\`\`\`\nLink: ${qrLink}\n\nName: ${name}\nPlatform: ${platform}\nRegion: ${region}\nSize: ${size}\nUploader: ${uploaderName}\`\`\`\`\`\`Is this the game you wish to edit? type 'yes'/'no'\`\`\``,
-        {
-          files: [qrImageUrl]
-        }
-      );
-
-      await new QrCollector(receivedMessage, "edit")
-        .collect()
-        .end(async diffArguments => {
-          const editGameObject = await createInitialObjectEdit(
-            diffArguments,
-            receivedMessage,
-            game
-          );
-          await editQree(id, editGameObject, receivedMessage);
-          const check = await findGameToEdit(id);
-          await receivedMessage.channel.send(
-            `\`\`\`\nUPDATED QR:\nLink: ${check.qrLink}\n\nName: ${check.name}\nPlatform: ${check.platform}\nRegion: ${check.region}\nSize: ${check.size}\nUploader: ${check.uploaderName}\`\`\``,
-            {
-              files: [check.qrImageUrl]
-            }
-          );
+      receivedMessage.channel
+        .send(
+          `\`\`\`\nLink: ${qrLink}\n\nName: ${name}\nPlatform: ${platform}\nRegion: ${region}\nSize: ${size}\nUploader: ${uploaderName}\`\`\`\`\`\`Is this the game you wish to edit? type 'yes'/'no'\`\`\``,
+          {
+            files: [qrImageUrl]
+          }
+        )
+        .then(message => {
+          messagesIdArray.push(message.id);
         });
-    } else {
-      await receivedMessage.channel.send(`Edit session ended`);
+
+      await new QrCollector(receivedMessage, "edit", {
+        messagesIdArray: messagesIdArray
+      })
+        .collect()
+        .end(id, game);
     }
   } catch (e) {
     console.log(e);
