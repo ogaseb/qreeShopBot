@@ -141,6 +141,7 @@ async function sendToQrGames(data, receivedMessage, client) {
     "Bot created by: ProPanek#0188",
     false,
     1000,
+    false,
     false
   );
 }
@@ -168,7 +169,8 @@ async function createRandomEmbed(
     "Bot created by: ProPanek#0188",
     false,
     120000,
-    true
+    true,
+    false
   );
 }
 
