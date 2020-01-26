@@ -123,7 +123,7 @@ async function createEmbeddedAnswer(
     "Qr Code 3DS games search collection",
     "Bot created by: ProPanek#0188",
     true,
-    15000,
+    120000,
     false,
     true
   );
