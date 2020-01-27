@@ -1,31 +1,25 @@
 require("dotenv").config();
-import { Client } from "discord.js";
-import {
-  scrapChannelForQrCodes,
+require("@sentry/node").init({ dsn: process.env.SENTRY_URL });
+const { getHours, getMinutes } = require("date-fns");
+const { Client } = require("discord.js");
+const {
   changeInvokeCommand,
   handleGameUpload,
   searchGame,
-  handleGameEdit,
-  createEmbeddedHelper,
-  makeQrImagesfromDB,
-  urlStatus,
-  updateSize,
-  headPat
-} from "./src/commands/index";
-import {
-  regexes,
-  checkIfDM,
-  validateGuilds,
-  validatePermissions,
-  validateAdmin
-} from "./src/helpers/helpers";
-import { approxQrCount } from "./src/db/db_qree";
-
-process.on("unhandledRejection", (err, p) => {
-  console.log("An unhandledRejection occurred");
-  console.log(`Rejected Promise: ${p}`);
-  console.log(`Rejection: ${err}`);
-});
+  editQrData,
+  sendHelp,
+  makeQrImagesFromDB,
+  checkUrlsForStatus,
+  updateSizeOfFile,
+  sendHeadPat,
+  findCoversForGames,
+  getRandomGame
+} = require("./commands/index");
+const {
+  validation: { validatePermissions, validateGuilds, validateAdmin, checkIfDM },
+  other: { regexes }
+} = require("./helpers/index");
+const { approxQrCount } = require("./controllers/qree_items");
 
 const client = new Client();
 let botInvoker = process.env.BOT_DEFAULT_INVOKE;
@@ -56,13 +50,13 @@ client.on("ready", async () => {
   setInterval(async () => {
     const qrCount = await approxQrCount();
     await client.user.setActivity(`QR Codes count: ${qrCount.count}`, {
-      type: "PLAYING"
+      type: "WATCHING"
     });
-  }, 60000);
 
-  setInterval(async () => {
-    await urlStatus(client);
-  }, 1000 * 60 * 60 * 24);
+    if (getHours(new Date()) === 18 && getMinutes(new Date()) === 0) {
+      await urlStatus(client);
+    }
+  }, 1000 * 60);
 });
 
 client.on("message", receivedMessage => {
@@ -104,8 +98,6 @@ function processCommand(receivedMessage) {
     primaryCommand = messageArguments[0]; // The first word directly after the exclamation is the command
   }
 
-  console.log(primaryCommand);
-
   if (!primaryCommand) {
     checkIfDM(receivedMessage)
       ? receivedMessage.channel.send(
@@ -119,16 +111,20 @@ function processCommand(receivedMessage) {
   }
 
   if (primaryCommand === "help") {
-    return createEmbeddedHelper(serverInvokers, receivedMessage).build();
+    return sendHelp(serverInvokers, receivedMessage).build();
   }
 
   if (primaryCommand === "search") {
     return searchGame(fullCommand, receivedMessage);
   }
 
+  if (primaryCommand === "random") {
+    return getRandomGame(receivedMessage);
+  }
+
   if (primaryCommand === "headpat") {
     validateGuilds(receivedMessage)
-      ? headPat(messageArguments, receivedMessage)
+      ? sendHeadPat(messageArguments, receivedMessage)
       : null;
   }
 
@@ -154,24 +150,28 @@ function processCommand(receivedMessage) {
       );
     }
 
-    if (primaryCommand === "scrap") {
-      return scrapChannelForQrCodes(messageArguments, receivedMessage);
-    }
+    // if (primaryCommand === "scrap") {
+    //   return scrapChannelForQrCodes(messageArguments, receivedMessage);
+    // }
 
     if (primaryCommand === "images") {
-      return makeQrImagesfromDB(messageArguments, receivedMessage);
+      return makeQrImagesFromDB(messageArguments, receivedMessage);
     }
 
     if (primaryCommand === "edit") {
-      return handleGameEdit(messageArguments, receivedMessage);
+      return editQrData(messageArguments, receivedMessage);
     }
 
     if (primaryCommand === "checkurls") {
-      return urlStatus(client);
+      return checkUrlsForStatus(client);
     }
 
     if (primaryCommand === "updatesize") {
-      return updateSize(client);
+      return updateSizeOfFile(client);
+    }
+
+    if (primaryCommand === "findcovers") {
+      return findCoversForGames(client);
     }
   }
 
