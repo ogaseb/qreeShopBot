@@ -89,7 +89,10 @@ async function createQrImageUrlFromLink(finalObject, receivedMessage, url) {
   if (
     typeof imageMsg.attachments.values().next().value.proxyURL !== "undefined"
   ) {
-    return imageMsg.attachments.values().next().value.proxyURL;
+    return {
+      proxyURL: imageMsg.attachments.values().next().value.proxyURL,
+      id: imageMsg.id
+    };
   } else {
     throw "cant get link for qr image";
   }

@@ -69,7 +69,6 @@ module.exports.editQree = async function(
       },
       { where: { id } }
     );
-    await receivedMessage.channel.send("Edited!");
     console.log("DB -> save qr in DB");
   } catch (e) {
     await receivedMessage.channel.send(

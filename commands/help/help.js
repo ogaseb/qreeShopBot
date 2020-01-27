@@ -19,8 +19,8 @@ module.exports.sendHelp = function(
           "Description",
           "```search -  It's available on channels and DM's, it will search for all games containing typed phrase. (emoji navigation in dm's is a little buggy but it works)```"
         )
-        .addField("Command: ", '```!qre search "<name>" ```')
-        .addField("Example: ", '```!qre search "Super Castlevania IV"```')
+        .addField("Command: ", "```!qre search <name> ```")
+        .addField("Example: ", "```!qre search Super Castlevania IV```")
     );
   } else {
     embeds.push(
