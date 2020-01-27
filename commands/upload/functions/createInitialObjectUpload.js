@@ -39,11 +39,14 @@ const createInitialObjectUpload = async (messageArguments, receivedMessage) => {
   finalObject.size = await checkFileSize(finalObject.qrLink);
   finalObject.uploaderDiscordId = receivedMessage.author.id;
   finalObject.uploaderName = receivedMessage.author.username;
-  finalObject.qrImageUrl = await createQrImageUrlFromLink(
+  const qrImageUrl = await createQrImageUrlFromLink(
     finalObject,
     receivedMessage,
     finalObject.qrLink
   );
+  finalObject.qrImageUrl = qrImageUrl.proxyURL;
+  finalObject.qrImageMessageId = qrImageUrl.id;
+
   const isEmpty = Object.values(finalObject).every(x => x === null);
   if (isEmpty) {
     throw `something went wrong with creating data for qr code`;

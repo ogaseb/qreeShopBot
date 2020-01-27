@@ -13,11 +13,11 @@ module.exports.searchGame = async function(messageArguments, receivedMessage) {
     if (rows.length === 0) {
       if (checkIfDM(receivedMessage)) {
         return await receivedMessage.channel.send(
-          `I didn't find anything called \`${finalArgs}\` in my database. If you want to request games join https://discord.gg/tXJfdNp`
+          `I didn't find anything called \`${finalArgs}\` in my database. If you want to request games join https://discord.gg/336MjzF`
         );
       } else {
         return await receivedMessage.channel.send(
-          `I didn't find anything called \`${finalArgs}\` in my database. You can request game on <#582262747937505290> channel`
+          `I didn't find anything called \`${finalArgs}\` in my database. You can request game on <#670452321955610633> channel`
         );
       }
     } else {

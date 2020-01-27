@@ -49,7 +49,8 @@ async function createPaginationFromEmbed(
   footer,
   showNavigation = true,
   timeout,
-  isFromRandom
+  isFromRandom,
+  deleteOnTimeout = false
 ) {
   return new Pagination.Embeds()
     .setArray(embeds)
@@ -60,6 +61,7 @@ async function createPaginationFromEmbed(
     .setTitle(title)
     .setFooter(footer)
     .setColor(0x000000)
+    .setDeleteOnTimeout(deleteOnTimeout)
     .setFunctionEmojis(
       isFromRandom
         ? {
@@ -121,8 +123,9 @@ async function createEmbeddedAnswer(
     "Qr Code 3DS games search collection",
     "Bot created by: ProPanek#0188",
     true,
-    600000,
-    false
+    120000,
+    false,
+    true
   );
 }
 
@@ -138,6 +141,7 @@ async function sendToQrGames(data, receivedMessage, client) {
     "Bot created by: ProPanek#0188",
     false,
     1000,
+    false,
     false
   );
 }
@@ -165,7 +169,8 @@ async function createRandomEmbed(
     "Bot created by: ProPanek#0188",
     false,
     120000,
-    true
+    true,
+    false
   );
 }
 
