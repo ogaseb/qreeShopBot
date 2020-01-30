@@ -13,7 +13,7 @@ module.exports.checkUrlsForStatus = async function(client) {
       console.timeEnd(`scanningTime - ${name}`);
     } catch (e) {
       if (e.response) {
-        if (e.response.status === 404) {
+        if (/\b(?:4[0-9]{2}|5[0-4][0-9]|550)\b/.test(e.response.status)) {
           await client.channels
             .get("670579373623214102")
             .send(
