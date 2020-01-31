@@ -1,6 +1,6 @@
 const { getWholeDB } = require("../../controllers/qree_items");
 const axios = require("axios");
-var progress = require("progress-string");
+const progress = require("progress-string");
 
 module.exports.checkUrlsForStatus = async function(client, receivedMessage) {
   await client.channels
@@ -47,12 +47,6 @@ module.exports.checkUrlsForStatus = async function(client, receivedMessage) {
               `${qrLink} sends ${e.response.status} respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} . <@${uploaderDiscordId}>`
             );
         }
-      } else {
-        await client.channels
-          .get("670579373623214102")
-          .send(
-            `${qrLink} sends error, but link probably works, check by clicking on it: ${name}. DB ID for updating: ${id} . <@${uploaderDiscordId}>`
-          );
       }
       counter++;
       await receivedMessage.channel.messages
