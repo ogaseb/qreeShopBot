@@ -163,7 +163,7 @@ function processCommand(receivedMessage) {
     }
 
     if (primaryCommand === "checkurls") {
-      return checkUrlsForStatus(client);
+      return checkUrlsForStatus(client, receivedMessage);
     }
 
     if (primaryCommand === "updatesize") {

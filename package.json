@@ -44,6 +44,7 @@
     "nodemon": "^2.0.2",
     "pg": "^7.12.1",
     "prettysize": "^2.0.0",
+    "progress-string": "^1.2.2",
     "qrcode-generator": "^1.4.3",
     "qrcode-reader": "^1.0.4",
     "request": "^2.88.0",

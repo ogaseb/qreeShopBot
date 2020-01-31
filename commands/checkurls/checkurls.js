@@ -1,32 +1,63 @@
 const { getWholeDB } = require("../../controllers/qree_items");
 const axios = require("axios");
+var progress = require("progress-string");
 
-module.exports.checkUrlsForStatus = async function(client) {
+module.exports.checkUrlsForStatus = async function(client, receivedMessage) {
   await client.channels
-    .get("670579373623214102")
+    .get("604692669146333184")
     .send(`Checking urls started... I will do it every 24 hours`);
   const rows = await getWholeDB();
+  let loading = await client.channels
+    .get("604692669146333184")
+    .send(`Checking...`);
+  let bar = progress({
+    width: 60,
+    total: rows.length,
+    style: function(complete, incomplete) {
+      return "[" + complete + ">" + incomplete + "]";
+    }
+  });
+  let counter = 0;
   for (const { id, qrLink, name, uploaderDiscordId } of rows) {
     try {
-      console.time(`scanningTime - ${name}`);
-      await axios.head(qrLink, { timeout: 30000 });
-      console.timeEnd(`scanningTime - ${name}`);
+      const link = await axios.head(qrLink, { timeout: 30000 });
+      if (
+        /\b(?:4[0-9]{2}|5[0-4][0-9]|550)\b/.test(
+          link.response.status.toString()
+        )
+      ) {
+        await client.channels
+          .get("604692669146333184")
+          .send(
+            `${qrLink} sends ${link.response.status} respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} . <@${uploaderDiscordId}>`
+          );
+      }
+      counter++;
+      await receivedMessage.channel.messages
+        .get(loading.id)
+        .edit(`${bar(counter)} (${counter}/${rows.length})`);
     } catch (e) {
       if (e.response) {
-        if (/\b(?:4[0-9]{2}|5[0-4][0-9]|550)\b/.test(e.response.status)) {
+        if (
+          /\b(?:4[0-9]{2}|5[0-4][0-9]|550)\b/.test(e.response.status.toString())
+        ) {
           await client.channels
-            .get("670579373623214102")
+            .get("604692669146333184")
             .send(
               `${qrLink} sends ${e.response.status} respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} . <@${uploaderDiscordId}>`
             );
         }
       } else {
         await client.channels
-          .get("670579373623214102")
+          .get("604692669146333184")
           .send(
             `${qrLink} sends error, but link probably works, check by clicking on it: ${name}. DB ID for updating: ${id} . <@${uploaderDiscordId}>`
           );
       }
+      counter++;
+      await receivedMessage.channel.messages
+        .get(loading.id)
+        .edit(`${bar(counter)} (${counter}/${rows.length})`);
     }
   }
   await client.channels
