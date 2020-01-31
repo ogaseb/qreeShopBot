@@ -4,11 +4,11 @@ var progress = require("progress-string");
 
 module.exports.checkUrlsForStatus = async function(client, receivedMessage) {
   await client.channels
-    .get("604692669146333184")
+    .get("670579373623214102")
     .send(`Checking urls started... I will do it every 24 hours`);
   const rows = await getWholeDB();
   let loading = await client.channels
-    .get("604692669146333184")
+    .get("670579373623214102")
     .send(`Checking...`);
   let bar = progress({
     width: 60,
@@ -27,7 +27,7 @@ module.exports.checkUrlsForStatus = async function(client, receivedMessage) {
         )
       ) {
         await client.channels
-          .get("604692669146333184")
+          .get("670579373623214102")
           .send(
             `${qrLink} sends ${link.response.status} respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} . <@${uploaderDiscordId}>`
           );
@@ -42,14 +42,14 @@ module.exports.checkUrlsForStatus = async function(client, receivedMessage) {
           /\b(?:4[0-9]{2}|5[0-4][0-9]|550)\b/.test(e.response.status.toString())
         ) {
           await client.channels
-            .get("604692669146333184")
+            .get("670579373623214102")
             .send(
               `${qrLink} sends ${e.response.status} respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} . <@${uploaderDiscordId}>`
             );
         }
       } else {
         await client.channels
-          .get("604692669146333184")
+          .get("670579373623214102")
           .send(
             `${qrLink} sends error, but link probably works, check by clicking on it: ${name}. DB ID for updating: ${id} . <@${uploaderDiscordId}>`
           );
