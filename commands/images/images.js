@@ -16,7 +16,6 @@ module.exports.makeQrImagesFromDB = async function(
     const rows = await getWholeDB();
     for (const {
       id,
-      qrImageUrl,
       qrLink,
       name,
       platform,

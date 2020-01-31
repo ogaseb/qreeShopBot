@@ -101,5 +101,6 @@ async function createQrImageUrlFromLink(finalObject, receivedMessage, url) {
 module.exports = {
   parseURL,
   createASCIIQrCode,
-  createQrImageUrlFromLink
+  createQrImageUrlFromLink,
+  createDataURLQrCode
 };
