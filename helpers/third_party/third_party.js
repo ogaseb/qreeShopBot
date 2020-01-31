@@ -57,7 +57,6 @@ async function getGameCover(name, id) {
         console.log(nameString);
         return getGameCover(nameString, id);
       }
-
     }
   } catch (error) {
     console.log(error);

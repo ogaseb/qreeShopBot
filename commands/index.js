@@ -8,7 +8,7 @@ const { makeQrImagesFromDB } = require("./images/images");
 const { checkUrlsForStatus } = require("./checkurls/checkurls");
 const { updateSizeOfFile } = require("./updatesize/updatesize");
 const { sendHeadPat } = require("./headpat/headpat");
-const { findCoversForGames } = require("./findcovers/findcovers");
+const { findCovers } = require("./findcovers/findcovers");
 const { getRandomGame } = require("./random/random");
 
 module.exports = {
@@ -22,6 +22,6 @@ module.exports = {
   checkUrlsForStatus,
   updateSizeOfFile,
   sendHeadPat,
-  findCoversForGames,
+  findCovers,
   getRandomGame
 };
