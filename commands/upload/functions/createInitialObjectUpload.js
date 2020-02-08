@@ -45,7 +45,6 @@ const createInitialObjectUpload = async (messageArguments, receivedMessage) => {
     finalObject.qrLink
   );
   finalObject.qrImageUrl = qrImageUrl.proxyURL;
-  finalObject.qrImageMessageId = qrImageUrl.id;
 
   const isEmpty = Object.values(finalObject).every(x => x === null);
   if (isEmpty) {

@@ -73,7 +73,6 @@ const createInitialObjectEdit = async (
       finalObject.qrLink
     );
     finalObject.qrImageUrl = qrImageUrl.proxyURL;
-    finalObject.messagesIdArray.push(qrImageUrl.id);
   } else {
     finalObject.qrImageUrl = game.qrImageUrl;
   }

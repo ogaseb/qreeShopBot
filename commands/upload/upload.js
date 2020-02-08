@@ -33,7 +33,6 @@ module.exports.handleGameUpload = async function(
       messageArguments,
       receivedMessage
     );
-    messagesIdArray.push(qrGameObject.qrImageMessageId);
     const searchResult = await findGame(qrGameObject.name);
     const text =
       searchResult.length === 0
