@@ -39,7 +39,7 @@
     "global": "^4.4.0",
     "image-data-uri": "^2.0.0",
     "jimp": "^0.9.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "node-fetch": "^2.6.0",
     "nodemon": "^2.0.2",
     "pg": "^7.12.1",
