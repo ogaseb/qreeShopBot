@@ -40,7 +40,7 @@
     "image-data-uri": "^2.0.0",
     "jimp": "^0.9.3",
     "lodash": "^4.17.15",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "nodemon": "^2.0.2",
     "pg": "^7.12.1",
     "prettysize": "^2.0.0",
