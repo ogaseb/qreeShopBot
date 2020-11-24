@@ -1,8 +1,9 @@
-const { RichEmbed } = require("discord.js");
-const { Embeds } = require("discord-paginationembed");
 const {
   validation: { checkIfDM }
 } = require("../../helpers/index");
+
+const { MessageEmbed } = require("discord.js");
+const { Embeds } = require("discord-paginationembed");
 
 module.exports.sendHelp = function(
   serverInvokers,
@@ -13,7 +14,7 @@ module.exports.sendHelp = function(
 
   if (checkIfDM(receivedMessage)) {
     embeds.push(
-      new RichEmbed()
+      new MessageEmbed()
         .addField("**COMMAND**: ", "```search```")
         .addField(
           "Description",
@@ -24,7 +25,7 @@ module.exports.sendHelp = function(
     );
   } else {
     embeds.push(
-      new RichEmbed()
+      new MessageEmbed()
         .addField("**COMMAND**: ", "```upload```")
         .addField(
           "Description",
@@ -55,7 +56,7 @@ module.exports.sendHelp = function(
     );
 
     embeds.push(
-      new RichEmbed()
+      new MessageEmbed()
         .addField("**COMMAND**: ", "```edit```")
         .addField(
           "Description",
@@ -87,7 +88,7 @@ module.exports.sendHelp = function(
     );
 
     embeds.push(
-      new RichEmbed()
+      new MessageEmbed()
         .addField("**COMMAND**: ", "```search```")
         .addField(
           "Description",
@@ -108,7 +109,7 @@ module.exports.sendHelp = function(
     );
 
     embeds.push(
-      new RichEmbed()
+      new MessageEmbed()
         .addField("**COMMAND**: ", "```random```")
         .addField(
           "Description",
@@ -125,7 +126,7 @@ module.exports.sendHelp = function(
     );
 
     embeds.push(
-      new RichEmbed()
+      new MessageEmbed()
         .addField("**COMMAND**: ", "```invoke```")
         .addField(
           "Description",
