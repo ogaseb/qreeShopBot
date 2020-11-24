@@ -129,10 +129,7 @@ function processCommand(receivedMessage) {
   }
 
   if (primaryCommand === "upload") {
-    if (
-      validateGuilds(receivedMessage) &&
-      validatePermissions(receivedMessage)
-    ) {
+    if (validatePermissions(receivedMessage)) {
       return handleGameUpload(messageArguments, receivedMessage, client);
     } else {
       return receivedMessage.channel.send(
@@ -141,7 +138,7 @@ function processCommand(receivedMessage) {
     }
   }
 
-  if (validateGuilds(receivedMessage) && validateAdmin(receivedMessage)) {
+  if (validateAdmin(receivedMessage)) {
     if (primaryCommand === "invoke") {
       return changeInvokeCommand(
         messageArguments,
