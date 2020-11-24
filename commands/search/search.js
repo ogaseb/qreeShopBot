@@ -21,8 +21,8 @@ module.exports.searchGame = async function(messageArguments, receivedMessage) {
         );
       }
     } else {
-      const response = await receivedMessage.channel.send(`wait a moment...`);
-      const loadingMessageId = response.id;
+      // const response = await receivedMessage.channel.send(`wait a moment...`);
+      // const loadingMessageId = response.id;
 
       const QrCodesSearchResults = await createEmbeddedAnswer(
         rows,
