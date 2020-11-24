@@ -19,16 +19,16 @@ function validateGuilds(receivedMessage) {
 
 function validatePermissions(receivedMessage) {
   if (!checkIfDM(receivedMessage)) {
-    return !!receivedMessage.member.roles.some(r =>
-      process.env.BOT_PERMISSIONS_ROLES.includes(r.name)
+    return !!receivedMessage.member._roles.find(role =>
+      process.env.BOT_PERMISSIONS_ROLES.includes(role)
     );
   }
 }
 
 function validateAdmin(receivedMessage) {
   if (!checkIfDM(receivedMessage)) {
-    return !!receivedMessage.member.roles.some(r =>
-      process.env.BOT_PERMISSIONS_ADMIN.includes(r.name)
+    return !!receivedMessage.member._roles.find(role =>
+      process.env.BOT_ADMIN_ROLES.includes(role)
     );
   }
 }
