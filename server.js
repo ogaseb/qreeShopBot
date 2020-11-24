@@ -22,7 +22,6 @@ const {
 const { approxQrCount } = require("./controllers/qree_items");
 
 const client = new Client();
-let botInvoker = process.env.BOT_DEFAULT_INVOKE;
 let serverInvokers = new Map();
 
 void (async function() {
@@ -68,7 +67,7 @@ client.on("message", receivedMessage => {
 function processCommand(receivedMessage) {
   let fullCommand, primaryCommand;
 
-  fullCommand = receivedMessage.content.substr(botInvoker.length + 1);
+  fullCommand = receivedMessage.content.substr(1);
   const messageArguments = fullCommand.match(regexes.ARGUMENTS);
   console.log(messageArguments);
   if (messageArguments !== null && messageArguments.length) {
@@ -99,9 +98,7 @@ function processCommand(receivedMessage) {
   }
 
   if (primaryCommand === "headpat") {
-    validateGuilds(receivedMessage)
-      ? sendHeadPat(messageArguments, receivedMessage)
-      : null;
+    return sendHeadPat(messageArguments, receivedMessage);
   }
 
   if (primaryCommand === "upload") {
