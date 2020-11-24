@@ -3,13 +3,11 @@ const axios = require("axios");
 const progress = require("progress-string");
 
 module.exports.checkUrlsForStatus = async function(client, receivedMessage) {
-  await client.channels
-    .get("670579373623214102")
-    .send(`Checking urls started... I will do it every 24 hours`);
+  await receivedMessage.channel.send(
+    `Checking urls started... I will do it every 24 hours`
+  );
   const rows = await getWholeDB();
-  let loading = await client.channels
-    .get("670579373623214102")
-    .send(`Checking...`);
+  let loading = await receivedMessage.channel.send(`Checking...`);
   let bar = progress({
     width: 60,
     total: rows.length,
@@ -26,11 +24,9 @@ module.exports.checkUrlsForStatus = async function(client, receivedMessage) {
           link.response.status.toString()
         )
       ) {
-        await client.channels
-          .get("670579373623214102")
-          .send(
-            `${qrLink} sends ${link.response.status} respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} . <@${uploaderDiscordId}>`
-          );
+        await receivedMessage.channel.send(
+          `${qrLink} sends ${link.response.status} respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} . <@${uploaderDiscordId}>`
+        );
       }
       counter++;
       await receivedMessage.channel.messages
@@ -41,11 +37,9 @@ module.exports.checkUrlsForStatus = async function(client, receivedMessage) {
         if (
           /\b(?:4[0-9]{2}|5[0-4][0-9]|550)\b/.test(e.response.status.toString())
         ) {
-          await client.channels
-            .get("670579373623214102")
-            .send(
-              `${qrLink} sends ${e.response.status} respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} . <@${uploaderDiscordId}>`
-            );
+          await receivedMessage.channel.send(
+            `${qrLink} sends ${e.response.status} respond code (not found or other error) for game: ${name}. DB ID for updating: ${id} . <@${uploaderDiscordId}>`
+          );
         }
       }
       counter++;
@@ -54,7 +48,5 @@ module.exports.checkUrlsForStatus = async function(client, receivedMessage) {
         .edit(`${bar(counter)} (${counter}/${rows.length})`);
     }
   }
-  await client.channels
-    .get("670579373623214102")
-    .send(`All games have been scanned!`);
+  await receivedMessage.channel.send(`All games have been scanned!`);
 };
