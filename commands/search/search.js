@@ -7,7 +7,7 @@ const {
 module.exports.searchGame = async function(messageArguments, receivedMessage) {
   try {
     let args = messageArguments.split(" ");
-    args.splice(0, 1);
+    args.shift();
     console.log(messageArguments, args);
     let finalArgs = args.join(" ");
     console.log(finalArgs);
