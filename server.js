@@ -93,10 +93,11 @@ function processCommand(receivedMessage) {
       ));
 
   const messageArguments = fullCommand.match(regexes.ARGUMENTS);
-
+  console.log(messageArguments);
   if (messageArguments !== null && messageArguments.length) {
     primaryCommand = messageArguments[0]; // The first word directly after the exclamation is the command
   }
+  console.log(primaryCommand);
 
   if (!primaryCommand) {
     checkIfDM(receivedMessage)
