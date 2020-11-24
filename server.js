@@ -82,9 +82,7 @@ function processCommand(receivedMessage) {
           `You need to specify which command you want to use type "!qre help" to display available commands`
         )
       : receivedMessage.channel.send(
-          `You need to specify which command you want to use type "${serverInvokers.get(
-            receivedMessage.guild.id
-          )} help" to display available commands`
+          `You need to specify which command you want to use type "!qre help" to display available commands`
         );
   }
 
