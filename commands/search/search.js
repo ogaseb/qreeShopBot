@@ -10,6 +10,7 @@ module.exports.searchGame = async function(messageArguments, receivedMessage) {
     args.splice(0, 1);
     let finalArgs = args.join(" ");
     const rows = await findGame(finalArgs);
+    console.log(rows);
     if (rows.length === 0) {
       if (checkIfDM(receivedMessage)) {
         return await receivedMessage.channel.send(
