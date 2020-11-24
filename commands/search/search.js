@@ -29,8 +29,8 @@ module.exports.searchGame = async function(messageArguments, receivedMessage) {
 
       const QrCodesSearchResults = await createEmbeddedAnswer(
         rows,
-        receivedMessage,
-        loadingMessageId
+        receivedMessage
+        // loadingMessageId
       );
       await QrCodesSearchResults.build();
     }

@@ -68,13 +68,10 @@ function processCommand(receivedMessage) {
   let fullCommand, primaryCommand;
 
   fullCommand = receivedMessage.content.substr(4);
-  console.log(fullCommand);
   const messageArguments = fullCommand.match(regexes.ARGUMENTS);
-  console.log(messageArguments);
   if (messageArguments !== null && messageArguments.length) {
     primaryCommand = messageArguments[0]; // The first word directly after the exclamation is the command
   }
-  console.log(primaryCommand);
 
   // if (!primaryCommand) {
   //   checkIfDM(receivedMessage)
@@ -91,6 +88,7 @@ function processCommand(receivedMessage) {
   }
 
   if (primaryCommand === "search") {
+    console.log("search");
     return searchGame(fullCommand, receivedMessage);
   }
 
