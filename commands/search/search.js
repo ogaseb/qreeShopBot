@@ -8,7 +8,9 @@ module.exports.searchGame = async function(messageArguments, receivedMessage) {
   try {
     let args = messageArguments.split(" ");
     args.splice(0, 1);
+    console.log(messageArguments, args);
     let finalArgs = args.join(" ");
+    console.log(finalArgs);
     const rows = await findGame(finalArgs);
     console.log(rows);
     if (rows.length === 0) {
