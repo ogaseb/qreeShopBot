@@ -36,16 +36,16 @@ void (async function() {
 client.on("ready", async () => {
   console.log("On Discord!");
   console.log("Connected as " + client.user.tag);
-  console.log("Servers:");
-  client.guilds.forEach(guild => {
-    serverInvokers.set(guild.id, botInvoker);
-    console.log(" - " + guild.id);
-    guild.channels.forEach(channel => {
-      console.log(` -- ${channel.name} (${channel.type}) - ${channel.id}`);
-    });
-
-    console.log(serverInvokers);
-  });
+  // console.log("Servers:");
+  // client.guilds.forEach(guild => {
+  //   serverInvokers.set(guild.id, botInvoker);
+  //   console.log(" - " + guild.id);
+  //   guild.channels.forEach(channel => {
+  //     console.log(` -- ${channel.name} (${channel.type}) - ${channel.id}`);
+  //   });
+  //
+  //   console.log(serverInvokers);
+  // });
 
   setInterval(async () => {
     const qrCount = await approxQrCount();
