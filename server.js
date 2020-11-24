@@ -67,7 +67,8 @@ client.on("message", receivedMessage => {
 function processCommand(receivedMessage) {
   let fullCommand, primaryCommand;
 
-  fullCommand = receivedMessage.content.substr(1);
+  fullCommand = receivedMessage.content.substr(4);
+  console.log(fullCommand);
   const messageArguments = fullCommand.match(regexes.ARGUMENTS);
   console.log(messageArguments);
   if (messageArguments !== null && messageArguments.length) {
