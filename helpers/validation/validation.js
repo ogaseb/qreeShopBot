@@ -28,7 +28,7 @@ function validatePermissions(receivedMessage) {
 function validateAdmin(receivedMessage) {
   if (!checkIfDM(receivedMessage)) {
     return !!receivedMessage.member._roles.find(role =>
-      process.env.BOT_ADMIN_ROLES.includes(role)
+      process.env.BOT_PERMISSIONS_ADMIN.includes(role)
     );
   }
 }
