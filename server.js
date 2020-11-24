@@ -36,26 +36,12 @@ void (async function() {
 client.on("ready", async () => {
   console.log("On Discord!");
   console.log("Connected as " + client.user.tag);
-  // console.log("Servers:");
-  // client.guilds.forEach(guild => {
-  //   serverInvokers.set(guild.id, botInvoker);
-  //   console.log(" - " + guild.id);
-  //   guild.channels.forEach(channel => {
-  //     console.log(` -- ${channel.name} (${channel.type}) - ${channel.id}`);
-  //   });
-  //
-  //   console.log(serverInvokers);
-  // });
 
   setInterval(async () => {
     const qrCount = await approxQrCount();
     await client.user.setActivity(`QR Codes count: ${qrCount.count}`, {
       type: "WATCHING"
     });
-
-    if (getHours(new Date()) === 18 && getMinutes(new Date()) === 0) {
-      await urlStatus(client);
-    }
   }, 1000 * 60);
 });
 
@@ -65,7 +51,7 @@ client.on("message", receivedMessage => {
   }
 
   if (receivedMessage.channel.type === "dm") {
-    if (receivedMessage.content.startsWith(`${botInvoker}`)) {
+    if (receivedMessage.content.startsWith(`!`)) {
       processCommand(receivedMessage);
     } else {
       return receivedMessage.channel.send(
@@ -73,11 +59,7 @@ client.on("message", receivedMessage => {
       );
     }
   } else {
-    if (
-      receivedMessage.content.startsWith(
-        `${serverInvokers.get(receivedMessage.guild.id)}`
-      )
-    ) {
+    if (receivedMessage.content.startsWith(`!`)) {
       processCommand(receivedMessage);
     }
   }
@@ -86,12 +68,7 @@ client.on("message", receivedMessage => {
 function processCommand(receivedMessage) {
   let fullCommand, primaryCommand;
 
-  checkIfDM(receivedMessage)
-    ? (fullCommand = receivedMessage.content.substr(botInvoker.length + 1))
-    : (fullCommand = receivedMessage.content.substr(
-        serverInvokers.get(receivedMessage.guild.id).length + 1
-      ));
-
+  fullCommand = receivedMessage.content.substr(botInvoker.length + 1);
   const messageArguments = fullCommand.match(regexes.ARGUMENTS);
   console.log(messageArguments);
   if (messageArguments !== null && messageArguments.length) {
