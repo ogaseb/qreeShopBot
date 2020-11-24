@@ -75,15 +75,15 @@ function processCommand(receivedMessage) {
   }
   console.log(primaryCommand);
 
-  if (!primaryCommand) {
-    checkIfDM(receivedMessage)
-      ? receivedMessage.channel.send(
-          `You need to specify which command you want to use type "!qre help" to display available commands`
-        )
-      : receivedMessage.channel.send(
-          `You need to specify which command you want to use type "!qre help" to display available commands`
-        );
-  }
+  // if (!primaryCommand) {
+  //   checkIfDM(receivedMessage)
+  //     ? receivedMessage.channel.send(
+  //         `You need to specify which command you want to use type "!qre help" to display available commands`
+  //       )
+  //     : receivedMessage.channel.send(
+  //         `You need to specify which command you want to use type "!qre help" to display available commands`
+  //       );
+  // }
 
   if (primaryCommand === "help") {
     return sendHelp(serverInvokers, receivedMessage).build();
