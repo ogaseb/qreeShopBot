@@ -1,7 +1,7 @@
 `use strict`;
 require("dotenv").config();
-const { RichEmbed } = require("discord.js");
-const Pagination = require("discord-paginationembed");
+const { MessageEmbed } = require("discord.js");
+const { Embeds } = require("discord-paginationembed");
 const { getGameCover } = require("../../helpers/third_party/third_party");
 const { getWholeDB } = require("../../controllers/qree_items");
 
@@ -25,7 +25,7 @@ async function createArrayOfEmbeddedMessages(data) {
       (await getGameCover(name, id)) ||
       "https://cdn4.iconfinder.com/data/icons/nintendo-console-line-set/32/ico-line-3ds-512.png";
     embeds.push(
-      new RichEmbed()
+      new MessageEmbed()
         .setImage(qrImageUrl)
         .addField("Name: ", name)
         .addField("DB ID: ", id, true)
@@ -52,7 +52,7 @@ async function createPaginationFromEmbed(
   isFromRandom,
   deleteOnTimeout = false
 ) {
-  return new Pagination.Embeds()
+  return new Embeds()
     .setArray(embeds)
     .setAuthorizedUsers(author)
     .setChannel(channel)
